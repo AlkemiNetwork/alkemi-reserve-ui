@@ -4,37 +4,39 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter: AlkemiOfficial](https://img.shields.io/twitter/follow/AlkemiOfficial.svg?style=social)](https://twitter.com/AlkemiOfficial)
 
-> Web3 interface for alkemi liquidity reserves
+> Web3 interface for Alkemi liquidity reserves
 
 ![Liquidity Dashboard](/docs/assets/liquidity-dashboard2.gif)
 
-### How do I get set up?
+## How do I get set up?
 
-### Customize configuration
+#### Customize configuration
 
--       See [Configuration Reference](https://cli.vuejs.org/config/).
+-   See [Configuration Reference](https://cli.vuejs.org/config/).
 
-#### Project setup
+#### Install
 
-    yarn install
+```bash
+npm install
+```
 
-#### Compiles and hot-reloads for development
+#### Run your unit tests
 
-    yarn serve
+```bash
+npm run-script test:unit
+```
 
-### Run your unit tests
+#### Run your end-to-end tests
 
-    yarn test:unit
+```bash
+npm run-script test:e2e
+```
 
-### Run your end-to-end tests
+#### Lints and fixes files
 
-    yarn test:e2e
-
--   Deployment instructions
-
-#### Compiles and minifies for production
-
-    yarn build
+```bash
+npm run-script lint
+```
 
 ### Contribution guidelines
 
@@ -42,9 +44,35 @@
 -   Code review
 -   Other guidelines
 
-### Lints and fixes files
+* * *
 
-    yarn lint
+### Deployment instructions
+
+#### Compiles and hot-reloads for development
+
+```bash
+npm run-script serve
+```
+
+#### Compiles and minifies for production
+
+```bash
+npm run-script build
+```
+
+#### Build and Deploy with Docker
+
+```bash
+docker build . -t liquidity-reserve-dashboard
+
+docker run -d -p 8080:80 liquidity-reserve-dashboard
+```
+
+#### Continuous Deployment for Production
+
+-   env staging: <https://dapp.alkemi.tech>
+
+-   env production: <https://dapp.alkemi.network>
 
 ## Author
 
@@ -54,20 +82,8 @@
 -   Twitter: [@AlkemiOfficial](https://twitter.com/AlkemiOfficial)
 -   Github: [@project-alkemi](https://github.com/project-alkemi)
 
-## Deployment
-
--   AWS staging deployment: <https://dapp.alkemi.tech>
-
--   AWS production deployment: <https://dapp.alkemi.network>
-
--   AWS ganache-cli ethereum testnet deployment: testnet.alkemi.tech:8545
-
-```sh
-testnet mnemonic seed: street cushion flash correct bind fantasy cute pitch typical south anchor glue
-```
-
 ## 📝 License
 
-Copyright © 2020 [Alkemi](https://github.com/project-alkemi).
+Copyright © 2020 [Alkemi Network](https://github.com/project-alkemi).
 
 This project is [MIT](https://opensource.org/licenses/MIT) licensed.
