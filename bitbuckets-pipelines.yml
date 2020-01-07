@@ -1,0 +1,80 @@
+image:                                 atlassian/default-image:2
+
+pipelines:
+  custom:
+    ganache-upload:
+      - step:
+          name:                        "Upload Ganache"
+          script:
+            - echo "Uploading Ethereum Testnet!"
+            - zip -j application.zip ganache/Dockerfile
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.2.3
+              variables:
+                AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
+                APPLICATION_NAME:      'liquidity-dashboard'
+                COMMAND:               'upload-only'
+                ZIP_FILE:              'application.zip'
+                VERSION_LABEL:         'ganache-$BITBUCKET_BUILD_NUMBER'
+      - step:
+            name:                      "Deploy Ganache Testnet"
+            deployment:                production
+            script:
+            - echo "Deployment Ganache!"
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.2.3
+              variables:
+                AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
+                APPLICATION_NAME:      'liquidity-dashboard'
+                COMMAND:               'deploy-only'
+                VERSION_LABEL:         'ganache-$BITBUCKET_BUILD_NUMBER'
+                ENVIRONMENT_NAME:      'ganache'
+                WAIT:                  'true'
+  default:
+    - step:
+        name:                          "Build and Test"
+        script:
+          - echo "Build, Upload and Test!"
+          - zip -r application.zip Dockerfile server.js public package.json package-lock.json
+          - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.2.3
+            variables:
+              AWS_ACCESS_KEY_ID:       $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:   $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
+              APPLICATION_NAME:        'liquidity-dashboard'
+              COMMAND:                 'upload-only'
+              ZIP_FILE:                'application.zip'
+              VERSION_LABEL:           'liquidity-dashboard-$BITBUCKET_BUILD_NUMBER'
+    - step:
+        name:                          "Deploy to Staging"
+        deployment:                    staging
+        script:
+        - echo "Deployment to Staging!"
+        - pipe:                        atlassian/aws-elasticbeanstalk-deploy:0.2.3
+          variables:
+            AWS_ACCESS_KEY_ID:         $AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY:     $AWS_SECRET_ACCESS_KEY
+            AWS_DEFAULT_REGION:        $AWS_DEFAULT_REGION
+            APPLICATION_NAME:          'liquidity-dashboard'
+            COMMAND:                   'deploy-only'
+            VERSION_LABEL:             'liquidity-dashboard-$BITBUCKET_BUILD_NUMBER'
+            ENVIRONMENT_NAME:          'staging'
+            WAIT:                      'true'
+    - step:
+        name:                          "Deploy to Production"
+        deployment:                    production
+        trigger:                       manual
+        script:
+          - echo "Deployment to Production!"
+          - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.2.3
+            variables:
+              AWS_ACCESS_KEY_ID:       $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:   $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
+              APPLICATION_NAME:        'liquidity-dashboard'
+              COMMAND:                 'deploy-only'
+              VERSION_LABEL:           'liquidity-dashboard-$BITBUCKET_BUILD_NUMBER'
+              ENVIRONMENT_NAME:        'production'
+              WAIT:                    'true'
