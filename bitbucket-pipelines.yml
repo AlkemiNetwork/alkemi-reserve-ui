@@ -1,0 +1,61 @@
+image:                                 atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        name:                          "Build and Test"
+        script:
+          - echo "Build, Test and Upload"
+          - npm install
+          - npm run-script test:unit
+  branches:
+    master:
+      - step:
+          name:                        "Build, Test and Upload"
+          script:
+            - echo "Build, Test and Upload"
+            - npm install
+            - npm run-script test:unit
+            - npm run-script lint
+            - zip -r application.zip .
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
+              variables:
+                AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
+                APPLICATION_NAME:      '$APPLICATION_NAME'
+                COMMAND:               'upload-only'
+                ZIP_FILE:              'application.zip'
+                VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+      - step:
+          name:                        "Deploy to Staging"
+          deployment:                  staging
+          trigger:                     manual
+          script:
+          - echo "Deployment to Staging!"
+          - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.4
+            variables:
+              AWS_ACCESS_KEY_ID:       $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:   $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
+              APPLICATION_NAME:        '$APPLICATION_NAME'
+              COMMAND:                 'deploy-only'
+              VERSION_LABEL:           '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+              ENVIRONMENT_NAME:        'staging'
+              WAIT:                    'true'
+      - step:
+          name:                        "Deploy to Production"
+          deployment:                  production
+          trigger:                     manual
+          script:
+            - echo "Deployment to Production!"
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
+              variables:
+                AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
+                APPLICATION_NAME:      '$APPLICATION_NAME'
+                COMMAND:               'deploy-only'
+                VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+                ENVIRONMENT_NAME:      'production'
+                WAIT:                  'true'
