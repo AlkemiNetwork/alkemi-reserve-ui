@@ -17,6 +17,7 @@ pipelines:
             - npm install
             - npm run-script test:unit
             - npm run-script lint
+            - npm run-script build
             - zip -r application.zip .
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
               variables:
