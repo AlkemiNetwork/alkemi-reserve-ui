@@ -41,7 +41,7 @@ pipelines:
               APPLICATION_NAME:        '$APPLICATION_NAME'
               COMMAND:                 'deploy-only'
               VERSION_LABEL:           '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
-              ENVIRONMENT_NAME:        'staging'
+              ENVIRONMENT_NAME:        '$APPLICATION_NAME-staging'
               WAIT:                    'true'
       - step:
           name:                        "Deploy to Production"
@@ -57,5 +57,5 @@ pipelines:
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'deploy-only'
                 VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
-                ENVIRONMENT_NAME:      'production'
+                ENVIRONMENT_NAME:      '$APPLICATION_NAME-production'
                 WAIT:                  'true'
