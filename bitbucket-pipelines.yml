@@ -17,6 +17,7 @@ pipelines:
             - npm install
             - npm run-script test:unit
             - npm run-script lint
+            - npm run-script build
             - zip -r application.zip .
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
               variables:
@@ -41,7 +42,7 @@ pipelines:
               APPLICATION_NAME:        '$APPLICATION_NAME'
               COMMAND:                 'deploy-only'
               VERSION_LABEL:           '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
-              ENVIRONMENT_NAME:        'staging'
+              ENVIRONMENT_NAME:        '$APPLICATION_NAME-staging'
               WAIT:                    'true'
       - step:
           name:                        "Deploy to Production"
@@ -57,5 +58,5 @@ pipelines:
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'deploy-only'
                 VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
-                ENVIRONMENT_NAME:      'production'
+                ENVIRONMENT_NAME:      '$APPLICATION_NAME-production'
                 WAIT:                  'true'
