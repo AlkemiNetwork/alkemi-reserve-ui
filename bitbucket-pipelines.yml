@@ -31,7 +31,6 @@ pipelines:
       - step:
           name:                        "Deploy to Staging"
           deployment:                  staging
-          trigger:                     manual
           script:
           - echo "Deployment to Staging!"
           - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.4
