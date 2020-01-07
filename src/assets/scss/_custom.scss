@@ -1,0 +1,86 @@
+
+.head {
+	background: $black;
+	min-height: 100px;
+	.cl-text-banner{
+		color: $color-gray;
+		font-size: 16px;
+		vertical-align: middle;
+
+	}
+	.vertical-line{
+		color: $color-gray;
+		font-size: 24px;
+		vertical-align: bottom;
+	}
+	.btn-akm{
+		background: #3366FF;
+		border: 1px solid $color-shark;
+		border-radius: 4px;
+		color: $color-white;
+		min-width: 120px;
+	}
+}
+.body-content{
+	height: 90vh;
+	background: $color-shark;
+	.title-es-content{
+		color: $color-boulder;
+		text-transform: uppercase;
+	}
+	.monney{
+		color: $color-white;
+		font-size: 26px;
+		font-family: $font-poppins;
+	}
+	.est-content{
+		margin: 20px;
+		border-bottom: 2px solid $color-black;
+	}
+	.change-number{
+		font-size: 26px;
+		color: $color-green;
+		font-family: $font-poppins;
+	}
+	.col-auto{
+		.card-header{
+			background: $color-woodsmoke;
+		}
+		.nav-item{
+			.active{
+				color: $color-black;
+			}
+		}
+		ul{
+			li{
+				a{
+					display: flex;
+					background-color: $color-woodsmoke !important;
+				}
+			}
+		}
+	}
+	.acronym-name{
+		margin-left: 15px;
+		color: $white;
+		.name-el-money{
+		color: $color-boulder;
+		}
+	}
+	
+}
+.pl-35{
+	padding-left: 35px;
+}
+.pr-35{
+	padding-right: 35px;
+}
+.mb-20{
+	margin-bottom: 20px;
+}
+.mr-30{
+	margin-right: 30px;
+}
+.pull-right {
+	float: right;
+}

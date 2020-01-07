@@ -1,28 +1,22 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default {
-  name: "app",
-  components: {
-    HelloWorld
-  }
-};
+  name: 'app'
+}
 </script>
 
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+  /* Import Bootstrap Vue Styles */
+  @import '~bootstrap-vue/dist/bootstrap-vue.css';
+  /*Google fonts*/
+  @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+  // Import Main styles for this application
+  @import 'assets/scss/style';
+
 </style>
