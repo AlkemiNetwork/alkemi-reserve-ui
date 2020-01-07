@@ -6,6 +6,8 @@ pipelines:
         name:                          "Build and Test"
         script:
           - echo "Build, Test and Upload"
+          - npm install mocha mocha-junit-reporter --save-dev
+          - mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml
           - npm install
           - npm run-script test:unit
   branches:
@@ -14,6 +16,8 @@ pipelines:
           name:                        "Build, Test and Upload"
           script:
             - echo "Build, Test and Upload"
+            - npm install mocha mocha-junit-reporter --save-dev
+            - mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml
             - npm install
             - npm run-script test:unit
             - npm run-script lint
