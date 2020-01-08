@@ -18,7 +18,11 @@ Vue.use(FunctionalCalendar, {
 // }).$mount("#app");
 Vue.component("chart", Echarts);
 Vue.use(BootstrapVue);
-new Vue({ el: "#app", router, render: h => h(App) });
+new Vue({
+  el: "#app",
+  router,
+  render: h => h(App)
+});
 
 /* eslint-disable no-new */
 // new Vue({

@@ -481,13 +481,16 @@
 </template>
 
 <script>
-const moment = require("moment");
+//const moment = require("moment");
 import Web3 from "web3";
-import { FunctionalCalendar } from "vue-functional-calendar";
+import // Not Currently Used
+//  FunctionalCalendar
+"vue-functional-calendar";
 export default {
   name: "dashboard",
   components: {
-    FunctionalCalendar
+    //  Registered But not used
+    //  FunctionalCalendar
   },
   data() {
     return {
@@ -571,44 +574,48 @@ export default {
     };
   },
   computed: {},
-  created() {
-    if (web3.currentProvider.selectedAddress) {
-      var addressWallet = web3.currentProvider.selectedAddress;
-      this.addressWallet =
-        addressWallet.substr(0, 4) +
-        "..." +
-        addressWallet.substr(addressWallet.length - 4, 4);
-      this.isConnect = true;
-    }
-  },
-  watch: {},
-
-  methods: {
-    connectWallet() {
-      if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
-        try {
-          ethereum
-            .enable()
-            .then(addressWallet => {
-              this.addressWallet =
-                addressWallet[0].substr(0, 4) +
-                "..." +
-                addressWallet[0].substr(addressWallet[0].length - 4, 4);
-              this.isConnect = true;
-            })
-            .cacth(error => {
-              console.log(error);
-            });
-        } catch (error) {}
-      } else if (window.web3) {
-        window.web3 = new Web3(web3.currentProvider);
-      } else {
-        console.log(
-          "Non-Ethereum browser detected. You should consider trying MetaMask!"
-        );
+  /* eslint-disable */
+    created() {
+      if (web3.currentProvider.selectedAddress) {
+        var addressWallet = web3.currentProvider.selectedAddress;
+        this.addressWallet =
+          addressWallet.substr(0, 4) +
+          "..." +
+          addressWallet.substr(addressWallet.length - 4, 4);
+        this.isConnect = true;
       }
     },
+    watch: {},
+
+    methods: {
+      connectWallet() {
+        if (window.ethereum) {
+          window.web3 = new Web3(ethereum);
+          try {
+            ethereum
+              .enable()
+              .then(addressWallet => {
+                this.addressWallet =
+                  addressWallet[0].substr(0, 4) +
+                  "..." +
+                  addressWallet[0].substr(addressWallet[0].length - 4, 4);
+                this.isConnect = true;
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        } else if (window.web3) {
+          window.web3 = new Web3(web3.currentProvider);
+        } else {
+          console.log(
+            "Non-Ethereum browser detected. You should consider trying MetaMask!"
+          );
+        }
+      },
+      /* eslint-enable */
     showModal() {
       this.$refs["my-modal"].show();
     },
