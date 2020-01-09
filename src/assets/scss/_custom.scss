@@ -16,7 +16,8 @@ body {
 	.vertical-line{
 		color: $color-gray;
 		font-size: 24px;
-		vertical-align: bottom;
+		vertical-align: middle;
+		margin: 0 5px;
 	}
 	.btn-akm{
 		background: #3366FF;
@@ -25,12 +26,19 @@ body {
 		color: $color-white;
 		min-width: 120px;
 	}
+	.banner-logo{
+		padding-left: 24px;
+	}
 }
 .body-content{
 	background: $color-shark;
+	.line-vertical-14{
+		margin: 0 5px;
+		font-size: $font-size-14;
+		color: $color-boulder;
+	}
 	.title-es-content{
 		color: $color-boulder;
-		text-transform: uppercase;
 		font-size: $font-size-14;
 	}
 	.monney{
@@ -50,6 +58,17 @@ body {
 	.card{
 		border: none !important;
 		.col-auto{
+			width: 30%;
+			&:focus{
+				outline: 0;
+			}
+			li{
+				a{
+					&:focus{
+						outline: 0;
+					}
+				}
+			}
 			.card-header{
 				background: $color-woodsmoke;
 			}
@@ -71,6 +90,7 @@ body {
 						align-items: center;
 						border-bottom: 2px solid $color-black;
 						padding: 1em 2em !important;
+						height: 85px;
 						&:hover{
 							background: $color-shark;
 						}
@@ -83,8 +103,14 @@ body {
 			}
 		}
 		.tab-content{
+			width: 70%;
 			background: $color-shark;
 			color: $color-white;
+			&:hover{
+				outline: 0;
+			}div{
+				outline: 0;
+			}
 			.info-value{
 				margin-bottom: 40px;
 				.value{
@@ -95,6 +121,10 @@ body {
 					.text-est{
 						color: $color-boulder;
 					}
+				}
+				.acronym-name{
+					padding-left: 20px;
+					line-height: 54px;
 				}
 			}
 			.chart-line{
@@ -124,11 +154,12 @@ body {
 					background-color: $color-white;
 					color: $color-woodsmoke;
 					font-size: $font-size-14;
+					text-transform: uppercase;
 					box-shadow: 0px 3px 6px #000000FA;
 				}
 				table.table{
 					th{
-						text-align: center;
+						padding: 0.75rem 0;
 						color: $color-boulder;
 						font-size: $font-size-12;
 						font-weight: normal;
@@ -138,7 +169,7 @@ body {
 						} 
 					}
 					td{
-						text-align: center;
+						padding: 0.75rem 0;
 						font-size: $font-size-14;
 						color: $color-white;
 						border: {
@@ -149,22 +180,32 @@ body {
 				}
 			}
 		}
+		.card-body{
+			padding: 28px 25px 28px 40px;
+		}
 	}
-	.content-mid-img{
-		width: 50px;
-		border-collapse: collapse;
-	}
-	.content-mid{
-		min-width: 120px;
-		border-collapse: collapse;
-		.cost{
-			font-size: $font-size-12;
-			color: $color-boulder;
+	.tab-flex{
+		display: flex;
+		.content-mid-img{
+			width: 50px;
+			border-collapse: collapse;
+		}
+		.content-mid{
+			font-size: 18px;
+			min-width: 125px;
+			border-collapse: collapse;
+			.cost{
+				font-size: $font-size-12;
+				color: $color-boulder;
+			}
+			.percent{
+				font-size: 13px;
+			}
 		}
 	}
 }
 .acronym-name{
-	font-size: $font-size-18;
+	min-width: 80px !important;
 	color: $color-white;
 	.name-el-money{
 		color: $color-boulder;
@@ -201,12 +242,16 @@ body {
 		background: $color-shark;
 	}
 	.head-modal{
-		padding: 30px 0;
+		padding: 28px 0;
 		color: $color-white;
 		text-align: center;
 		background: $color-salute;
+		.title-popup{
+			padding-left: 15px;
+		}
 	}
 	.content-modal{
+		height: 530px;
 		padding: 35px;
 		text-align: center;
 		.text-label{
@@ -218,8 +263,10 @@ body {
 			padding: 20px 25px;
 			background: $color-salute;
 			width: 100%;
+			height: 80px;
 			border: none;
 			border-radius: 0px;
+			color: $color-white;
 			&:focus{
 				outline: none;
 				box-shadow: none;
@@ -231,9 +278,14 @@ body {
 			width: 100%;
 			border: none;
 			border-radius: 0px;
+			font-size: $font-size-18;
+			height: 55px;
 			&:focus {
 				outline: none;
 				box-shadow: none;
+			}
+			&::placeholder {
+				color: $color-white;
 			}
 		}
 		.choose-date{
@@ -244,6 +296,11 @@ body {
 			width: 100%;
 			border: none;
 			border-radius: 0px;
+			height: 55px;
+			display: flex;
+			align-items: center;
+			font-size: $font-size-18;
+			color: $color-white;
 			&:focus {
 				outline: none;
 				box-shadow: none;
@@ -260,14 +317,15 @@ body {
 			img{
 				width: 14px;
 				position: absolute;
-				right: 8px;
-				top: 12px;
+				right: 16px;
+				top: 21px;
 				cursor: pointer;
 			}
 		}
 		.btn-modal-add-new{
 			width: 100%;
 			border-radius: 0;
+			margin-top: 30px;
 		}
 		.btn-submit{
 			padding: 10px 0;
@@ -287,9 +345,9 @@ body {
 		}
 		.btn-position{
 			position: absolute;
-			top: 8px;
+			top: 16px;
 			background: transparent;
-			right: 8px;
+			right: 16px;
 			border: none;
 			padding: 0;
 			font-size: $font-size-14;
@@ -311,6 +369,7 @@ body {
 				.vfc-calendar{
 					background: $color-shark;
 					.vfc-content{
+						margin: 0 !important;
 						.vfc-dayNames {
 							span{
 								color: $color-white;
@@ -324,13 +383,17 @@ body {
 						}
 						.vfc-top-date{
 							a{
-								color: $color-white;
+								//color: $color-white;
 							}
 						}
 						.vfc-week {
 							.vfc-day{
 								.vfc-span-day{
-									color: $color-white;
+									width: 45px !important;
+    								line-height: 40px !important;
+									&:hover{
+										border-radius: 0;
+									}
 								}
 							}
 						}
