@@ -1,12 +1,12 @@
 
 const gulp = require('gulp');
-const runSequence = require('run-sequence'); // Run tasks sequentially
+const runSequence = require('gulp4-run-sequence'); // Run tasks sequentially
 const jsonModify = require('gulp-json-modify');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //  AUTO UPDATE PATCH TASK
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-gulp.task('upversion', function () {
+gulp.task('upversion', function (done) {
     let ver = require('./package.json').version; //version defined in the package.json file
     console.log('current version: ', ver)
     let splitString = ver.split('.', 3)
@@ -16,6 +16,7 @@ gulp.task('upversion', function () {
     splitString[2] = String(patchNumber);
     process.env.VERSION = splitString.join('.');
     console.log(process.env.VERSION)
+    done();
 })
 
 gulp.task('saveversion', function () {
@@ -25,8 +26,10 @@ return gulp.src(['./package.json'])
         value: process.env.VERSION
     }))
     .pipe(gulp.dest('./'))
+
 })
 
-gulp.task('autoversion', function () {
+gulp.task('autoversion', function (done) {
     runSequence('upversion','saveversion');
+    done();
 })

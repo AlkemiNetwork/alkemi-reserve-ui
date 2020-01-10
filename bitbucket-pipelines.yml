@@ -8,7 +8,12 @@ pipelines:
         name:                          "Build and Test"
         script:
           - echo "Build, Test and Upload"
+          - apt-get update
+          - apt-get install jq
           - npm install
+          - gulp autoversion
+          - declare -x VERSION=$(jq -r '.version' package.json)
+          - echo $VERSION
           - npm run-script test:unit
           - npm run-script lint
   branches:
@@ -22,7 +27,6 @@ pipelines:
             - echo "Build, Test and Upload"
             - apt-get update
             - apt-get install jq zip -y
-            - npm install -g gulp
             - npm install
             - npm run-script test:unit
             - npm run-script build
