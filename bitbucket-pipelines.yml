@@ -20,7 +20,8 @@ pipelines:
           script:
             # PACKAGE INSTALLATIONS
             - echo "Build, Test and Upload"
-            - apt-get install jq zip
+            - apt-get update
+            - apt-get install jq zip -y
             - npm install
             - npm run-script test:unit
             - npm run-script build
