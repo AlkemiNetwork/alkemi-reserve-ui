@@ -34,7 +34,7 @@ pipelines:
             - npm run-script test:unit
             - npm run-script build
             # Push back update to git
-            - git config remote.origin.url https://$USERNAME:$PASSWORD@bitbucket.org/$USERNAME/liquidity-reserve-dashboard.git
+            - git config remote.origin.url https://$bitbucket_id:$bitbucket_token@bitbucket.org/project-alkemi/liquidity-reserve-dashboard.git
             - git init
             - git config user.name "$USERNAME"
             - git config user.email "ryan@alkemi.ai" # Need to change this ti Build CI user
