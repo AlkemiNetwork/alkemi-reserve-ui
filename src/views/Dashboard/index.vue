@@ -144,7 +144,10 @@
                                     </div>
                                   </div>
                                   <div class="clearfix"></div>
-                                  <chart auto-resize :options="chartOptionsLine"></chart>
+                                  <chart
+                                    auto-resize
+                                    :options="chartOptionsLine"
+                                  ></chart>
                                 </div>
                                 <div class="form-reserve">
                                   <div class="float-left">RESERVE POOLS</div>
@@ -205,10 +208,10 @@
                                           label-for="input-3"
                                         >
                                           <div
-                                          class="choose-date"
-                                          @click="toggleCalendar()"
+                                            class="choose-date"
+                                            @click="toggleCalendar()"
                                           >
-                                          <span>{{ dayChoose }}</span>
+                                            <span>{{ dayChoose }}</span>
                                             <b-img
                                               src="/img/arrow-down-sign-to-navigate.png"
                                             ></b-img>
@@ -231,6 +234,7 @@
                                         <FunctionalCalendar
                                           :is-dark="true"
                                           :is-date-picker="true"
+                                          :date-format="'dd/mm/yyyy'"
                                           v-on:choseDay="clickDay"
                                         ></FunctionalCalendar>
                                         <b-button
@@ -242,7 +246,11 @@
                                       </div>
                                     </div>
                                   </b-modal>
-                                  <b-table fixed :items="items" :fields="fields">
+                                  <b-table
+                                    fixed
+                                    :items="items"
+                                    :fields="fields"
+                                  >
                                     <template v-slot:cell(btn)="row">
                                       <b-button
                                         v-if="!row.item.btn"
@@ -516,6 +524,7 @@
           </b-row>
         </b-col>
       </b-row>
+      <!-- <loadingPopup :quality="4"></loadingPopup> -->
     </b-container>
   </div>
 </template>
@@ -526,7 +535,7 @@ const moment = require("moment");
 export default {
   name: "dashboard",
   components: {
-    FunctionalCalendar,
+    FunctionalCalendar
   },
   data() {
     return {
@@ -569,32 +578,32 @@ export default {
         {
           key: "created",
           label: "Created",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         },
         {
           key: "total_size",
           label: "Total Size",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         },
         {
           key: "est_USD_value",
           label: "Est USD Value",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         },
         {
           key: "total_earnings",
           label: "Total Earnings",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         },
         {
           key: "total_percent_earnings",
           label: "Total % Earnings",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         },
         {
           key: "btn",
           label: "",
-          thStyle: {width: "16.66%"}
+          thStyle: { width: "16.66%" }
         }
       ],
       items: [
@@ -612,41 +621,41 @@ export default {
           est_USD_value: "$12,433.22",
           total_earnings: "+16,232.12 OMG",
           total_percent_earnings: "21.59 %",
-          btn: "",
-
+          btn: ""
         }
       ]
     };
   },
   created() {
-    if (web3.currentProvider.selectedAddress) {
-      var addressWallet = web3.currentProvider.selectedAddress;
-      this.addressWallet = addressWallet.substr(0, 4) +'...'+addressWallet.substr(addressWallet.length-4, 4)
-      this.isConnect = true
-    } 
+    if (window.web3.currentProvider.selectedAddress) {
+      var addressWallet = window.web3.currentProvider.selectedAddress;
+      this.addressWallet =
+        addressWallet.substr(0, 4) +
+        "..." +
+        addressWallet.substr(addressWallet.length - 4, 4);
+      this.isConnect = true;
+    }
   },
   methods: {
-   connectWallet(){
-      if (window.ethereum) { 
-        window.web3 = new Web3(ethereum);
+    connectWallet() {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
         try {
-          ethereum.enable()
-          .then(addressWallet=>{
-             this.addressWallet =  addressWallet[0].substr(0, 4) +'...'+addressWallet[0].substr(addressWallet[0].length-4, 4)
-             this.isConnect = true
-          })
-          .cacth(error=>{
-            console.log(error)
-          }) 
-             
+          window.ethereum.enable().then(addressWallet => {
+            this.addressWallet =
+              addressWallet[0].substr(0, 4) +
+              "..." +
+              addressWallet[0].substr(addressWallet[0].length - 4, 4);
+            this.isConnect = true;
+          });
         } catch (error) {
-
+          console.log(error);
         }
       } else if (window.web3) {
-        window.web3 = new Web3(web3.currentProvider);
+        // window.web3 = new Web3(web3.currentProvider);
       } else {
         console.log(
-          'Non-Ethereum browser detected. You should consider trying MetaMask!'
+          "Non-Ethereum browser detected. You should consider trying MetaMask!"
         );
       }
     },
@@ -657,13 +666,15 @@ export default {
       this.$refs["my-modal"].hide();
     },
     toggleCalendar() {
-      this.isShow = !this.isShow
+      this.isShow = !this.isShow;
     },
     clickDay(data) {
-      this.dayChoose = data.date;
-      this.isShow = false
+      if (data.date) {
+        this.dayChoose = moment(data.date, "DD/MM/YYYY").format("DD MMM YYYY");
+        this.isShow = false;
+      }
       return false;
-    },
+    }
   }
 };
 </script>
