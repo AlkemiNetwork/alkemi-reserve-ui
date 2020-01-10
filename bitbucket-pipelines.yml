@@ -18,12 +18,28 @@ pipelines:
           - node
           name:                        "Build, Test and Upload"
           script:
+            # PACKAGE INSTALLATIONS
             - echo "Build, Test and Upload"
             - npm install
+            - npm install -g gulp node-jq
             - npm run-script test:unit
             - npm run-script build
+            # AUTO VERSIONING
+            - git config remote.origin.url https://$USERNAME:$PASSWORD@bitbucket.org/$USERNAME/liquidity-reserve-dashboard.git
+            - gulp autoversion
+            - git init
+            - git config user.name "$USERNAME"
+            - git config user.email "ryan@alkemi.ai" # Need to change this ti Build CI user
+            - git add package.json
+            - git commit -m "[skip CI]" # Required to avoid re-running this CI upon git push
+            - git push
+            - declare -x VERSION=$(jq -r '.version' package.json)
+            - echo $VERSION
+            - git tag $VERSION
+            - git remote -v
+            - git push origin --tags
             - zip -r application.zip .
-            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
                 AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
@@ -31,20 +47,22 @@ pipelines:
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'upload-only'
                 ZIP_FILE:              'application.zip'
-                VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
       - step:
           name:                        "Deploy to Staging"
           deployment:                  staging
           script:
           - echo "Deployment to Staging!"
-          - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.4
+          - npm install -g node-jq
+          - declare -x VERSION=$(jq -r '.version' package.json)
+          - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.5
             variables:
               AWS_ACCESS_KEY_ID:       $AWS_ACCESS_KEY_ID
               AWS_SECRET_ACCESS_KEY:   $AWS_SECRET_ACCESS_KEY
               AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
               APPLICATION_NAME:        '$APPLICATION_NAME'
               COMMAND:                 'deploy-only'
-              VERSION_LABEL:           '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+              VERSION_LABEL:           '$APPLICATION_NAME-$VERSION'
               ENVIRONMENT_NAME:        '$APPLICATION_NAME-staging'
               WAIT:                    'true'
       - step:
@@ -52,14 +70,16 @@ pipelines:
           deployment:                  production
           trigger:                     manual
           script:
-            - echo "Deployment to Production!"
-            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.4
+            - echo "Deployment to Production!"    
+            - npm install -g node-jq
+            - declare -x VERSION=$(jq -r '.version' package.json)
+            - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
                 AWS_ACCESS_KEY_ID:     $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'deploy-only'
-                VERSION_LABEL:         '$APPLICATION_NAME-$BITBUCKET_BUILD_NUMBER'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
                 ENVIRONMENT_NAME:      '$APPLICATION_NAME-production'
                 WAIT:                  'true'
