@@ -322,6 +322,8 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
+                                <div class="clearfix"></div>
+                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -384,6 +386,8 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
+                                <div class="clearfix"></div>
+                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -443,6 +447,8 @@
                                   </div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
+                                <div class="clearfix"></div>
+                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -503,6 +509,8 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
+                                <div class="clearfix"></div>
+                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -623,11 +631,11 @@ export default {
       var addressWallet = web3.currentProvider.selectedAddress;
       this.addressWallet = addressWallet.substr(0, 4) +'...'+addressWallet.substr(addressWallet.length-4, 4)
       this.isConnect = true
-    } 
+    }
   },
   methods: {
    connectWallet(){
-      if (window.ethereum) { 
+      if (window.ethereum) {
         window.web3 = new Web3(ethereum);
         try {
           ethereum.enable()
@@ -637,8 +645,8 @@ export default {
           })
           .cacth(error=>{
             console.log(error)
-          }) 
-             
+          })
+
         } catch (error) {
 
         }
@@ -650,6 +658,37 @@ export default {
         );
       }
     },
+    watch: {},
+
+    methods: {
+      connectWallet() {
+        if (window.ethereum) {
+          window.web3 = new Web3(ethereum);
+          try {
+            ethereum
+              .enable()
+              .then(addressWallet => {
+                this.addressWallet =
+                  addressWallet[0].substr(0, 4) +
+                  "..." +
+                  addressWallet[0].substr(addressWallet[0].length - 4, 4);
+                this.isConnect = true;
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        } else if (window.web3) {
+          window.web3 = new Web3(web3.currentProvider);
+        } else {
+          console.log(
+            "Non-Ethereum browser detected. You should consider trying MetaMask!"
+          );
+        }
+      },
+      /* eslint-enable */
     showModal() {
       this.$refs["my-modal"].show();
     },
