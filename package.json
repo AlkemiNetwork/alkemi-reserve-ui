@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --reporter mocha-junit-reporter --reporter-options mochaFile=./reports/test-results/test_results.xml",
-    "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e": "vue-cli-service test:e2e  --reporter mocha-junit-reporter --reporter-options mochaFile=./reports/test-results/test_results.xml",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
