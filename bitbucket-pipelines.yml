@@ -22,10 +22,10 @@ pipelines:
             - echo "Build, Test and Upload"
             - apt-get install jq
             - npm install
-            - npm install -g gulp
             - npm run-script test:unit
             - npm run-script build
             # AUTO VERSIONING
+            - npm install gulp
             - git config remote.origin.url https://$USERNAME:$PASSWORD@bitbucket.org/$USERNAME/liquidity-reserve-dashboard.git
             - gulp autoversion
             - git init
