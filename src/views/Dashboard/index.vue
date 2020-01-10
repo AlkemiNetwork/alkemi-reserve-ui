@@ -536,14 +536,23 @@
     </b-container>
   </div>
 </template>
+
 <script>
+import { mapActions, mapState } from "vuex";
 import Web3 from "web3";
+//import * as actions from "@/store/actions";
+//import * as mutations from "@/store/mutation-types";
 import { FunctionalCalendar } from "vue-functional-calendar";
+
 const moment = require("moment");
+
 export default {
   name: "dashboard",
   components: {
     FunctionalCalendar
+  },
+  computed: {
+    ...mapState(["currentNetwork", "account"])
   },
   data() {
     return {
@@ -645,22 +654,32 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["INIT_APP"]),
     connectWallet() {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
           window.ethereum.enable().then(addressWallet => {
+            this.INIT_APP(window.web3);
             this.addressWallet =
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-            this.isConnect = true;
+            this.isCionnect = true;
           });
         } catch (error) {
           console.log(error);
+          window.web3 = new Web3(
+            new Web3.providers.HttpProvider(
+              "https://rinkeby.infura.io/v3/816cc7a6308448dbbaf46ac5488507cf"
+            )
+          );
+          this.INIT_APP(window.web3);
         }
       } else if (window.web3) {
-        // window.web3 = new Web3(web3.currentProvider);
+        console.log("Running legacy web3 provider");
+        //window.web3 = new Web3(web3.currentProvider);
+        //this.INIT_APP(window.web3);
       } else {
         console.log(
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
