@@ -20,6 +20,7 @@ pipelines:
           script:
             # PACKAGE INSTALLATIONS
             - echo "Build, Test and Upload"
+            - apt-get install autoconf
             - npm install
             - npm install -g gulp node-jq
             - npm run-script test:unit
@@ -53,6 +54,7 @@ pipelines:
           deployment:                  staging
           script:
           - echo "Deployment to Staging!"
+          - apt-get install autoconf
           - npm install -g node-jq
           - declare -x VERSION=$(jq -r '.version' package.json)
           - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.5
@@ -70,7 +72,8 @@ pipelines:
           deployment:                  production
           trigger:                     manual
           script:
-            - echo "Deployment to Production!"    
+            - echo "Deployment to Production!"
+            - apt-get install autoconf
             - npm install -g node-jq
             - declare -x VERSION=$(jq -r '.version' package.json)
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
