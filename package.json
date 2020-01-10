@@ -14,7 +14,6 @@
     "bootstrap-vue": "^2.1.0",
     "core-js": "^3.4.4",
     "echarts": "^4.6.0",
-    "node-jq": "^1.11.0",
     "vue": "^2.6.11",
     "vue-echarts": "^4.1.0",
     "vue-functional-calendar": "^2.7.3",
