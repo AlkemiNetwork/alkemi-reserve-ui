@@ -28,11 +28,13 @@ pipelines:
             - apt-get update
             - apt-get install jq zip -y
             - npm install
+            - npm install gulp -g
+            # AUTO VERSIONING
+            - gulp autoversion
             - npm run-script test:unit
             - npm run-script build
-            # AUTO VERSIONING
+            # Push back update to git
             - git config remote.origin.url https://$USERNAME:$PASSWORD@bitbucket.org/$USERNAME/liquidity-reserve-dashboard.git
-            - gulp autoversion
             - git init
             - git config user.name "$USERNAME"
             - git config user.email "ryan@alkemi.ai" # Need to change this ti Build CI user
