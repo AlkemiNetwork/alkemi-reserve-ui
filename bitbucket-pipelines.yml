@@ -11,7 +11,6 @@ pipelines:
           - apt-get update
           - apt-get install jq
           - npm install
-          - gulp autoversion
           - declare -x VERSION=$(jq -r '.version' package.json)
           - echo $VERSION
           - npm run-script test:unit
@@ -28,9 +27,6 @@ pipelines:
             - apt-get update
             - apt-get install jq zip -y
             - npm install
-            - npm install gulp -g
-            # AUTO VERSIONING
-            - gulp autoversion
             - npm run-script test:unit
             - npm run-script build
             # Push back update to git
@@ -60,9 +56,9 @@ pipelines:
           name:                        "Deploy to Staging"
           deployment:                  staging
           script:
-          - echo "Deployment to Staging!"
+          - echo "$VERSION Deployment to Staging!"
           - apt-get update
-          - apt-get install jq zip -y
+          - apt-get install jq -y
           - declare -x VERSION=$(jq -r '.version' package.json)
           - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.5
             variables:
@@ -81,7 +77,7 @@ pipelines:
           script:
             - echo "Deployment to Production!"
             - apt-get update
-            - apt-get install jq zip -y
+            - apt-get install jq -y
             - declare -x VERSION=$(jq -r '.version' package.json)
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
