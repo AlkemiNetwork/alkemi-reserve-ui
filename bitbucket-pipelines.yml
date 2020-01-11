@@ -28,6 +28,7 @@ pipelines:
             - npm run-script test:unit
             - npm run-script build
             - declare -x VERSION=$(jq -r '.version' package.json)
+            - echo "$VERSION"
             - zip -r application.zip .
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
