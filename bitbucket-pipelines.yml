@@ -38,7 +38,7 @@ pipelines:
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'upload-only'
                 ZIP_FILE:              'application.zip'
-                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
       - step:
           name:                        "Deploy to Staging"
           deployment:                  staging
@@ -54,7 +54,7 @@ pipelines:
               AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
               APPLICATION_NAME:        '$APPLICATION_NAME'
               COMMAND:                 'deploy-only'
-              VERSION_LABEL:           '$APPLICATION_NAME-$VERSION'
+              VERSION_LABEL:           '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
               ENVIRONMENT_NAME:        '$APPLICATION_NAME-staging'
               WAIT:                    'true'
       - step:
@@ -73,6 +73,6 @@ pipelines:
                 AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'deploy-only'
-                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
                 ENVIRONMENT_NAME:      '$APPLICATION_NAME-production'
                 WAIT:                  'true'
