@@ -9,7 +9,7 @@ pipelines:
         script:
           - echo "Build, Test and Upload"
           - apt-get update
-          - apt-get install jq
+          - apt-get install jq zip -y
           - npm install
           - npm run-script test:unit
           - npm run-script lint
@@ -23,7 +23,7 @@ pipelines:
             # PACKAGE INSTALLATIONS
             - echo "Build, Test and Upload"
             - apt-get update
-            - apt-get --assume-yes install jq zip -y
+            - apt-get install jq zip -y
             - npm install
             - npm run-script test:unit
             - npm run-script build
