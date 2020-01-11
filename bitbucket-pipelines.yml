@@ -11,8 +11,6 @@ pipelines:
           - apt-get update
           - apt-get install jq
           - npm install
-          - declare -x VERSION=$(jq -r '.version' package.json)
-          - echo $VERSION
           - npm run-script test:unit
           - npm run-script lint
   branches:
@@ -29,19 +27,7 @@ pipelines:
             - npm install
             - npm run-script test:unit
             - npm run-script build
-            # Push back update to git
-            - git config remote.origin.url https://$bitbucket_id:$bitbucket_token@bitbucket.org/project-alkemi/liquidity-reserve-dashboard.git
-            - git init
-            - git config user.name "$USERNAME"
-            - git config user.email "ryan@alkemi.ai" # Need to change this ti Build CI user
-            - git add package.json
-            - git commit -m "[skip CI]" # Required to avoid re-running this CI upon git push
-            - git push
             - declare -x VERSION=$(jq -r '.version' package.json)
-            - echo $VERSION
-            - git tag $VERSION
-            - git remote -v
-            - git push origin --tags
             - zip -r application.zip .
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
