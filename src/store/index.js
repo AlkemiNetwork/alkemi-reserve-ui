@@ -90,7 +90,33 @@ export default new Vuex.Store({
         console.log("contract")
         console.log(alkemiNetwork)
   
-        commit(mutations.SET_ALKEMI_NETWORK, alkemiNetwork)  
+        commit(mutations.SET_ALKEMI_NETWORK, alkemiNetwork);
       },
+      [actions.LOAD_LIQUIDITY_RESERVES]: async function ({
+        commit,
+        state
+      }) {
+  
+        console.log("fetching provider liquidity reserves");
+        console.log(state.account);
+  
+        commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+          status: 'pending',
+          txHash: ""
+        });
+  
+        let txHash = await state.alkemiNetwork.providerLiquidityReserves(state.account, {
+          from: state.account
+        });
+        console.log(txHash);
+  
+        if (txHash) {
+          commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+            status: 'done',
+            txHash: txHash.tx
+          });
+        }
+  
+      }
     }    
 });

@@ -652,6 +652,9 @@ export default {
       ]
     };
   },
+  async mounted() {
+    //await this.LOAD_LIQUIDITY_RESERVES();
+  },
   created() {
     if (window.web3.currentProvider.selectedAddress) {
       var addressWallet = window.web3.currentProvider.selectedAddress;
@@ -663,7 +666,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["INIT_APP"]),
+    ...mapActions([
+      "INIT_APP",
+      "LOAD_LIQUIDITY_RESERVES"
+    ]),
     connectWallet() {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
