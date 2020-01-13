@@ -9,11 +9,8 @@ pipelines:
         script:
           - echo "Build, Test and Upload"
           - apt-get update
-          - apt-get install jq
+          - apt-get install jq zip -y
           - npm install
-          - gulp autoversion
-          - declare -x VERSION=$(jq -r '.version' package.json)
-          - echo $VERSION
           - npm run-script test:unit
           - npm run-script lint
   branches:
@@ -28,24 +25,10 @@ pipelines:
             - apt-get update
             - apt-get install jq zip -y
             - npm install
-            - npm install gulp -g
-            # AUTO VERSIONING
-            - gulp autoversion
             - npm run-script test:unit
             - npm run-script build
-            # Push back update to git
-            - git config remote.origin.url https://$bitbucket_id:$bitbucket_token@bitbucket.org/project-alkemi/liquidity-reserve-dashboard.git
-            - git init
-            - git config user.name "$USERNAME"
-            - git config user.email "ryan@alkemi.ai" # Need to change this ti Build CI user
-            - git add package.json
-            - git commit -m "[skip CI]" # Required to avoid re-running this CI upon git push
-            - git push
             - declare -x VERSION=$(jq -r '.version' package.json)
-            - echo $VERSION
-            - git tag $VERSION
-            - git remote -v
-            - git push origin --tags
+            - echo "$VERSION"
             - zip -r application.zip .
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
@@ -55,14 +38,14 @@ pipelines:
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'upload-only'
                 ZIP_FILE:              'application.zip'
-                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
       - step:
           name:                        "Deploy to Staging"
           deployment:                  staging
           script:
-          - echo "Deployment to Staging!"
+          - echo "$VERSION Deployment to Staging!"
           - apt-get update
-          - apt-get install jq zip -y
+          - apt-get install jq -y
           - declare -x VERSION=$(jq -r '.version' package.json)
           - pipe:                      atlassian/aws-elasticbeanstalk-deploy:0.5.5
             variables:
@@ -71,7 +54,7 @@ pipelines:
               AWS_DEFAULT_REGION:      $AWS_DEFAULT_REGION
               APPLICATION_NAME:        '$APPLICATION_NAME'
               COMMAND:                 'deploy-only'
-              VERSION_LABEL:           '$APPLICATION_NAME-$VERSION'
+              VERSION_LABEL:           '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
               ENVIRONMENT_NAME:        '$APPLICATION_NAME-staging'
               WAIT:                    'true'
       - step:
@@ -81,7 +64,7 @@ pipelines:
           script:
             - echo "Deployment to Production!"
             - apt-get update
-            - apt-get install jq zip -y
+            - apt-get install jq -y
             - declare -x VERSION=$(jq -r '.version' package.json)
             - pipe:                    atlassian/aws-elasticbeanstalk-deploy:0.5.5
               variables:
@@ -90,6 +73,6 @@ pipelines:
                 AWS_DEFAULT_REGION:    $AWS_DEFAULT_REGION
                 APPLICATION_NAME:      '$APPLICATION_NAME'
                 COMMAND:               'deploy-only'
-                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION'
+                VERSION_LABEL:         '$APPLICATION_NAME-$VERSION-$BITBUCKET_BUILD_NUMBER'
                 ENVIRONMENT_NAME:      '$APPLICATION_NAME-production'
                 WAIT:                  'true'

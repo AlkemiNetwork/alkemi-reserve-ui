@@ -15,21 +15,23 @@ Vue.use(Router);
 // };
 
 const router = new Router({
-	mode: "hash", // https://router.vuejs.org/api/#mode
-	linkActiveClass: "open active",
-	routes: [{
-		path: "/",
-		name: "Dashboard",
-		component: Dashboard,
-		meta: {
-			title: "Alkemi Liquidity Reserve"
-		}
-	}]
+  mode: "hash", // https://router.vuejs.org/api/#mode
+  linkActiveClass: "open active",
+  routes: [
+    {
+      path: "/",
+      name: "Dashboard",
+      component: Dashboard,
+      meta: {
+        title: "Alkemi Liquidity Reserve"
+      }
+    }
+  ]
 });
 
 // const DEFAULT_TITLE = "Home";
 router.beforeEach((to, from, next) => {
-	document.title = to.meta.title;
-	next();
+  document.title = to.meta.title;
+  next();
 });
 export default router;
