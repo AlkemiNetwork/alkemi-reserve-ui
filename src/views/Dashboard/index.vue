@@ -64,7 +64,7 @@
                   </div>
                   <div class="est-content">
                     <div class="title-es-content">EST USD EARNINGS 24 hr:</div>
-                    <div class="monney">$7,729.09</div>
+                    <div class="monney mb-20">$7,729.09</div>
                     <div class="title-es-content">CHANGE 24hr:</div>
                     <div class="change-number">+12.22%</div>
                   </div>
