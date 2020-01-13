@@ -2,7 +2,10 @@
   <div>
     <ul id="ul-list-dot">
       <li class="li-list-dot" v-for="item in quality" v-bind:key="item">
-        <div class="dot-loading"></div>
+        <div
+          class="dot-loading"
+          v-bind:class="{ 'active-dot': item == number }"
+        ></div>
       </li>
     </ul>
   </div>
@@ -11,13 +14,32 @@
 export default {
   name: "v-loading",
   props: {
-    quality: Number
+    quality: {
+      type: Number,
+      default: 4
+    }
   },
   data() {
-    return {};
+    return {
+      number: 1,
+      intervalid: ""
+    };
   },
-  created() {
-    console.log(this.quality);
+  mounted() {
+    this.loadings();
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalid);
+  },
+  methods: {
+    loadings() {
+      const goble = this;
+      this.intervalid = setInterval(function() {
+        if (goble.number === goble.quality) {
+          goble.number = 1;
+        } else goble.number++;
+      }, 500);
+    }
   }
 };
 </script>

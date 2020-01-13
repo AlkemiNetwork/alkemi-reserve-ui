@@ -22,7 +22,7 @@ body {
 		margin: 0 5px;
 	}
 	.btn-akm{
-		background: #3366FF;
+		background: $color-blue;
 		border: 1px solid $color-shark;
 		border-radius: 4px;
 		color: $color-white;
@@ -59,6 +59,9 @@ body {
 	}
 	.card{
 		border: none !important;
+		> div{
+			min-height: calc(100vh - 100px);
+		}
 		.col-auto{
 			width: 30%;
 			&:focus{
@@ -285,6 +288,7 @@ body {
 			}
 		}
 		.enter-money{
+			color: $color-white;
 			background: $color-woodsmoke;
 			padding: 6px 25px;
 			width: 100%;
@@ -366,7 +370,7 @@ body {
 			border: none;
 			padding: 0;
 			font-size: $font-size-14;
-			color: #3366FF;
+			color: $color-blue;
 			&:focus{
 				box-shadow: none;
 				outline: 0;
@@ -412,7 +416,7 @@ body {
 									}
 								}
 								span.vfc-span-day.vfc-today{
-									background-color: #3366FF !important;
+									background-color: $color-blue !important;
 									border-radius: 0 !important;
 								}
 							}
@@ -420,7 +424,23 @@ body {
 					}
 				}
 			}
-			
+		}
+		.processing{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			.title-process{
+				font-size: $font-size-18;
+				color: $color-blue;
+			}
+			.address-transaction{
+				font-size: $font-size-18;
+				color: $color-white;
+			}
+			> div{
+				line-height: 40px;
+			}
 		}
 	}
 }
@@ -476,15 +496,20 @@ body {
 	}
 }
 #ul-list-dot{
+	padding: 0;
+	margin-top: 10px;
 	text-align: center;
 	.li-list-dot{
 		padding: 0 10px;
 		display: inline-block;
 		.dot-loading{
-			background: $color-white;
+			background: $color-woodsmoke;
 			width: 12px;
 			height: 12px;
 			border-radius: 50%;
+			&.active-dot{
+				background: $color-blue;
+			}
 		}
 	}
 }

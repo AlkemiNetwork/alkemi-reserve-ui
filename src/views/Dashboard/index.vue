@@ -174,7 +174,7 @@
                                       </span>
                                     </div>
                                     <div class="content-modal">
-                                      <b-form v-if="!isShow">
+                                      <b-form v-if="isShow == 'form-add'">
                                         <b-form-group
                                           class="text-label text-left"
                                           label="AVAILABLE DAI BALANCE"
@@ -209,7 +209,7 @@
                                         >
                                           <div
                                             class="choose-date"
-                                            @click="toggleCalendar()"
+                                            @click="showCalendar"
                                           >
                                             <span>{{ dayChoose }}</span>
                                             <b-img
@@ -219,7 +219,7 @@
                                         </b-form-group>
                                         <b-button
                                           class="btn-submit btn-modal-add-new"
-                                          type="submit"
+                                          @click="loading"
                                         >
                                           CREATE POOL
                                         </b-button>
@@ -230,7 +230,7 @@
                                           Cancel
                                         </b-button>
                                       </b-form>
-                                      <div v-if="isShow">
+                                      <div v-if="isShow == 'calendar'">
                                         <FunctionalCalendar
                                           :is-dark="true"
                                           :is-date-picker="true"
@@ -239,10 +239,26 @@
                                         ></FunctionalCalendar>
                                         <b-button
                                           class="btn-cancel"
-                                          @click="toggleCalendar()"
+                                          @click="backForm()"
                                         >
                                           Back
                                         </b-button>
+                                      </div>
+                                      <div
+                                        v-if="isShow == 'loading'"
+                                        class="processing"
+                                      >
+                                        <div>
+                                          <div class="title-process">
+                                            Processing Transaction
+                                          </div>
+                                          <div class="address-transaction">
+                                            0xbj39....1ea401
+                                          </div>
+                                          <loadingPopup
+                                            :quality="4"
+                                          ></loadingPopup>
+                                        </div>
                                       </div>
                                     </div>
                                   </b-modal>
@@ -330,8 +346,6 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
-                                <div class="clearfix"></div>
-                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -394,8 +408,6 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
-                                <div class="clearfix"></div>
-                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -452,11 +464,10 @@
                                         + $12,333.12
                                       </div>
                                     </div>
+                                    <div class="clearfix"></div>
                                   </div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
-                                <div class="clearfix"></div>
-                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -517,8 +528,6 @@
                                   <div class="clearfix"></div>
                                   <chart :options="chartOptionsLine"></chart>
                                 </div>
-                                <div class="clearfix"></div>
-                                <chart :options="chartOptionsLine"></chart>
                               </div>
                             </template>
                           </b-card-text>
@@ -532,22 +541,23 @@
           </b-row>
         </b-col>
       </b-row>
-      <!-- <loadingPopup :quality="4"></loadingPopup> -->
     </b-container>
   </div>
 </template>
 <script>
 import Web3 from "web3";
 import { FunctionalCalendar } from "vue-functional-calendar";
+import loadingPopup from "../../components/loading-popup/index";
 const moment = require("moment");
 export default {
   name: "dashboard",
   components: {
-    FunctionalCalendar
+    FunctionalCalendar,
+    loadingPopup
   },
   data() {
     return {
-      isShow: false,
+      isShow: "form-add",
       isConnect: false,
       addressWallet: "",
       dayChoose: "",
@@ -674,15 +684,26 @@ export default {
     hideModal() {
       this.$refs["my-modal"].hide();
     },
-    toggleCalendar() {
-      this.isShow = !this.isShow;
+    showCalendar() {
+      this.isShow = "calendar";
+    },
+    backForm() {
+      this.isShow = "form-add";
     },
     clickDay(data) {
       if (data.date) {
         this.dayChoose = moment(data.date, "DD/MM/YYYY").format("DD MMM YYYY");
-        this.isShow = false;
+        this.isShow = "form-add";
       }
       return false;
+    },
+    loading() {
+      this.isShow = "loading";
+      setTimeout(() => {
+        this.isShow = "form-add";
+        return this.hideModal();
+      }, 4000);
+      // clearTimeout(timerid);
     }
   }
 };
