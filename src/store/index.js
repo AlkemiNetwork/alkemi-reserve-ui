@@ -99,23 +99,13 @@ export default new Vuex.Store({
   
         console.log("fetching provider liquidity reserves");
         console.log(state.account);
-  
-        commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
-          status: 'pending',
-          txHash: ""
-        });
-  
-        let txHash = await state.alkemiNetwork.providerLiquidityReserves(state.account, {
+    
+        let reserves = await state.alkemiNetwork.providerLiquidityReserves(state.account, {
           from: state.account
         });
-        console.log(txHash);
+        console.log(reserves);
   
-        if (txHash) {
-          commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
-            status: 'done',
-            txHash: txHash.tx
-          });
-        }
+        commit(mutations.SET_LIQUIDITY_RESERVE, reserves);
       },
       [actions.CREATE_LIQUIDITY_RESERVE]: async function ({
         commit,
@@ -145,6 +135,8 @@ export default new Vuex.Store({
             status: 'done',
             txHash: txHash.tx
           });
+
+          dispatch(actions.CREATE_LIQUIDITY_RESERVE);          
         }
       }
     }    
