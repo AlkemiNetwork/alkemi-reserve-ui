@@ -20,7 +20,8 @@
     "vue-echarts": "^4.1.0",
     "vue-functional-calendar": "^2.7.3",
     "vue-router": "^3.1.3",
-    "web3": "^1.2.4"
+    "web3": "^1.2.4",
+    "accounting": "^0.4.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
