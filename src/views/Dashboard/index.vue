@@ -60,22 +60,22 @@
                 <b-col md="2" class="pdr-0">
                   <div class="est-content">
                     <div class="title-es-content">EST PORTFOLIO USD VALUE:</div>
-                    <div class="monney mb-20">$1,354,884.45</div>
+                    <div class="monney">$1,354,884.45</div>
                   </div>
                   <div class="est-content">
                     <div class="title-es-content">EST USD EARNINGS 24 hr:</div>
-                    <div class="monney mb-20">$7,729.09</div>
+                    <div class="monney">$7,729.09</div>
                     <div class="title-es-content">CHANGE 24hr:</div>
-                    <div class="change-number mb-20">+12.22%</div>
+                    <div class="change-number">+12.22%</div>
                   </div>
                   <div class="est-content">
                     <div class="float-left mr-30">
                       <div class="title-es-content">RESERVES</div>
-                      <div class="monney mb-20">3</div>
+                      <div class="monney">3</div>
                     </div>
                     <div>
                       <div class="title-es-content">POOLS</div>
-                      <div class="monney mb-20">12</div>
+                      <div class="monney">12</div>
                     </div>
                   </div>
                 </b-col>
