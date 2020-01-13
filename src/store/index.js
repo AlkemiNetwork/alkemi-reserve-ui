@@ -116,7 +116,36 @@ export default new Vuex.Store({
             txHash: txHash.tx
           });
         }
+      },
+      [actions.CREATE_LIQUIDITY_RESERVE]: async function ({
+        commit,
+        state
+      }, params) {
   
+        console.log("liquidity provider address");
+        console.log(state.account);
+  
+        commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+          status: 'pending',
+          txHash: ""
+        });
+  
+        let txHash = await state.alkemiNetwork.createLiquidityReserve(
+          params.linkToken,
+          params.beneficiary,
+          params.erc20Token,
+          params.lockingPeriod,
+          params.lockingPrice,
+          params.lockingPricePosition,
+          { from: state.account }
+        );
+  
+        if (txHash) {
+          commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+            status: 'done',
+            txHash: txHash.tx
+          });
+        }
       }
     }    
 });
