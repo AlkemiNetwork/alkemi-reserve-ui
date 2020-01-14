@@ -135,8 +135,8 @@ export default new Vuex.Store({
             status: 'done',
             txHash: txHash.tx
           });
-
-          dispatch(actions.CREATE_LIQUIDITY_RESERVE);          
+          
+          dispatch(actions.LOAD_LIQUIDITY_RESERVES);
         }
       }
     }    
