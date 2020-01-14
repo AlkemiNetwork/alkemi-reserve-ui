@@ -416,9 +416,16 @@ body {
 			width: 100%;
 			border-radius: 0;
 			margin-top: 30px;
+			background: $color-blue;
+			border: 1px solid $color-blue;
 		}
 		.btn-submit{
 			padding: 10px 0;
+		}
+		.btn-modal-disable{
+			width: 100%;
+			border-radius: 0;
+			margin-top: 30px;
 			border: 1px solid #F8F8F824;
 			background: transparent;
 			opacity: .3;
@@ -493,6 +500,9 @@ body {
     								line-height: 40px !important;
 									&:hover{
 										border-radius: 0;
+									}
+									&.vfc-hover:hover{
+										cursor: pointer;
 									}
 								}
 								span.vfc-span-day.vfc-today{
@@ -597,4 +607,10 @@ body {
 			}
 		}
 	}
+}
+.version{
+	position: absolute;
+	bottom: 15px;
+	left: 25px;
+	color: $color-gray;
 }
