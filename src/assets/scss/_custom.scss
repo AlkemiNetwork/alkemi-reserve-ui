@@ -51,8 +51,8 @@ body {
 	.est-content{
 		margin: 10px;
 		background: $color-woodsmoke;
-		border-radius: 10px;
-		padding: 25px;
+		border-radius: 4px;
+		padding: 20px 25px 15px 25px;
 	}
 	.change-number{
 		font-size: 26px;
@@ -147,7 +147,7 @@ body {
 			}
 			.chart-line{
 				padding: 40px;
-				border-radius: 10px;
+				border-radius: 4px;
 				background: $color-woodsmoke;
 				.value-change{
 					font-size: $font-size-12;
@@ -177,6 +177,7 @@ body {
 					background-color: $color-white;
 					color: $color-woodsmoke;
 					font-size: $font-size-14;
+					font-weight: 500;
 					text-transform: uppercase;
 					box-shadow: 0px 3px 6px #000000FA;
 					height: 35px;
@@ -557,6 +558,10 @@ body {
 .pr-25{
 	padding-right: 25px;
 }
+.pt-15 {
+    padding-top: 15px;
+}
+    
 .mb-20{
 	margin-bottom: 20px;
 }
@@ -613,4 +618,5 @@ body {
 	bottom: 15px;
 	left: 25px;
 	color: $color-gray;
+	font-size: 12px;
 }
