@@ -54,6 +54,9 @@ export default new Vuex.Store({
         [mutations.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
           state.miningTransactionObject = miningTransactionObject;
         },
+        [mutations.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
+          state.withdrawEventObject = withdrawEventObject;
+        }
     },
     actions: {
       [actions.GET_CURRENT_NETWORK]: function ({
@@ -176,6 +179,12 @@ export default new Vuex.Store({
             txHash: txHash.tx
           });
           
+          liquidityReserve.once('ReserveWithdraw', {
+            fromBlock: 0
+          }, function(error, event){ 
+            console.log(event); 
+          });
+        
           dispatch(actions.LOAD_LIQUIDITY_RESERVES);
         }
       }
