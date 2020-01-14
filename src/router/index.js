@@ -27,8 +27,8 @@ const router = new Router({
       }
     },
     {
-      path: "/dashboard-emty",
-      name: "Dashboard-emty",
+      path: "/dashboard-empty",
+      name: "Dashboard-empty",
       component: Dashboard_Empty
     }
   ]

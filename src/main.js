@@ -4,6 +4,7 @@ import Echarts from "vue-echarts";
 import "echarts/lib/chart/bar";
 import "echarts/lib/component/title";
 import "echarts/lib/chart/line";
+import store from "./store";
 
 Vue.config.productionTip = false;
 import BootstrapVue from "bootstrap-vue";
@@ -21,6 +22,7 @@ Vue.use(BootstrapVue);
 new Vue({
   el: "#app",
   router,
+  store,
   render: h => h(App)
 });
 
