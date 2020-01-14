@@ -658,7 +658,7 @@ export default {
     loadingPopup
   },
   computed: {
-    ...mapState(["currentNetwork", "account"])
+    ...mapState(["currentNetwork", "account", "web3"])
   },
   data() {
     return {
@@ -749,10 +749,7 @@ export default {
       ]
     };
   },
-  async mounted() {
-    //await this.LOAD_LIQUIDITY_RESERVES();
-  },
-  created() {
+  async created() {
     if (window.web3.currentProvider.selectedAddress) {
       var addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -761,6 +758,7 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
     }
+    console.log(this.$store.state);
   },
   methods: {
     ...mapActions([
@@ -777,7 +775,7 @@ export default {
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-            this.isCionnect = true;
+            this.isConnect = true;
           });
         } catch (error) {
           console.log(error);
@@ -797,6 +795,7 @@ export default {
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
         );
       }
+      console.log(this.$store.state);
     },
     /* eslint-enable */
     showModal() {
