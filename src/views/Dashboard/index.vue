@@ -57,7 +57,7 @@
           <b-row>
             <b-container fluid class="body-content">
               <b-row>
-                <b-col md="2" class="pdr-0">
+                <b-col md="2" class="pdr-0 pt-15">
                   <div class="est-content">
                     <div class="title-es-content">EST PORTFOLIO USD VALUE:</div>
                     <div class="monney">$1,354,884.45</div>
