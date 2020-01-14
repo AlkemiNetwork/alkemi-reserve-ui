@@ -658,7 +658,7 @@ export default {
     loadingPopup
   },
   computed: {
-    ...mapState(["currentNetwork", "account", "web3"])
+    ...mapState(["currentNetwork", "account"])
   },
   data() {
     return {

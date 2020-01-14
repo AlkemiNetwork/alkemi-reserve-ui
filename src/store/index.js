@@ -13,9 +13,10 @@ import * as actions from "./actions";
 import * as mutations from "./mutation-types";
 
 import AlkemiNetworkABI from "../contracts/AlkemiNetwork.json";
-//import LiquidityReserve from "../contracts/LiquidityReserve.json";
+import LiquidityReserveABI from "../contracts/LiquidityReserve.json";
 
 const AlkemiNetwork = truffleContract(AlkemiNetworkABI);
+const LiquidityReserve = truffleContract(LiquidityReserveABI);
 
 Vue.use(Vuex);
 
@@ -26,7 +27,7 @@ export default new Vuex.Store({
         currentNetwork: null,
         etherscanBase: null,
         alkemiNetwork: null,
-        liquidityReserve: null
+        liquidityReserves: null
     },
     mutations: {
         //WEB3 Stuff
@@ -47,8 +48,8 @@ export default new Vuex.Store({
         [mutations.SET_ALKEMI_NETWORK]: async function (state, alkemiNetwork) {
           state.alkemiNetwork = alkemiNetwork;
         },
-        [mutations.SET_LIQUIDITY_RESERVE]: async function (state, liquidityReserve) {
-          state.liquidityReserve = liquidityReserve;
+        [mutations.SET_LIQUIDITY_RESERVE]: async function (state, liquidityReserves) {
+          state.liquidityReserves = liquidityReserves;
         },
         [mutations.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
           state.miningTransactionObject = miningTransactionObject;
@@ -109,6 +110,7 @@ export default new Vuex.Store({
       },
       [actions.CREATE_LIQUIDITY_RESERVE]: async function ({
         commit,
+        dispatch,
         state
       }, params) {
   
@@ -127,6 +129,44 @@ export default new Vuex.Store({
           params.lockingPeriod,
           params.lockingPrice,
           params.lockingPricePosition,
+          { from: state.account }
+        );
+  
+        if (txHash) {
+          commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+            status: 'done',
+            txHash: txHash.tx
+          });
+          
+          dispatch(actions.LOAD_LIQUIDITY_RESERVES);
+        }
+      },
+      [actions.CLAIM_LIQUIDITY_RESERVE]: async function ({
+        commit,
+        dispatch,
+        state
+      }, params) {
+  
+        console.log("liquidity provider address");
+        console.log(state.account);
+
+        console.log("liquidity reserve to claim");
+        console.log(params.reserveAddress);
+  
+        commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+          status: 'pending',
+          txHash: ""
+        });
+
+        let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+  
+        let txHash = await liquidityReserve.withdraw(
+          params.amount,
+          params.oracle,
+          params.jobId,
+          params.tokenSymbol,
+          params.market,
+          params.oraclePayment,
           { from: state.account }
         );
   
