@@ -123,6 +123,7 @@ const actions = {
     dispatch,
     state
   }, params) {
+    LiquidityReserve.setProvider(state.web3);
 
     console.log("liquidity provider address");
     console.log(state.account);
@@ -166,6 +167,7 @@ const actions = {
     commit,
     state
   }, params) {
+    ERC20Token.setProvider(params.web3.currentProvider);
 
     console.log("approving token transfer from provider to AlkemiNetwork");
     console.log(params.erc20);

@@ -769,6 +769,12 @@ export default {
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
       this.INIT_APP(window.web3);
+      this.APPROVE_TOKEN_DEPOSIT({
+        web3: window.web3,
+        erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+        spender: "0xF033d235bE73560aE39f2F85775B11C1d4911750",
+        amount: "10"
+      });
     }
   },
   computed: {
@@ -786,7 +792,8 @@ export default {
   methods: {
     ...mapActions("ContractController", [
       "INIT_APP",
-      "LOAD_LIQUIDITY_RESERVES"
+      "LOAD_LIQUIDITY_RESERVES",
+      "APPROVE_TOKEN_DEPOSIT"
     ]),
     connectWallet() {
       if (window.ethereum) {
