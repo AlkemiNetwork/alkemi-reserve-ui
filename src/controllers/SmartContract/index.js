@@ -3,7 +3,7 @@ import truffleContract from "truffle-contract";
 import * as actionType from "../ActionTypes";
 import * as mutationType from "../MutationType";
 import AlkemiNetworkABI from "../../contracts/AlkemiNetwork.json";
-import LiquidityReserveABI from "../contracts/LiquidityReserve.json";
+import LiquidityReserveABI from "../../contracts/LiquidityReserve.json";
 
 const AlkemiNetwork = truffleContract(AlkemiNetworkABI);
 const LiquidityReserve = truffleContract(LiquidityReserveABI);

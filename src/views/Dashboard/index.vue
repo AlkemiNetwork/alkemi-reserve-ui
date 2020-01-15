@@ -659,7 +659,6 @@ import Web3 from "web3";
 //import * as mutations from "@/store/mutation-types";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import loadingPopup from "../../components/loading-popup/index";
-import { mapState, mapActions } from "vuex";
 
 const currentVersion = require("../../../package.json").version;
 const moment = require("moment");
@@ -669,9 +668,6 @@ export default {
   components: {
     FunctionalCalendar,
     loadingPopup
-  },
-  computed: {
-    ...mapState(["currentNetwork", "account"])
   },
   data() {
     return {
@@ -788,14 +784,9 @@ export default {
     alkemiNetwork: function(value) {
       if (value) this.LOAD_LIQUIDITY_RESERVES();
     }
-    console.log(this.$store.state);
   },
   methods: {
-<<<<<<< HEAD
-    ...mapActions([
-=======
     ...mapActions("ContractController", [
->>>>>>> master
       "INIT_APP",
       "LOAD_LIQUIDITY_RESERVES"
     ]),
