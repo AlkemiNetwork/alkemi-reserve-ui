@@ -28,10 +28,10 @@ const actions = {
     commit,
   }) {
     getNetIdString().then(currentNetwork => {
-      commit(mutations.SET_CURRENT_NETWORK, currentNetwork);
+      commit(mutationType.SET_CURRENT_NETWORK, currentNetwork);
     });
     getEtherscanAddress().then(etherscanBase => {
-      commit(mutations.SET_ETHERSCAN_NETWORK, etherscanBase);
+      commit(mutationType.SET_ETHERSCAN_NETWORK, etherscanBase);
     });
   },
   [actionType.INIT_APP]: async function ({
@@ -42,7 +42,7 @@ const actions = {
     AlkemiNetwork.setProvider(web3.currentProvider)
     console.log("IN STORE")
     console.log(web3)
-    commit(mutations.SET_WEB3, {
+    commit(mutationType.SET_WEB3, {
       web3
     });
     console.log("set")
@@ -52,14 +52,14 @@ const actions = {
     let accounts = await web3.eth.getAccounts();
     let account = accounts[0];
     if (account) {
-      commit(mutations.SET_ACCOUNT, account);
+      commit(mutationType.SET_ACCOUNT, account);
     }
 
     let alkemiNetwork = await AlkemiNetwork.deployed();
     console.log("contract")
     console.log(alkemiNetwork)
 
-    commit(mutations.SET_ALKEMI_NETWORK, alkemiNetwork);
+    commit(mutationType.SET_ALKEMI_NETWORK, alkemiNetwork);
   },
   [actionType.LOAD_LIQUIDITY_RESERVES]: async function ({
     commit,
@@ -74,7 +74,7 @@ const actions = {
     });
     console.log(reserves);
 
-    commit(mutations.SET_LIQUIDITY_RESERVE, reserves);
+    commit(mutationType.SET_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function ({
     commit,
@@ -85,7 +85,7 @@ const actions = {
     console.log("liquidity provider address");
     console.log(state.account);
 
-    commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
       status: 'pending',
       txHash: ""
     });
@@ -101,7 +101,7 @@ const actions = {
     );
 
     if (txHash) {
-      commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
         status: 'done',
         txHash: txHash.tx
       });
@@ -121,7 +121,7 @@ const actions = {
     console.log("liquidity reserve to claim");
     console.log(params.reserveAddress);
 
-    commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
       status: 'pending',
       txHash: ""
     });
@@ -139,7 +139,7 @@ const actions = {
     );
 
     if (txHash) {
-      commit(mutations.SET_MINING_TRANSACTION_OBJECT, {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
         status: 'done',
         txHash: txHash.tx
       });
