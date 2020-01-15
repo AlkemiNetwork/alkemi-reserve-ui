@@ -105,6 +105,12 @@ const actions = {
         status: 'done',
         txHash: txHash.tx
       });
+
+      alkemiNetwork.once('ReserveCreate', {
+        fromBlock: 0
+      }, function(error, event){ 
+        console.log(event); 
+      });
       
       dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
     }
