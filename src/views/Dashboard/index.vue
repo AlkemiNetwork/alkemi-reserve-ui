@@ -655,8 +655,6 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Web3 from "web3";
-//import * as actions from "@/store/actions";
-//import * as mutations from "@/store/mutation-types";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import loadingPopup from "../../components/loading-popup/index";
 
