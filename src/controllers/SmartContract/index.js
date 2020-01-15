@@ -14,7 +14,11 @@ const state = {
   currentNetwork: null,
   etherscanBase: null,
   alkemiNetwork: null,
-  liquidityReserves: null
+  liquidityReserves: null,
+  miningTransactionObject: {
+    status: null,
+    txHash: ''
+  }
 };
 
 const getters = {};
