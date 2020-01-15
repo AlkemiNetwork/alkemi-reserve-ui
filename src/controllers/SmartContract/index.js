@@ -20,7 +20,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  [actions.GET_CURRENT_NETWORK]: function ({
+  [actionType.GET_CURRENT_NETWORK]: function ({
     commit,
   }) {
     getNetIdString().then(currentNetwork => {
@@ -30,7 +30,7 @@ const actions = {
       commit(mutations.SET_ETHERSCAN_NETWORK, etherscanBase);
     });
   },
-  [actions.INIT_APP]: async function ({
+  [actionType.INIT_APP]: async function ({
     commit,
     dispatch
   }, web3) {
@@ -43,7 +43,7 @@ const actions = {
     });
     console.log("set")
 
-    dispatch(actions.GET_CURRENT_NETWORK);
+    dispatch(actionType.GET_CURRENT_NETWORK);
 
     let accounts = await web3.eth.getAccounts();
     let account = accounts[0];
@@ -57,7 +57,7 @@ const actions = {
 
     commit(mutations.SET_ALKEMI_NETWORK, alkemiNetwork);
   },
-  [actions.LOAD_LIQUIDITY_RESERVES]: async function ({
+  [actionType.LOAD_LIQUIDITY_RESERVES]: async function ({
     commit,
     state
   }) {
@@ -72,7 +72,7 @@ const actions = {
 
     commit(mutations.SET_LIQUIDITY_RESERVE, reserves);
   },
-  [actions.CREATE_LIQUIDITY_RESERVE]: async function ({
+  [actionType.CREATE_LIQUIDITY_RESERVE]: async function ({
     commit,
     dispatch,
     state
@@ -102,10 +102,10 @@ const actions = {
         txHash: txHash.tx
       });
       
-      dispatch(actions.LOAD_LIQUIDITY_RESERVES);
+      dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
     }
   },
-  [actions.CLAIM_LIQUIDITY_RESERVE]: async function ({
+  [actionType.CLAIM_LIQUIDITY_RESERVE]: async function ({
     commit,
     dispatch,
     state
@@ -146,37 +146,37 @@ const actions = {
         console.log(event); 
       });
     
-      dispatch(actions.LOAD_LIQUIDITY_RESERVES);
+      dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
     }
   }
 };
 
 const mutations = {
   //WEB3 Stuff
-  [mutations.SET_ACCOUNT](state, account) {
+  [mutationType.SET_ACCOUNT](state, account) {
     console.log("Account set")
     console.log(account)
     state.account = account;
   },
-  [mutations.SET_CURRENT_NETWORK](state, currentNetwork) {
+  [mutationType.SET_CURRENT_NETWORK](state, currentNetwork) {
     state.currentNetwork = currentNetwork;
   },
-  [mutations.SET_ETHERSCAN_NETWORK](state, etherscanBase) {
+  [mutationType.SET_ETHERSCAN_NETWORK](state, etherscanBase) {
     state.etherscanBase = etherscanBase;
   },
-  [mutations.SET_WEB3]: async function (state, web3) {
+  [mutationType.SET_WEB3]: async function (state, web3) {
     state.web3 = web3;
   },
-  [mutations.SET_ALKEMI_NETWORK]: async function (state, alkemiNetwork) {
+  [mutationType.SET_ALKEMI_NETWORK]: async function (state, alkemiNetwork) {
     state.alkemiNetwork = alkemiNetwork;
   },
-  [mutations.SET_LIQUIDITY_RESERVE]: async function (state, liquidityReserves) {
+  [mutationType.SET_LIQUIDITY_RESERVE]: async function (state, liquidityReserves) {
     state.liquidityReserves = liquidityReserves;
   },
-  [mutations.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
+  [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;
   },
-  [mutations.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
+  [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
   }
 };
