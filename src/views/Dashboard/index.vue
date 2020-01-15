@@ -57,7 +57,7 @@
           <b-row>
             <b-container fluid class="body-content">
               <b-row>
-                <b-col md="2" class="pdr-0">
+                <b-col md="2" class="pdr-0 pt-15">
                   <div class="est-content">
                     <div class="title-es-content">EST PORTFOLIO USD VALUE:</div>
                     <div class="monney">$1,354,884.45</div>
@@ -182,7 +182,7 @@
                                         <b-form-group
                                           class="text-label text-left"
                                           label="AVAILABLE DAI BALANCE"
-                                          label-for="input-1"
+                                          label-for="daiBlance"
                                         >
                                           <b-form-input
                                             class="value-available"
@@ -194,9 +194,10 @@
                                         <b-form-group
                                           class="text-label text-left input-rlt"
                                           label="ENTER FUNDING AMOUNT"
-                                          label-for="input-1"
+                                          label-for="fundingAmount"
                                         >
                                           <b-form-input
+                                            v-model="enterMoney"
                                             class="enter-money"
                                             type="text"
                                             placeholder="0.00"
@@ -207,9 +208,10 @@
                                           </b-button>
                                         </b-form-group>
                                         <b-form-group
+                                          v-model="unclockDate"
                                           class="text-label text-left"
                                           label="SELECT UNLOCK DATE"
-                                          label-for="input-3"
+                                          label-for="unclockDate"
                                         >
                                           <div
                                             class="choose-date"
@@ -222,6 +224,13 @@
                                           </div>
                                         </b-form-group>
                                         <b-button
+                                          v-if="!enterMoney && !unclockDate"
+                                          class="btn-submit btn-modal-disable"
+                                        >
+                                          CREATE POOL
+                                        </b-button>
+                                        <b-button
+                                          v-else
                                           class="btn-submit btn-modal-add-new"
                                           @click="loading"
                                         >
@@ -571,6 +580,7 @@
         </b-col>
       </b-row>
     </b-container>
+    <div class="version">Version: {{ version }}</div>
     <b-modal
       hide-footer
       hide-header
@@ -649,6 +659,9 @@ import Web3 from "web3";
 //import * as mutations from "@/store/mutation-types";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import loadingPopup from "../../components/loading-popup/index";
+import { mapState, mapActions } from "vuex";
+
+const currentVersion = require("../../../package.json").version;
 const moment = require("moment");
 
 export default {
@@ -662,10 +675,13 @@ export default {
   },
   data() {
     return {
+      version: currentVersion,
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
       dayChoose: "",
+      enterMoney: null,
+      unclockDate: null,
       chartOptionsLine: {
         grid: {
           left: 0,
@@ -757,11 +773,29 @@ export default {
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
+      window.web3 = new Web3(window.web3.currentProvider);
+      this.INIT_APP(window.web3);
+    }
+  },
+  computed: {
+    ...mapState("ContractController", [
+      "currentNetwork",
+      "account",
+      "alkemiNetwork"
+    ])
+  },
+  watch: {
+    alkemiNetwork: function(value) {
+      if (value) this.LOAD_LIQUIDITY_RESERVES();
     }
     console.log(this.$store.state);
   },
   methods: {
+<<<<<<< HEAD
     ...mapActions([
+=======
+    ...mapActions("ContractController", [
+>>>>>>> master
       "INIT_APP",
       "LOAD_LIQUIDITY_RESERVES"
     ]),
@@ -775,6 +809,7 @@ export default {
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
+            console.log(this.addressWallet);
             this.isConnect = true;
           });
         } catch (error) {
