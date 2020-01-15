@@ -16,7 +16,8 @@ const state = {
   currentNetwork: null,
   etherscanBase: null,
   alkemiNetwork: null,
-  liquidityReserves: null,
+  providerLiquidityReserves: null,
+  tokenLiquidityReserves: [],
   miningTransactionObject: {
     status: null,
     txHash: ''
@@ -63,7 +64,7 @@ const actions = {
 
     commit(mutationType.SET_ALKEMI_NETWORK, alkemiNetwork);
   },
-  [actionType.LOAD_LIQUIDITY_RESERVES]: async function ({
+  [actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES]: async function ({
     commit,
     state
   }) {
@@ -76,7 +77,7 @@ const actions = {
     });
     console.log(reserves);
 
-    commit(mutationType.SET_LIQUIDITY_RESERVE, reserves);
+    commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function ({
     commit,
@@ -86,8 +87,6 @@ const actions = {
 
     console.log("liquidity provider address");
     console.log(state.account);
-
-    dispatch(actionType.APPROVE_TOKEN_DEPOSIT);
 
     commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
       status: 'pending',
@@ -116,7 +115,7 @@ const actions = {
         console.log(event); 
       });
       
-      dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
     }
   },
   [actionType.CLAIM_LIQUIDITY_RESERVE]: async function ({
@@ -160,7 +159,7 @@ const actions = {
         console.log(event); 
       });
     
-      dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
     }
   },
   [actionType.APPROVE_TOKEN_DEPOSIT]: async function ({
@@ -187,6 +186,21 @@ const actions = {
         txHash: txHash.tx
       });
     }
+  },
+  [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function ({
+    commit,
+    state
+  }, params) {
+
+    console.log("fetching token liquidity reserves");
+    console.log(params.erc20);
+
+    let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
+      from: state.account
+    });
+    console.log(reserves);
+
+    commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
   }
 };
 
@@ -209,8 +223,11 @@ const mutations = {
   [mutationType.SET_ALKEMI_NETWORK]: async function (state, alkemiNetwork) {
     state.alkemiNetwork = alkemiNetwork;
   },
-  [mutationType.SET_LIQUIDITY_RESERVE]: async function (state, liquidityReserves) {
-    state.liquidityReserves = liquidityReserves;
+  [mutationType.SET_PROVIDER_LIQUIDITY_RESERVE]: async function (state, providerLiquidityReserves) {
+    state.providerLiquidityReserves = providerLiquidityReserves;
+  },
+  [mutationType.SET_TOKEN_LIQUIDITY_RESERVE]: async function (state, tokenLiquidityReserves) {
+    state.tokenLiquidityReserves.push(tokenLiquidityReserves);
   },
   [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;
