@@ -4,9 +4,11 @@ import * as actionType from "../ActionTypes";
 import * as mutationType from "../MutationType";
 import AlkemiNetworkABI from "../../contracts/AlkemiNetwork.json";
 import LiquidityReserveABI from "../../contracts/LiquidityReserve.json";
+import ERC20ABI from "../../contracts/ERC20.json";
 
 const AlkemiNetwork = truffleContract(AlkemiNetworkABI);
 const LiquidityReserve = truffleContract(LiquidityReserveABI);
+const ERC20Token = truffleContract(ERC20ABI);
 
 const state = {
   web3: null,
@@ -85,6 +87,8 @@ const actions = {
     console.log("liquidity provider address");
     console.log(state.account);
 
+    dispatch(actionType.APPROVE_TOKEN_DEPOSIT);
+
     commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
       status: 'pending',
       txHash: ""
@@ -157,6 +161,31 @@ const actions = {
       });
     
       dispatch(actionType.LOAD_LIQUIDITY_RESERVES);
+    }
+  },
+  [actionType.APPROVE_TOKEN_DEPOSIT]: async function ({
+    commit,
+    state
+  }, params) {
+
+    console.log("approving token transfer from provider to AlkemiNetwork");
+    console.log(params.erc20);
+    console.log(state.account);
+
+    let erc20Token = await ERC20Token.at(params.erc20);
+    console.log(erc20Token);
+
+    let txHash = erc20Token.approve(
+      params.spender,
+      params.amount,
+      { from: state.account }
+    );
+
+    if (txHash) {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+        status: 'done',
+        txHash: txHash.tx
+      });
     }
   }
 };
