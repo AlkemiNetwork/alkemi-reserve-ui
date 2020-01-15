@@ -49,12 +49,19 @@ body {
 		font-family: $font-poppins;
 	}
 	.est-content{
-		margin: 20px;
-		border-bottom: 2px solid $color-black;
+		margin: 10px;
+		background: $color-woodsmoke;
+		border-radius: 4px;
+		padding: 20px 25px 15px 25px;
 	}
 	.change-number{
 		font-size: 26px;
 		color: $color-green;
+		font-family: $font-poppins;
+	}
+	.null-change-number{
+		font-size: 26px;
+		color: $color-white;
 		font-family: $font-poppins;
 	}
 	.card{
@@ -131,10 +138,16 @@ body {
 					padding-left: 20px;
 					line-height: 54px;
 				}
+				.address-in-content{
+					text-align: center;
+					border-left: 1px solid #000000;
+					padding: 4px 0 4px 10px;
+					margin-top: 12px;
+				}
 			}
 			.chart-line{
 				padding: 40px;
-				border-radius: 10px;
+				border-radius: 4px;
 				background: $color-woodsmoke;
 				.value-change{
 					font-size: $font-size-12;
@@ -143,6 +156,10 @@ body {
 				}
 				.percent{
 					font-size: $font-size-18;
+				}
+				percent-null{
+					font-size: $font-size-18;
+					color: $color-white;
 				}
 				.est-value-change{
 					color: $color-white;
@@ -160,6 +177,7 @@ body {
 					background-color: $color-white;
 					color: $color-woodsmoke;
 					font-size: $font-size-14;
+					font-weight: 500;
 					text-transform: uppercase;
 					box-shadow: 0px 3px 6px #000000FA;
 					height: 35px;
@@ -185,6 +203,17 @@ body {
 								border: {
 									top: none !important;
 									bottom: 1px solid $color-black;
+								}
+							}
+						}
+						.b-table-empty-row{
+							> td{
+								border-bottom: 0;
+								> div{
+									margin-top: 18px;
+									.empty-row{
+										font-size: $font-size-14;
+									}
 								}
 							}
 						}
@@ -262,6 +291,7 @@ body {
 		text-align: center;
 		background: $color-salute;
 		.title-popup{
+			font-size: $font-size-18;
 			padding-left: 15px;
 		}
 	}
@@ -273,14 +303,56 @@ body {
 			color: $color-boulder;
 			text-transform: uppercase;
 		}
+		.select-relative{
+			position: relative;
+			.select-wallet{
+				color: $color-white;
+				background: $color-woodsmoke;
+				padding: 6px 25px;
+				width: 100%;
+				border: none;
+				border-radius: 0px;
+				font-size: $font-size-18;
+				height: 55px;
+				&:focus{
+					outline: 0;
+					box-shadow: none;
+				}
+			}
+			> img{
+				width: 14px;
+				position: absolute;
+				right: 25px;
+				top: 21px;
+				cursor: pointer;
+			}
+		}
+		.line-horizontal{
+			width: 100%;
+			height: 0.12em;
+			background: $color-woodsmoke;
+			margin-bottom: 20px;
+		}
+		&-claim{
+			height: 600px;
+		}
+		.wrap-summary{
+			color: $color-white;
+			font-size: $font-size-14;
+			> div{
+				> label{
+					min-width: 150px;
+				}
+			}
+		}
 		.value-available{
-			font-size: $font-size-30;
-			padding: 20px 25px;
+			font-size: 26px;
+			padding: 20px 25px 16px 25px;
 			background: $color-salute;
 			width: 100%;
 			height: 80px;
 			border: none;
-			border-radius: 0px;
+			border-radius: 4px;
 			color: $color-white;
 			&:focus{
 				outline: none;
@@ -293,7 +365,7 @@ body {
 			padding: 6px 25px;
 			width: 100%;
 			border: none;
-			border-radius: 0px;
+			border-radius: 4px;
 			font-size: $font-size-18;
 			height: 55px;
 			&:focus {
@@ -311,7 +383,7 @@ body {
 			padding: 6px 25px;
 			width: 100%;
 			border: none;
-			border-radius: 0px;
+			border-radius: 4px;
 			height: 55px;
 			display: flex;
 			align-items: center;
@@ -345,9 +417,16 @@ body {
 			width: 100%;
 			border-radius: 0;
 			margin-top: 30px;
+			background: $color-blue;
+			border: 1px solid $color-blue;
 		}
 		.btn-submit{
 			padding: 10px 0;
+		}
+		.btn-modal-disable{
+			width: 100%;
+			border-radius: 0;
+			margin-top: 30px;
 			border: 1px solid #F8F8F824;
 			background: transparent;
 			opacity: .3;
@@ -361,6 +440,15 @@ body {
 			&:hover{
 				background: transparent;
 			}
+		}
+		.btn-claim{
+			padding: 10px 0;
+			background: $color-blue;
+			color: $color-white;
+			width: 100%;
+			border-radius: 0;
+			margin-top: 30px;
+			border: none;
 		}
 		.btn-position{
 			position: absolute;
@@ -414,6 +502,9 @@ body {
 									&:hover{
 										border-radius: 0;
 									}
+									&.vfc-hover:hover{
+										cursor: pointer;
+									}
 								}
 								span.vfc-span-day.vfc-today{
 									background-color: $color-blue !important;
@@ -464,6 +555,13 @@ body {
 .pr-35{
 	padding-right: 35px;
 }
+.pr-25{
+	padding-right: 25px;
+}
+.pt-15 {
+    padding-top: 15px;
+}
+    
 .mb-20{
 	margin-bottom: 20px;
 }
@@ -477,7 +575,9 @@ body {
 	background-color: #1D2026;
 	height: 35px;
 }
-
+.pdr-0{
+	padding-right: 0;
+}
 .wallet-name {
 	border-bottom-left-radius: 4px;
     border-top-left-radius: 4px;
@@ -512,4 +612,11 @@ body {
 			}
 		}
 	}
+}
+.version{
+	position: absolute;
+	bottom: 15px;
+	left: 25px;
+	color: $color-gray;
+	font-size: 12px;
 }

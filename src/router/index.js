@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 // Containers
 const Dashboard = () => import("@/views/Dashboard");
-
+const Dashboard_Empty = () => import("@/views/Dashboard/index-empty");
 Vue.use(Router);
 
 // const header = {
@@ -25,6 +25,11 @@ const router = new Router({
       meta: {
         title: "Alkemi Liquidity Reserve"
       }
+    },
+    {
+      path: "/dashboard-empty",
+      name: "Dashboard-empty",
+      component: Dashboard_Empty
     }
   ]
 });

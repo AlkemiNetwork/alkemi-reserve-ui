@@ -15,7 +15,7 @@
               </div>
             </b-col>
             <b-col md="6">
-              <div class="float-right pr-35">
+              <div class="float-right pr-25">
                 <b-button-group v-if="!isConnect">
                   <b-button @click="connectWallet" variant="akm">
                     Connect
@@ -57,25 +57,34 @@
           <b-row>
             <b-container fluid class="body-content">
               <b-row>
-                <b-col md="2" class="pdr-0 pt-15">
+                <b-col md="2" class="pdr-0">
                   <div class="est-content">
                     <div class="title-es-content">EST PORTFOLIO USD VALUE:</div>
-                    <div class="monney">$1,354,884.45</div>
+                    <div class="monney mb-20">
+                      {{ estPortfolioValue | formatMoney }}
+                    </div>
                   </div>
                   <div class="est-content">
                     <div class="title-es-content">EST USD EARNINGS 24 hr:</div>
-                    <div class="monney mb-20">$7,729.09</div>
+                    <div class="monney mb-20">
+                      {{ estEarning | formatMoney }}
+                    </div>
                     <div class="title-es-content">CHANGE 24hr:</div>
-                    <div class="change-number">+12.22%</div>
+                    <div v-if="est24h" class="change-number mb-20">
+                      {{ est24h | formatPercentSpace }}
+                    </div>
+                    <div v-else class="null-change-number mb-20">-</div>
                   </div>
                   <div class="est-content">
                     <div class="float-left mr-30">
                       <div class="title-es-content">RESERVES</div>
-                      <div class="monney">3</div>
+                      <div class="monney mb-20">
+                        {{ reverve | formatNumber }}
+                      </div>
                     </div>
                     <div>
                       <div class="title-es-content">POOLS</div>
-                      <div class="monney">12</div>
+                      <div class="monney mb-20">{{ pool | formatNumber }}</div>
                     </div>
                   </div>
                 </b-col>
@@ -83,36 +92,48 @@
                   <div>
                     <b-card no-body>
                       <b-tabs pills card vertical>
-                        <b-tab>
+                        <b-tab v-for="(item, key) in data" :key="key">
                           <template v-slot:title>
                             <div class="tab-flex">
                               <div class="content-mid-img">
                                 <b-img src="/img/omg.svg"></b-img>
                               </div>
                               <div class="acronym-name content-mid">
-                                OMG
-                                <div class="name-el-money">Omise GO</div>
+                                {{ item.name }}
+                                <div class="name-el-money">
+                                  {{ item.fullName }}
+                                </div>
                               </div>
                               <div class="content-mid">
-                                120,000.34
-                                <div class="cost">$9344.44</div>
+                                {{ item.total | formatNumber }}
+                                <div class="cost">
+                                  {{ item.estUSD | formatMoneyReturnNull }}
+                                </div>
                               </div>
                               <div class="content-mid">
-                                +1443.22 <span class="percent">(6.54%)</span>
-                                <div class="cost">$334.54</div>
+                                {{ item.fluctuation | transformMoney }}
+                                <span v-if="item.fluctuation" class="percent"
+                                  >({{ items.change24h | formatPercent }})</span
+                                >
+                                <div v-if="item.fluctuation" class="cost">
+                                  {{ item.estFluctuation | formatMoney }}
+                                </div>
                               </div>
                             </div>
                           </template>
                           <b-card-text>
                             <template>
+                              {{ test([1213, 23, 3]) }}
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">
+                                    {{ item.total | formatNumberReturnZero }}
+                                  </div>
                                   <span class="acronym-name">
-                                    OMG
+                                    {{ item.name }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="el-name">
-                                      Omise GO
+                                      {{ item.fullName }}
                                     </span>
                                   </span>
                                   <span
@@ -121,7 +142,7 @@
                                   >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
+                                    {{ item.estUSD | formatMoneyHasDola }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="text-est">
                                       EST USD VALUE
@@ -132,18 +153,24 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div
+                                        v-if="item.change24h"
+                                        class="percent"
+                                      >
+                                        {{ item.change24h | formatPercent }}
+                                      </div>
+                                      <div v-else class="percent-null">-</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        {{ item.tokenEarning | transformMoney }}
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        {{ item.usdEarning | formatUSDEarning }}
                                       </div>
                                     </div>
                                   </div>
@@ -182,7 +209,7 @@
                                         <b-form-group
                                           class="text-label text-left"
                                           label="AVAILABLE DAI BALANCE"
-                                          label-for="daiBlance"
+                                          label-for="input-1"
                                         >
                                           <b-form-input
                                             class="value-available"
@@ -194,10 +221,9 @@
                                         <b-form-group
                                           class="text-label text-left input-rlt"
                                           label="ENTER FUNDING AMOUNT"
-                                          label-for="fundingAmount"
+                                          label-for="input-1"
                                         >
                                           <b-form-input
-                                            v-model="enterMoney"
                                             class="enter-money"
                                             type="text"
                                             placeholder="0.00"
@@ -208,10 +234,9 @@
                                           </b-button>
                                         </b-form-group>
                                         <b-form-group
-                                          v-model="unclockDate"
                                           class="text-label text-left"
                                           label="SELECT UNLOCK DATE"
-                                          label-for="unclockDate"
+                                          label-for="input-3"
                                         >
                                           <div
                                             class="choose-date"
@@ -224,13 +249,6 @@
                                           </div>
                                         </b-form-group>
                                         <b-button
-                                          v-if="!enterMoney && !unclockDate"
-                                          class="btn-submit btn-modal-disable"
-                                        >
-                                          CREATE POOL
-                                        </b-button>
-                                        <b-button
-                                          v-else
                                           class="btn-submit btn-modal-add-new"
                                           @click="loading"
                                         >
@@ -277,8 +295,9 @@
                                   </b-modal>
                                   <b-table
                                     fixed
-                                    :items="items"
                                     :fields="fields"
+                                    :items="item.table"
+                                    show-empty
                                   >
                                     <template v-slot:cell(btn)="row">
                                       <b-button
@@ -297,6 +316,11 @@
                                         {{ row.item.btn }}
                                       </b-button>
                                     </template>
+                                    <template slot="empty">
+                                      <div class="text-center empty-row">
+                                        You Currently Have No Active Pools
+                                      </div>
+                                    </template>
                                   </b-table>
                                 </div>
                               </div>
@@ -314,12 +338,13 @@
                                 <div class="name-el-money">Maker Dai</div>
                               </div>
                               <div class="content-mid">
-                                2,344,333.76
-                                <div class="cost">$89,344.44</div>
+                                -
+                                <!-- <div class="cost">$89,344.44</div> -->
                               </div>
                               <div class="content-mid">
-                                +22384.44 <span class="percent">(6.54%)</span>
-                                <div class="cost">$334.54</div>
+                                -
+                                <!-- +22384.44 <span class="percent">(6.54%)</span>
+                                <div class="cost">$334.54</div> -->
                               </div>
                             </div>
                           </template>
@@ -327,20 +352,14 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">0.00</div>
                                   <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
+                                    OMG |
                                     <span class="el-name"> Omise GO</span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
+                                    $0.00 |
                                     <span class="text-est"> EST USD VALUE</span>
                                   </div>
                                 </div>
@@ -348,18 +367,18 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent">-</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        -
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        -
                                       </div>
                                     </div>
                                   </div>
@@ -381,12 +400,13 @@
                                 <div class="name-el-money">EOS</div>
                               </div>
                               <div class="content-mid">
-                                182,382.28
-                                <div class="cost">$283,382.00</div>
+                                -
+                                <!-- <div class="cost">$283,382.00</div> -->
                               </div>
                               <div class="content-mid">
-                                +12443.23 <span class="percent">(8.56%)</span>
-                                <div class="cost">$12,754.53</div>
+                                -
+                                <!-- +12443.23 <span class="percent">(8.56%)</span>
+                                <div class="cost">$12,754.53</div> -->
                               </div>
                             </div>
                           </template>
@@ -394,19 +414,14 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">0.00</div>
                                   <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
+                                    OMG |
                                     <span class="el-name"> Omise GO</span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
+                                    $0.00
                                     <span class="line-vertical-14">|</span>
                                     <span class="text-est">EST USD VALUE</span>
                                   </div>
@@ -415,18 +430,18 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent">-</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        -
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        -
                                       </div>
                                     </div>
                                   </div>
@@ -448,12 +463,14 @@
                                 <div class="name-el-money">Maker</div>
                               </div>
                               <div class="content-mid">
-                                65,844.57
-                                <div class="cost">$23,003.90</div>
+                                -
+                                <!-- 65,844.57
+                                <div class="cost">$23,003.90</div> -->
                               </div>
                               <div class="content-mid">
-                                +1443.22 <span class="percent">(3.23%)</span>
-                                <div class="cost">$334.54</div>
+                                -
+                                <!-- +1443.22 <span class="percent">(3.23%)</span>
+                                <div class="cost">$334.54</div> -->
                               </div>
                             </div>
                           </template>
@@ -461,20 +478,13 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">0.00</div>
                                   <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="el-name"> Omise GO</span>
+                                    OMG |<span class="el-name"> Omise GO</span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
+                                    $0.00 |
                                     <span class="text-est"> EST USD VALUE</span>
                                   </div>
                                 </div>
@@ -482,18 +492,18 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent">-</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        -
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        -
                                       </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -515,6 +525,7 @@
                                 <div class="name-el-money">BInance</div>
                               </div>
                               <div class="content-mid">
+                                -
                                 <div class="cost"></div>
                               </div>
                               <div class="content-mid">
@@ -527,20 +538,14 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">0.00</div>
                                   <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
+                                    OMG |
                                     <span class="el-name"> Omise GO</span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
+                                    $0.00 |
                                     <span class="text-est"> EST USD VALUE</span>
                                   </div>
                                 </div>
@@ -548,18 +553,18 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent">-</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        -
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        -
                                       </div>
                                     </div>
                                   </div>
@@ -580,7 +585,6 @@
         </b-col>
       </b-row>
     </b-container>
-    <div class="version">Version: {{ version }}</div>
     <b-modal
       hide-footer
       hide-header
@@ -655,25 +659,20 @@
 import Web3 from "web3";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import loadingPopup from "../../components/loading-popup/index";
-import { mapState, mapActions } from "vuex";
-
-const currentVersion = require("../../../package.json").version;
+import accounting from "accounting";
 const moment = require("moment");
 export default {
-  name: "dashboard",
+  name: "test",
   components: {
     FunctionalCalendar,
     loadingPopup
   },
   data() {
     return {
-      version: currentVersion,
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
       dayChoose: "",
-      enterMoney: null,
-      unclockDate: null,
       chartOptionsLine: {
         grid: {
           left: 0,
@@ -697,7 +696,7 @@ export default {
           {
             showSymbol: false,
             type: "line",
-            data: [55, 72, 84, 48, 2000, 62, 500, 75, 94, 1011, 127, 118, 100]
+            data: []
           }
         ],
         title: {
@@ -737,22 +736,47 @@ export default {
           thStyle: { width: "16.66%" }
         }
       ],
-      items: [
+      estPortfolioValue: 0,
+      estEarning: 0,
+      est24h: 0,
+      reverve: 0,
+      pool: 0,
+      data: [
         {
-          created: "12 DEC 19",
-          total_size: "18,413 OMG",
-          est_USD_value: "$4373.43",
-          total_earnings: "+2,323.00 OMG",
-          total_percent_earnings: "12.23 %",
-          btn: "15 Days 2 Hrs"
+          name: "OMG",
+          fullName: "Omise GO",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
         },
         {
-          created: "01 DEC 19",
-          total_size: "101,600.20 OMG",
-          est_USD_value: "$12,433.22",
-          total_earnings: "+16,232.12 OMG",
-          total_percent_earnings: "21.59 %",
-          btn: ""
+          name: "OMG",
+          fullName: "Omise GO",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+        {
+          name: "OMG",
+          fullName: "Omise GO",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
         }
       ]
     };
@@ -765,53 +789,153 @@ export default {
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
-      window.web3 = new Web3(window.web3.currentProvider);
-      this.INIT_APP(window.web3);
     }
   },
-  computed: {
-    ...mapState("ContractController", [
-      "currentNetwork",
-      "account",
-      "alkemiNetwork"
-    ])
-  },
-  watch: {
-    alkemiNetwork: function(value) {
-      if (value) this.LOAD_LIQUIDITY_RESERVES();
+  filters: {
+    formatMoney: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "$",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "0.00";
+    },
+    formatMoneyHasDola: value => {
+      accounting.settings = {
+        currency: {
+          symbol: "$",
+          decimal: ".",
+          thousand: ",",
+          precision: 2,
+          format: "%s%v"
+        },
+        number: {
+          precision: 0,
+          thousand: ",",
+          decimal: "."
+        }
+      };
+      return accounting.formatMoney(value);
+    },
+    formatMoneyReturnNull: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "$",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "";
+    },
+    formatPercent: value => {
+      return accounting.formatMoney(value, { symbol: "%", format: "%v%s" });
+    },
+    formatPercentSpace: value => {
+      return accounting.formatMoney(value, { symbol: " %", format: "%v%s" });
+    },
+    formatNumberReturnZero: value => {
+      accounting.settings = {
+        currency: {
+          symbol: "",
+          decimal: ".",
+          thousand: ",",
+          precision: 2,
+          format: "%s%v"
+        },
+        number: {
+          precision: 0,
+          thousand: ",",
+          decimal: "."
+        }
+      };
+      return accounting.formatMoney(value);
+    },
+    transformMoney: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "+",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "-";
+    },
+    formatUSDEarning: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "+ $",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "-";
+    },
+    formatNumber: value => {
+      if (value) {
+        return value;
+      }
+      return "-";
     }
   },
   methods: {
-    ...mapActions("ContractController", [
-      "INIT_APP",
-      "LOAD_LIQUIDITY_RESERVES"
-    ]),
     connectWallet() {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
           window.ethereum.enable().then(addressWallet => {
-            this.INIT_APP(window.web3);
             this.addressWallet =
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-            console.log(this.addressWallet);
             this.isConnect = true;
           });
         } catch (error) {
           console.log(error);
-          window.web3 = new Web3(
-            new Web3.providers.HttpProvider(
-              "https://rinkeby.infura.io/v3/816cc7a6308448dbbaf46ac5488507cf"
-            )
-          );
-          this.INIT_APP(window.web3);
         }
       } else if (window.web3) {
-        console.log("Running legacy web3 provider");
-        //window.web3 = new Web3(web3.currentProvider);
-        //this.INIT_APP(window.web3);
+        // window.web3 = new Web3(web3.currentProvider);
       } else {
         console.log(
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
@@ -851,6 +975,10 @@ export default {
         return this.hideModal();
       }, 4000);
       // clearTimeout(timerid);
+    },
+    test(data) {
+      console.log(data);
+      this.chartOptionsLine.series.data = data;
     }
   }
 };
