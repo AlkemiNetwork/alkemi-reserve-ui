@@ -118,14 +118,13 @@ const actions = {
         fromBlock: latest
       }, function(error, event){ 
         console.log(event); 
-        // TODO: dispatch approve token action
-        /*dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+        // dispatch approve token action
+        dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
           web3: params.web3,
           erc20: params.erc20Token,
           spender: event.returnValues[0],
           amount: params.depositAmount
-        })*/
-        // TODO: dispatch deposit action
+        });
 
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
       });      
