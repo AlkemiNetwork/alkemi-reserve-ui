@@ -768,13 +768,23 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
-      this.INIT_APP(window.web3);
+      await this.INIT_APP(window.web3);
       /*this.APPROVE_TOKEN_DEPOSIT({
         web3: window.web3,
         erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
         spender: "0xF033d235bE73560aE39f2F85775B11C1d4911750",
         amount: "10"
       });*/
+      await this.CREATE_LIQUIDITY_RESERVE({
+        web3: window.web3,
+        linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
+        beneficiary: "0x0000000000000000000000000000000000000000",
+        erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+        lockingPeriod: "1579257151",
+        lockingPrice: 100,
+        lockingPricePosition: 1,
+        depositAmount: 10
+      });
     }
   },
   computed: {
@@ -784,16 +794,16 @@ export default {
       "alkemiNetwork"
     ])
   },
-  watch: {
+  /*watch: {
     alkemiNetwork: function(value) {
       if (value) this.LOAD_LIQUIDITY_RESERVES();
     }
-  },
+  },*/
   methods: {
     ...mapActions("ContractController", [
       "INIT_APP",
       "LOAD_LIQUIDITY_RESERVES",
-      "APPROVE_TOKEN_DEPOSIT"
+      "CREATE_LIQUIDITY_RESERVE"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -826,7 +836,6 @@ export default {
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
         );
       }
-      console.log(this.$store.state);
     },
     /* eslint-enable */
     showModal() {

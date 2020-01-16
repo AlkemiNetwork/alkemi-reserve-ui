@@ -8,8 +8,8 @@ Vue.use(Vuex);
 const vuexLocalStorage = new VuexPersist({
   key: 'vuex',
   storage: window.localStorage,
-  reducer: state => ({ 
-    alkemiNetwork: state.alkemiNetwork 
+  reducer: state => ({
+    alkemiNetwork: state.alkemiNetwork
   })
 })
 

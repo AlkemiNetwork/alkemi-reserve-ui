@@ -93,6 +93,8 @@ const actions = {
       txHash: ""
     });
 
+    let latest = await params.web3.eth.getBlockNumber();
+
     let txHash = await state.alkemiNetwork.createLiquidityReserve(
       params.linkToken,
       params.beneficiary,
@@ -109,13 +111,24 @@ const actions = {
         txHash: txHash.tx
       });
 
-      state.alkemiNetwork.once('ReserveCreate', {
-        fromBlock: 0
+      state.alkemiNetwork.contract.events.ReserveCreate({
+        filter: {
+          liquidityProvider: state.account
+        },
+        fromBlock: latest
       }, function(error, event){ 
         console.log(event); 
-      });
-      
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+        // TODO: dispatch approve token action
+        /*dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+          web3: params.web3,
+          erc20: params.erc20Token,
+          spender: event.returnValues[0],
+          amount: params.depositAmount
+        })*/
+        // TODO: dispatch deposit action
+
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      });      
     }
   },
   [actionType.CLAIM_LIQUIDITY_RESERVE]: async function ({
@@ -123,7 +136,8 @@ const actions = {
     dispatch,
     state
   }, params) {
-    LiquidityReserve.setProvider(state.web3);
+    console.log(state.web3.currentProvider);
+    LiquidityReserve.setProvider(state.web3.currentProvider);
 
     console.log("liquidity provider address");
     console.log(state.account);
@@ -154,10 +168,11 @@ const actions = {
         txHash: txHash.tx
       });
       
-      liquidityReserve.once('ReserveWithdraw', {
+      liquidityReserve.contract.events.ReserveWithdraw({
         fromBlock: 0
       }, function(error, event){ 
-        console.log(event); 
+        console.log(event);
+        // alert of withdraw 
       });
     
       dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
