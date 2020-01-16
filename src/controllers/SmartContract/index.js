@@ -135,8 +135,8 @@ const actions = {
     dispatch,
     state
   }, params) {
-    console.log(state.web3.currentProvider);
-    LiquidityReserve.setProvider(state.web3.currentProvider);
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
 
     console.log("liquidity provider address");
     console.log(state.account);
@@ -150,6 +150,8 @@ const actions = {
     });
 
     let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+
+    let latest = await params.web3.eth.getBlockNumber();
 
     let txHash = await liquidityReserve.withdraw(
       params.amount,
@@ -168,7 +170,10 @@ const actions = {
       });
       
       liquidityReserve.contract.events.ReserveWithdraw({
-        fromBlock: 0
+        filter: {
+          withdrawer: state.account
+        },
+        fromBlock: latest
       }, function(error, event){ 
         console.log(event);
         // alert of withdraw 
