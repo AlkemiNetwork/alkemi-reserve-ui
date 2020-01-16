@@ -10,30 +10,6 @@
       >Uploading content to IPFS...</md-dialog-title>
       <md-dialog-title v-if="miningTransactionObject.status=='pending'">Approve the transaction...</md-dialog-title>
       <md-dialog-title v-if="miningTransactionObject.status=='done'">Transaction mined!</md-dialog-title>
-      <img
-        v-if="miningTransactionObject.status=='uploading'"
-        class="text-center"
-        alt="step logo"
-        style="height:150px;"
-        src="../../assets/uploading.gif"
-      />
-      <video
-        v-if="miningTransactionObject.status=='pending'"
-        class="text-center"
-        alt="step logo"
-        style="height:200px; margin-left:20px"
-        type="video/webm"
-        src="../../assets/miningTransaction.webm"
-        autoplay="true"
-        loop="true"
-      />
-      <img
-        v-if="miningTransactionObject.status=='done'"
-        class="text-center"
-        alt="step logo"
-        style="width:50%; margin-left:120px"
-        src="../../assets/unicorn_dabbing.gif"
-      />
       <p
         style="padding:30px"
         v-if="miningTransactionObject.status=='uploading'"
