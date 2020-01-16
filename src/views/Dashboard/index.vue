@@ -779,7 +779,7 @@ export default {
         lockingPeriod: "1579257151",
         lockingPrice: 100,
         lockingPricePosition: 1,
-        depositAmount: 10
+        depositAmount: window.web3.utils.toWei("10", "ether")
       });
     }
   },
