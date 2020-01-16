@@ -216,6 +216,7 @@ const actions = {
   },
   [actionType.DEPOSIT_LIQUIDITY]: async function ({
     commit,
+    dispatch,
     state
   }, params) {
     console.log(params.web3.currentProvider);
