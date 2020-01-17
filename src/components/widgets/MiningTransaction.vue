@@ -1,34 +1,45 @@
 <template>
-  <div v-if="miningTransactionObject.status!=null" class="text-center">
+  <div v-if="miningTransactionObject.status != null" class="text-center">
     <md-dialog
-    class="text-center"
-      :md-active.sync="miningTransactionObject.status!=null"
+      class="text-center"
+      :md-active.sync="miningTransactionObject.status != null"
       style="background-color: #DEDDDE;width:600px"
     >
-      <md-dialog-title
-        v-if="miningTransactionObject.status=='uploading'"
-      >Uploading content to IPFS...</md-dialog-title>
-      <md-dialog-title v-if="miningTransactionObject.status=='pending'">Approve the transaction...</md-dialog-title>
-      <md-dialog-title v-if="miningTransactionObject.status=='done'">Transaction mined!</md-dialog-title>
+      <md-dialog-title v-if="miningTransactionObject.status == 'uploading'"
+        >Uploading content to IPFS...</md-dialog-title
+      >
+      <md-dialog-title v-if="miningTransactionObject.status == 'pending'"
+        >Approve the transaction...</md-dialog-title
+      >
+      <md-dialog-title v-if="miningTransactionObject.status == 'done'"
+        >Transaction mined!</md-dialog-title
+      >
       <p
         style="padding:30px"
-        v-if="miningTransactionObject.status=='uploading'"
-      >Your content is being uploaded to IPFS. This could take a few seconds.</p>
+        v-if="miningTransactionObject.status == 'uploading'"
+      >
+        Your content is being uploaded to IPFS. This could take a few seconds.
+      </p>
       <p
         style="padding:30px"
-        v-if="miningTransactionObject.status=='pending'"
-      >Approve the transaction in your web3 provider to submit it to the blockchain.</p>
+        v-if="miningTransactionObject.status == 'pending'"
+      >
+        Approve the transaction in your web3 provider to submit it to the
+        blockchain.
+      </p>
 
-      <p style="padding:30px" v-if="miningTransactionObject.status=='done'">
-        Transaction has been mined! You can view the transaction info on EtherScan
+      <p style="padding:30px" v-if="miningTransactionObject.status == 'done'">
+        Transaction has been mined! You can view the transaction info on
+        EtherScan
         <clickable-transaction :transaction="miningTransactionObject.txHash" />.
       </p>
       <md-button
-        v-if="miningTransactionObject.status=='done'"
+        v-if="miningTransactionObject.status == 'done'"
         class="md-primary md-raised"
         @click="modalClosed"
         style="background: #D81E5B"
-      >Close</md-button>
+        >Close</md-button
+      >
     </md-dialog>
   </div>
 </template>
@@ -49,8 +60,7 @@ export default {
       this.CLOSE_MINING_DIALOG();
     }
   },
-  mounted() {
-  },
+  mounted() {},
   computed: {
     ...mapState("ContractController", [
       "etherscanBase",
@@ -60,5 +70,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

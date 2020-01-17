@@ -6,12 +6,12 @@ import controller from "../_Controller";
 Vue.use(Vuex);
 
 const vuexLocalStorage = new VuexPersist({
-  key: 'vuex',
+  key: "vuex",
   storage: window.localStorage,
   reducer: state => ({
     alkemiNetwork: state.alkemiNetwork
   })
-})
+});
 
 export default new Vuex.Store({
   plugins: [vuexLocalStorage.plugin],

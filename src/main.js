@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import store from './store'
+import store from "./store";
 import Echarts from "vue-echarts";
 import "echarts/lib/chart/bar";
 import "echarts/lib/component/title";

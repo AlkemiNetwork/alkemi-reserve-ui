@@ -187,7 +187,7 @@
                                           <b-form-input
                                             class="value-available"
                                             type="text"
-                                            value="10,332.78"
+                                            v-model="daiBlance"
                                             readonly
                                           ></b-form-input>
                                         </b-form-group>
@@ -203,12 +203,14 @@
                                             placeholder="0.00"
                                           >
                                           </b-form-input>
-                                          <b-button class="btn-position">
+                                          <b-button
+                                            @click="maxAvailable"
+                                            class="btn-position"
+                                          >
                                             MAX
                                           </b-button>
                                         </b-form-group>
                                         <b-form-group
-                                          v-model="unclockDate"
                                           class="text-label text-left"
                                           label="SELECT UNLOCK DATE"
                                           label-for="unclockDate"
@@ -217,22 +219,41 @@
                                             class="choose-date"
                                             @click="showCalendar"
                                           >
-                                            <span>{{ dayChoose }}</span>
+                                            <input
+                                              type="text"
+                                              v-model="unclockDate"
+                                              disabled
+                                            />
                                             <b-img
                                               src="/img/arrow-down-sign-to-navigate.png"
                                             ></b-img>
                                           </div>
                                         </b-form-group>
-                                        <b-button
-                                          v-if="!enterMoney && !unclockDate"
-                                          class="btn-submit btn-modal-disable"
+                                        <b-form-group
+                                          class="text-label text-left input-rlt"
+                                          label="ENTER FUNDING AMOUNT"
+                                          label-for="fundingAmount"
                                         >
-                                          CREATE POOL
-                                        </b-button>
+                                          <b-form-input
+                                            v-model="clockPrice"
+                                            class="enter-money"
+                                            type="text"
+                                            placeholder="$ 0.00"
+                                          >
+                                          </b-form-input>
+                                        </b-form-group>
                                         <b-button
-                                          v-else
-                                          class="btn-submit btn-modal-add-new"
-                                          @click="loading"
+                                          class="btn-submit"
+                                          v-bind:class="{
+                                            'btn-modal-add-new':
+                                              enterMoney && unclockDate,
+                                            'btn-modal-disable':
+                                              !enterMoney || !unclockDate
+                                          }"
+                                          @click="createReserve"
+                                          :disabled="
+                                            !enterMoney || !unclockDate
+                                          "
                                         >
                                           CREATE POOL
                                         </b-button>
@@ -673,9 +694,11 @@ export default {
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
+      daiBlance: 0,
       dayChoose: "",
-      enterMoney: null,
-      unclockDate: null,
+      enterMoney: "",
+      unclockDate: "",
+      clockPrice: "",
       chartOptionsLine: {
         grid: {
           left: 0,
@@ -768,19 +791,10 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
-      await this.INIT_APP(window.web3);
-
-      // testing code...
-      await this.CREATE_LIQUIDITY_RESERVE({
-        web3: window.web3,
-        linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
-        beneficiary: "0x0000000000000000000000000000000000000000",
-        erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
-        lockingPeriod: "1579257151",
-        lockingPrice: 100,
-        lockingPricePosition: 1,
-        depositAmount: window.web3.utils.toWei("10", "ether")
+      window.web3.eth.getBalance(addressWallet).then(coins => {
+        this.daiBlance = coins;
       });
+      await this.INIT_APP(window.web3);
     }
   },
   computed: {
@@ -813,6 +827,11 @@ export default {
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
             console.log(this.addressWallet);
             this.isConnect = true;
+            window.web3.eth
+              .getBalance(window.web3.currentProvider.selectedAddress)
+              .then(coins => {
+                this.daiBlance = coins;
+              });
           });
         } catch (error) {
           console.log(error);
@@ -832,6 +851,23 @@ export default {
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
         );
       }
+    },
+    createReserve() {
+      this.CREATE_LIQUIDITY_RESERVE({
+        web3: window.web3,
+        linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
+        beneficiary: "0x0000000000000000000000000000000000000000",
+        erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+        lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
+          .unix()
+          .toString(),
+        lockingPrice: this.clockPrice,
+        lockingPricePosition: 1,
+        depositAmount: window.web3.utils.toWei(
+          this.enterMoney.toString(),
+          "ether"
+        )
+      });
     },
     /* eslint-enable */
     showModal() {
@@ -854,10 +890,16 @@ export default {
     },
     clickDay(data) {
       if (data.date) {
-        this.dayChoose = moment(data.date, "DD/MM/YYYY").format("DD MMM YYYY");
+        this.unclockDate = moment(data.date, "DD/MM/YYYY").format(
+          "DD MMM YYYY"
+        );
+        this.dayChoose = data.date;
         this.isShow = "form-add";
       }
       return false;
+    },
+    maxAvailable() {
+      this.enterMoney = this.daiBlance;
     },
     loading() {
       this.isShow = "loading";
