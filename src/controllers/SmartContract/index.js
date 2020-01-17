@@ -17,6 +17,7 @@ const state = {
   etherscanBase: null,
   alkemiNetwork: null,
   providerLiquidityReserves: null,
+  providerReservesDetails: [],
   tokenLiquidityReserves: [],
   miningTransactionObject: {
     status: null,
@@ -75,7 +76,6 @@ const actions = {
     let reserves = await state.alkemiNetwork.providerLiquidityReserves(state.account, {
       from: state.account
     });
-    console.log(reserves);
 
     commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
@@ -263,10 +263,37 @@ const actions = {
     let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
       from: state.account
     });
-    console.log("token reserves");
-    console.log(reserves);
 
     commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
+  },
+  [actionType.GET_RESERVE_DETAILS]: async function ({
+    commit,
+    state
+  }, params) {
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity reserve to fetch details");
+    console.log(params.reserveAddress);
+
+    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+
+    let txHash = await liquidityReserve.details(
+      { 
+        from: state.account,
+      }
+    );
+
+    if (txHash) {
+      commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+        asset: txHash[0],
+        lockingPeriod: txHash[1],
+        lockingPrice: txHash[2],
+        totalBalance: txHash[3],
+        deposited: txHash[4],
+        earned: txHash[5]
+      });
+    }
   }
 };
 
@@ -291,6 +318,9 @@ const mutations = {
   },
   [mutationType.SET_PROVIDER_LIQUIDITY_RESERVE]: async function (state, providerLiquidityReserves) {
     state.providerLiquidityReserves = providerLiquidityReserves;
+  },
+  [mutationType.SET_PROVIDER_RESERVE_DETAILS]: async function (state, providerReserveDetails) {
+    state.providerReservesDetails.push(providerReserveDetails);
   },
   [mutationType.SET_TOKEN_LIQUIDITY_RESERVE]: async function (state, tokenLiquidityReserves) {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
