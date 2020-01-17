@@ -296,7 +296,7 @@ body {
 		}
 	}
 	.content-modal{
-		height: 530px;
+		height: 620px;
 		padding: 35px;
 		text-align: center;
 		.text-label{
@@ -411,6 +411,11 @@ body {
 			}
 			> span{
 				text-transform: none;
+			}
+			> input{
+				background:$color-woodsmoke;
+				border: none;
+				color: $color-white
 			}
 		}
 		.btn-modal-add-new{
