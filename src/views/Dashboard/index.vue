@@ -781,6 +781,11 @@ export default {
         lockingPricePosition: 1,
         depositAmount: window.web3.utils.toWei("10", "ether")
       });
+
+      // testing code of fetching token reserves
+      /*await this.LOAD_TOKEN_LIQUIDITY_RESERVES({
+        erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
+      });*/
     }
   },
   computed: {
@@ -799,7 +804,8 @@ export default {
     ...mapActions("ContractController", [
       "INIT_APP",
       "LOAD_LIQUIDITY_RESERVES",
-      "CREATE_LIQUIDITY_RESERVE"
+      "CREATE_LIQUIDITY_RESERVE",
+      "LOAD_TOKEN_LIQUIDITY_RESERVES"
     ]),
     connectWallet() {
       if (window.ethereum) {

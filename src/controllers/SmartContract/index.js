@@ -263,6 +263,7 @@ const actions = {
     let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
       from: state.account
     });
+    console.log("token reserves");
     console.log(reserves);
 
     commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
