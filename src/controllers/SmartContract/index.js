@@ -17,6 +17,7 @@ const state = {
   etherscanBase: null,
   alkemiNetwork: null,
   providerLiquidityReserves: null,
+  tokensBalance: [],
   providerReservesDetails: [],
   tokenLiquidityReserves: [],
   miningTransactionObject: {
@@ -214,6 +215,28 @@ const actions = {
 
     }
   },
+  [actionType.GET_TOKEN_BALANCE]: async function ({
+    commit,
+    state
+  }, params) {
+    ERC20Token.setProvider(params.web3.currentProvider);
+
+    console.log("getting user token balance");
+    console.log(state.account);
+    console.log(params.erc20);
+
+    let erc20Token = await ERC20Token.at(params.erc20);
+    console.log(erc20Token);
+
+    let txHash = await erc20Token.balanceOf(
+      state.account,
+      { from: state.account }
+    );
+
+    if (txHash) {
+      commit(mutationType.SET_TOKEN_BALANCE, params.web3.utils.fromWei(txHash, "ether"));
+    }
+  },
   [actionType.DEPOSIT_LIQUIDITY]: async function ({
     commit,
     dispatch,
@@ -325,6 +348,9 @@ const mutations = {
   },
   [mutationType.SET_TOKEN_LIQUIDITY_RESERVE]: async function (state, tokenLiquidityReserves) {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
+  },
+  [mutationType.SET_TOKEN_BALANCE]: async function (state, tokenBalance) {
+    state.tokensBalance.push(tokenBalance);
   },
   [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;
