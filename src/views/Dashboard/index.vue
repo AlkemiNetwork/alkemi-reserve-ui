@@ -772,6 +772,11 @@ export default {
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
+      await this.GET_TOKEN_BALANCE({
+        web3: window.web3,
+        erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
+      });
+      console.log(this.tokensBalance);
       // testing code... get reserve details
       /*await this.GET_RESERVE_DETAILS({
         web3: window.web3,
@@ -801,7 +806,8 @@ export default {
       "account",
       "alkemiNetwork",
       "providerLiquidityReserves",
-      "providerReservesDetails"
+      "providerReservesDetails",
+      "tokensBalance"
     ])
   },
   watch: {
@@ -815,7 +821,8 @@ export default {
       "LOAD_PROVIDER_LIQUIDITY_RESERVES",
       "CREATE_LIQUIDITY_RESERVE",
       "LOAD_TOKEN_LIQUIDITY_RESERVES",
-      "GET_RESERVE_DETAILS"
+      "GET_RESERVE_DETAILS",
+      "GET_TOKEN_BALANCE"
     ]),
     connectWallet() {
       if (window.ethereum) {
