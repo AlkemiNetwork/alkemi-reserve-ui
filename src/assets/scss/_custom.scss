@@ -376,6 +376,14 @@ body {
 				color: $color-white;
 			}
 		}
+		.lock-price{
+			.bv-no-focus-ring{
+				display: flex;
+				> .select-relative{
+					margin-right: 10px;
+				}
+			}
+		}
 		.choose-date{
 			position: relative;
 			min-height: 38px;

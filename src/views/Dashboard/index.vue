@@ -83,15 +83,17 @@
                   <div>
                     <b-card no-body>
                       <b-tabs pills card vertical>
-                        <b-tab>
+                        <b-tab
+                        @click="selectWallet(item, key)"
+                         v-for="(item, key) in data" :key="key">
                           <template v-slot:title>
                             <div class="tab-flex">
                               <div class="content-mid-img">
                                 <b-img src="/img/omg.svg"></b-img>
                               </div>
                               <div class="acronym-name content-mid">
-                                OMG
-                                <div class="name-el-money">Omise GO</div>
+                                {{ item.name }}
+                                <div class="name-el-money">{{ item.fullName }}</div>
                               </div>
                               <div class="content-mid">
                                 120,000.34
@@ -109,10 +111,10 @@
                                 <div class="info-value">
                                   <div class="value float-left">120,000.34</div>
                                   <span class="acronym-name">
-                                    OMG
+                                    {{ item.name }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="el-name">
-                                      Omise GO
+                                      {{ item.fullName }}
                                     </span>
                                   </span>
                                   <span
@@ -163,139 +165,6 @@
                                       + Add New
                                     </b-button>
                                   </div>
-                                  <b-modal
-                                    hide-footer
-                                    hide-header
-                                    centered
-                                    ref="modal-add-new"
-                                    title="Using Component Methods"
-                                    id="modal-add"
-                                  >
-                                    <div class="head-modal">
-                                      <b-img src="/img/dai.svg"></b-img>
-                                      <span class="title-popup">
-                                        ADD DAI POOL
-                                      </span>
-                                    </div>
-                                    <div class="content-modal">
-                                      <b-form v-if="isShow == 'form-add'">
-                                        <b-form-group
-                                          class="text-label text-left"
-                                          label="AVAILABLE DAI BALANCE"
-                                          label-for="daiBlance"
-                                        >
-                                          <b-form-input
-                                            class="value-available"
-                                            type="text"
-                                            v-model="daiBlance"
-                                            readonly
-                                          ></b-form-input>
-                                        </b-form-group>
-                                        <b-form-group
-                                          class="text-label text-left input-rlt"
-                                          label="ENTER FUNDING AMOUNT"
-                                          label-for="fundingAmount"
-                                        >
-                                          <b-form-input
-                                            v-model="enterMoney"
-                                            class="enter-money"
-                                            type="text"
-                                            placeholder="0.00"
-                                          >
-                                          </b-form-input>
-                                          <b-button
-                                            @click="maxAvailable"
-                                            class="btn-position"
-                                          >
-                                            MAX
-                                          </b-button>
-                                        </b-form-group>
-                                        <b-form-group
-                                          class="text-label text-left"
-                                          label="SELECT UNLOCK DATE"
-                                          label-for="unclockDate"
-                                        >
-                                          <div
-                                            class="choose-date"
-                                            @click="showCalendar"
-                                          >
-                                            <input
-                                              type="text"
-                                              v-model="unclockDate"
-                                              disabled
-                                            />
-                                            <b-img
-                                              src="/img/arrow-down-sign-to-navigate.png"
-                                            ></b-img>
-                                          </div>
-                                        </b-form-group>
-                                        <b-form-group
-                                          class="text-label text-left input-rlt"
-                                          label="ENTER FUNDING AMOUNT"
-                                          label-for="fundingAmount"
-                                        >
-                                          <b-form-input
-                                            v-model="clockPrice"
-                                            class="enter-money"
-                                            type="text"
-                                            placeholder="$ 0.00"
-                                          >
-                                          </b-form-input>
-                                        </b-form-group>
-                                        <b-button
-                                          class="btn-submit"
-                                          v-bind:class="{
-                                            'btn-modal-add-new':
-                                              enterMoney && unclockDate,
-                                            'btn-modal-disable':
-                                              !enterMoney || !unclockDate
-                                          }"
-                                          @click="createReserve"
-                                          :disabled="
-                                            !enterMoney || !unclockDate
-                                          "
-                                        >
-                                          CREATE POOL
-                                        </b-button>
-                                        <b-button
-                                          class="btn-cancel"
-                                          @click="hideModal()"
-                                        >
-                                          Cancel
-                                        </b-button>
-                                      </b-form>
-                                      <div v-if="isShow == 'calendar'">
-                                        <FunctionalCalendar
-                                          :is-dark="true"
-                                          :is-date-picker="true"
-                                          :date-format="'dd/mm/yyyy'"
-                                          v-on:choseDay="clickDay"
-                                        ></FunctionalCalendar>
-                                        <b-button
-                                          class="btn-cancel"
-                                          @click="backForm()"
-                                        >
-                                          Back
-                                        </b-button>
-                                      </div>
-                                      <div
-                                        v-if="isShow == 'loading'"
-                                        class="processing"
-                                      >
-                                        <div>
-                                          <div class="title-process">
-                                            Processing Transaction
-                                          </div>
-                                          <div class="address-transaction">
-                                            0xbj39....1ea401
-                                          </div>
-                                          <loadingPopup
-                                            :quality="4"
-                                          ></loadingPopup>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </b-modal>
                                   <b-table
                                     fixed
                                     :items="items"
@@ -324,7 +193,7 @@
                             </template>
                           </b-card-text>
                         </b-tab>
-                        <b-tab>
+                        <!-- <b-tab>
                           <template v-slot:title>
                             <div class="tab-flex">
                               <div class="content-mid-img">
@@ -590,7 +459,7 @@
                               </div>
                             </template>
                           </b-card-text>
-                        </b-tab>
+                        </b-tab> -->
                       </b-tabs>
                     </b-card>
                   </div>
@@ -602,6 +471,148 @@
       </b-row>
     </b-container>
     <div class="version">Version: {{ version }}</div>
+    <b-modal
+      hide-footer
+      hide-header
+      centered
+      ref="modal-add-new"
+      title="Using Component Methods"
+      id="modal-add"
+    >
+      <div class="head-modal">
+        <b-img src="/img/dai.svg"></b-img>
+        <span class="title-popup">
+          ADD POOL
+        </span>
+      </div>
+      <div class="content-modal">
+        <b-form v-if="isShow == 'form-add'">
+          <b-form-group
+            class="text-label text-left"
+            label="AVAILABLE DAI BALANCE"
+            label-for="daiBlance"
+          >
+            <b-form-input
+              class="value-available"
+              type="text"
+              v-model="daiBlance"
+              readonly
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left input-rlt"
+            label="ENTER FUNDING AMOUNT"
+            label-for="fundingAmount"
+          >
+            <b-form-input
+              v-model="enterMoney"
+              class="enter-money"
+              type="text"
+              placeholder="0.00"
+            >
+            </b-form-input>
+            <b-button
+              @click="maxAvailable"
+              class="btn-position"
+            >
+              MAX
+            </b-button>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left"
+            label="SELECT UNLOCK DATE"
+            label-for="unclockDate"
+          >
+            <div
+              class="choose-date"
+              @click="showCalendar"
+            >
+              <input
+                type="text"
+                v-model="unclockDate"
+                disabled
+              />
+              <b-img
+                src="/img/arrow-down-sign-to-navigate.png"
+              ></b-img>
+            </div>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left lock-price"
+            label="ENTER USD LIQIUDATION PRICE"
+            label-for="fundingAmount"
+          >
+            <div class="select-relative w-50">
+              <b-form-select
+                v-model="lockPricePosition"
+                :options="options"
+                class="enter-money float-left"
+              >
+              </b-form-select>
+              <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
+            </div>
+            <b-form-input
+              v-model="lockPrice"
+              class="enter-money w-50 float-left"
+              type="text"
+              placeholder="$ 0.00"
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-button
+            class="btn-submit"
+            v-bind:class="{
+              'btn-modal-add-new':
+                enterMoney && unclockDate,
+              'btn-modal-disable':
+                !enterMoney || !unclockDate
+            }"
+            @click="createReserve"
+            :disabled="
+              !enterMoney || !unclockDate
+            "
+          >
+            CREATE POOL
+          </b-button>
+          <b-button
+            class="btn-cancel"
+            @click="hideModal()"
+          >
+            Cancel
+          </b-button>
+        </b-form>
+        <div v-if="isShow == 'calendar'">
+          <FunctionalCalendar
+            :is-dark="true"
+            :is-date-picker="true"
+            :date-format="'dd/mm/yyyy'"
+            v-on:choseDay="clickDay"
+          ></FunctionalCalendar>
+          <b-button
+            class="btn-cancel"
+            @click="backForm()"
+          >
+            Back
+          </b-button>
+        </div>
+        <div
+          v-if="isShow == 'loading'"
+          class="processing"
+        >
+          <div>
+            <div class="title-process">
+              Processing Transaction
+            </div>
+            <div class="address-transaction">
+              0xbj39....1ea401
+            </div>
+            <loadingPopup
+              :quality="4"
+            ></loadingPopup>
+          </div>
+        </div>
+      </div>
+    </b-modal>
     <b-modal
       hide-footer
       hide-header
@@ -698,7 +709,80 @@ export default {
       dayChoose: "",
       enterMoney: "",
       unclockDate: "",
-      clockPrice: "",
+      lockPrice: "",
+      selected: null,
+      lockPricePosition: "0",
+      options: [
+        { value: "0", text: 'Below' },
+        { value: "1", text: 'Above' },
+      ],
+      data: [
+        {
+          name: "DAI",
+          fullName: "Maker Dai",
+          erc20Token: "0xef77ce798401dac8120f77dc2debd5455eddacf9",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+        {
+          name: "USDC",
+          fullName: "USD Coin",
+          erc20Token: "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+        {
+          name: "LINK",
+          fullName: "LinkCoin",
+          erc20Token: "0xf6b1c64e86c1213088a6464484ebb8488635795d",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+        {
+          name: "MKR",
+          fullName: "Maker",
+          erc20Token: "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+        {
+          name: "KRWB",
+          fullName: "Korean Won",
+          erc20Token: "0x7fca0bf31dcec373c90478c9167b8b11b7dec3a1",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          tokenEarning: 0,
+          usdEarning: 0,
+          table: []
+        },
+      ],
       chartOptionsLine: {
         grid: {
           left: 0,
@@ -791,6 +875,7 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
+      this.selected = this.data[0],
       await this.INIT_APP(window.web3);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
@@ -887,12 +972,12 @@ export default {
         web3: window.web3,
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
         beneficiary: "0x0000000000000000000000000000000000000000",
-        erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+        erc20Token: this.selected.erc20Token,
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
-        lockingPrice: this.clockPrice,
-        lockingPricePosition: 1,
+        lockingPrice: this.lockPrice,
+        lockingPricePosition: parseInt(this.lockPricePosition),
         depositAmount: window.web3.utils.toWei(
           this.enterMoney.toString(),
           "ether"
@@ -938,6 +1023,11 @@ export default {
         return this.hideModal();
       }, 4000);
       // clearTimeout(timerid);
+    },
+    selectWallet(item)  {
+      this.selected = item
+      console.log(this.selected);
+      
     }
   }
 };

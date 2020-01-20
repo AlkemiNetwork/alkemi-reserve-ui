@@ -94,7 +94,7 @@ const actions = {
     });
 
     let latest = await params.web3.eth.getBlockNumber();
-
+    
     let txHash = await state.alkemiNetwork.createLiquidityReserve(
       params.linkToken,
       params.beneficiary,
@@ -263,7 +263,6 @@ const actions = {
     let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
       from: state.account
     });
-
     commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.GET_RESERVE_DETAILS]: async function ({
@@ -283,6 +282,8 @@ const actions = {
         from: state.account,
       }
     );
+    console.log(txHash);
+    
 
     if (txHash) {
       commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
