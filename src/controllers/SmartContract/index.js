@@ -305,9 +305,7 @@ const actions = {
         from: state.account,
       }
     );
-    console.log(txHash);
-    
-
+        
     if (txHash) {
       commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
         asset: txHash[0],

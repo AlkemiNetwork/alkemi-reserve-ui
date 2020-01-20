@@ -720,7 +720,7 @@ export default {
         {
           name: "DAI",
           fullName: "Maker Dai",
-          erc20Token: "0xef77ce798401dac8120f77dc2debd5455eddacf9",
+          erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
           total: 0,
           estUSD: 0,
           fluctuation: 0,
@@ -880,16 +880,9 @@ export default {
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
-      await this.GET_TOKEN_BALANCE({
-        web3: window.web3,
-        erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
-      });
-      console.log(this.tokensBalance);
-      // testing code... get reserve details
-      /*await this.GET_RESERVE_DETAILS({
-        web3: window.web3,
-        reserveAddress: this.providerLiquidityReserves[0]
-      });*/
+      await this.getProviderReservesDetails();
+      console.log("provider liquidity reserves details");
+      console.log(this.providerReservesDetails);
       // testing code...
       /*await this.CREATE_LIQUIDITY_RESERVE({
         web3: window.web3,
@@ -983,13 +976,24 @@ export default {
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
-        lockingPrice: this.lockPrice,
+        lockingPrice: window.web3.utils.toWei(
+          this.lockPrice.toString(),
+          "ether"
+        ),
         lockingPricePosition: parseInt(this.lockPricePosition),
         depositAmount: window.web3.utils.toWei(
           this.enterMoney.toString(),
           "ether"
         )
       });
+    },
+    async getProviderReservesDetails() {
+      for(let i=0; i<this.providerLiquidityReserves.length; i++) {
+        this.GET_RESERVE_DETAILS({
+          web3: window.web3,
+          reserveAddress: this.providerLiquidityReserves[i]
+        });
+      }
     },
     /* eslint-enable */
     showModal() {
