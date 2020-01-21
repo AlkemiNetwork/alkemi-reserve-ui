@@ -2,7 +2,9 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Twitter: AlkemiOfficial](https://img.shields.io/twitter/follow/AlkemiOfficial.svg?style=social)](https://twitter.com/AlkemiOfficial)[![Built with Vue.js](https://img.shields.io/badge/Vue.js-black?style=flat&logo=vue.js)](https://alkemi.atlassian.net/wiki/spaces/ARCH/pages/42139840/Switchboard)
+[![Built with Vue.js](https://img.shields.io/badge/Vue.js-black?style=flat&logo=vue.js)](https://alkemi.atlassian.net/wiki/spaces/ARCH/pages/42139840/Switchboard)
+[![Built on Ethereum](https://img.shields.io/badge/web3.js-blue?style=flat&logo=ethereum)](https://alkemi.atlassian.net/wiki/spaces/ARCH/pages/42139840/Switchboard)
+[![Twitter: AlkemiOfficial](https://img.shields.io/twitter/follow/AlkemiOfficial.svg?style=social)](https://twitter.com/AlkemiOfficial)
 
 > Web3 interface for Alkemi liquidity reserves
 
