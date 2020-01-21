@@ -309,10 +309,10 @@ const actions = {
       commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
         asset: txHash[0],
         lockingPeriod: txHash[1],
-        lockingPrice: txHash[2],
-        totalBalance: txHash[3],
-        deposited: txHash[4],
-        earned: txHash[5]
+        lockingPrice: params.web3.utils.fromWei(txHash[2], "ether"),
+        totalBalance: params.web3.utils.fromWei(txHash[3], "ether"),
+        deposited: params.web3.utils.fromWei(txHash[4], "ether"),
+        earned: params.web3.utils.fromWei(txHash[5], "ether"),
       });
     }
   }

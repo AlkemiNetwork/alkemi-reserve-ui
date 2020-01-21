@@ -70,12 +70,12 @@
                   </div>
                   <div class="est-content">
                     <div class="float-left mr-30">
-                      <div class="title-es-content">RESERVES</div>
-                      <div class="monney">3</div>
+                      <div class="title-es-content">POOLS</div>
+                      <div class="monney">{{ this.poolsCounter }}</div>
                     </div>
                     <div>
-                      <div class="title-es-content">POOLS</div>
-                      <div class="monney">12</div>
+                      <div class="title-es-content">RESERVES</div>
+                      <div class="monney">{{ this.reservesCounter }}</div>
                     </div>
                   </div>
                 </b-col>
@@ -96,11 +96,13 @@
                                 <div class="name-el-money">{{ item.fullName }}</div>
                               </div>
                               <div class="content-mid">
-                                {{ total[item.name] | formatNumber }}
+                                {{ data[key].total }}
                                 <div class="cost">$9344.44</div>
                               </div>
                               <div class="content-mid">
-                                +1443.22 <span class="percent">(6.54%)</span>
+                                {{ data[key].change24h}} 
+                                <span class="percent" v-if="data[key].total != 0">{{data[key].change24h * 100 / data[key].total}}%</span>
+                                <span class="percent" v-if="data[key].total == 0">{{data[key].total}}%</span>
                                 <div class="cost">$334.54</div>
                               </div>
                             </div>
@@ -109,7 +111,7 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">{{ total[item.name] | formatNumber }}</div>
+                                  <div class="value float-left">{{ selected.total }}</div>
                                   <span class="acronym-name">
                                     {{ item.name }}
                                     <span class="line-vertical-14">|</span>
@@ -134,12 +136,13 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent" v-if="selected.total != 0">+{{selected.change24h * 100 / selected.total}}%</div>
+                                      <div class="percent" v-if="selected.total == 0">+{{selected.total}}%</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        {{ selected.assetEarning }}
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
@@ -450,13 +453,8 @@ export default {
         { value: "0", text: 'Below' },
         { value: "1", text: 'Above' },
       ],
-      total: {
-        DAI: 0,
-        USDC: 0,
-        LINK: 0,
-        MKR: 0,
-        KRWB: 0
-      },
+      reservesCounter: 0,
+      poolsCounter: 0,
       data: [
         {
           name: "DAI",
@@ -468,9 +466,8 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
-          tokenEarning: 0,
-          usdEarning: 0,
-          table: []
+          assetEarning: 0,
+          usdEarning: 0
         },
         {
           name: "USDC",
@@ -482,9 +479,8 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
-          tokenEarning: 0,
-          usdEarning: 0,
-          table: []
+          assetEarning: 0,
+          usdEarning: 0
         },
         {
           name: "LINK",
@@ -496,9 +492,8 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
-          tokenEarning: 0,
-          usdEarning: 0,
-          table: []
+          assetEarning: 0,
+          usdEarning: 0
         },
         {
           name: "MKR",
@@ -510,9 +505,8 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
-          tokenEarning: 0,
-          usdEarning: 0,
-          table: []
+          assetEarning: 0,
+          usdEarning: 0
         },
         {
           name: "KRWB",
@@ -524,9 +518,8 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
-          tokenEarning: 0,
+          assetEarning: 0,
           usdEarning: 0,
-          table: []
         },
       ],
       chartOptionsLine: {
@@ -609,9 +602,10 @@ export default {
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
+      this.reservesCounter = this.providerLiquidityReserves.length;
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
-      console.log(providerReservesDetails);
+      console.log(this.providerReservesDetails);
     }
   },
   computed: {
@@ -825,32 +819,33 @@ export default {
     },
     async getProviderReservesDetails() {
       for(let i=0; i<this.providerLiquidityReserves.length; i++) {
-        this.GET_RESERVE_DETAILS({
+        await this.GET_RESERVE_DETAILS({
           web3: window.web3,
           reserveAddress: this.providerLiquidityReserves[i]
-        }).then( result => {
-          result = this.providerReservesDetails;
-          result.forEach(element => {
-            switch (element.asset) {
-              case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa":
-                this.total.DAI += element.deposited.words.reduce((a, b) => a + b)
-                break;
-              case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096":
-                this.total.USDC += element.deposited.words.reduce((a, b) => a + b)
-                break;
-              case "0xf6b1c64e86c1213088a6464484ebb8488635795d":
-                this.total.LINK += element.deposited.words.reduce((a, b) => a + b)
-                break;
-              case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
-                this.total.MKR += element.deposited.words.reduce((a, b) => a + b)
-                break;
-              default:
-                this.total.KRWB += element.deposited.words.reduce((a, b) => a + b)
-                break;
-            }
-          });
         });
       }
+      this.providerReservesDetails.forEach(reserve => {
+        switch (reserve.asset) {
+          case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa":
+            this.data[0].total += parseInt(reserve.deposited);
+            this.data[0].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096":
+            this.data[1].total += parseInt(reserve.deposited);
+            this.data[1].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0xf6b1c64e86c1213088a6464484ebb8488635795d":
+            this.data[2].total += parseInt(reserve.deposited);
+            this.data[2].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
+            this.data[3].total.MKR += parseInt(reserve.deposited);
+            this.data[3].assetEarning += parseInt(reserve.earned);
+            break;
+          default:
+            break;
+        }
+      });
     },
     /* eslint-enable */
     showModal() {
@@ -893,7 +888,8 @@ export default {
       // clearTimeout(timerid);
     },
     selectWallet(item)  {
-      this.selected = item
+      this.selected = item;
+      console.log(this.selected);
     }
   }
 };
