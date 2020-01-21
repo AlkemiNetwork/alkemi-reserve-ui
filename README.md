@@ -8,7 +8,7 @@
 
 > Web3 interface for Alkemi liquidity reserves
 
-![Liquidity Dashboard](/docs/assets/liquidity-dashboard2.gif)
+![Liquidity Dashboard](https://raw.githubusercontent.com/project-alkemi/alkemi-protocol/master/docs/assets/liquidity-dashboard2.gif)
 
 ## How do I get set up?
 
