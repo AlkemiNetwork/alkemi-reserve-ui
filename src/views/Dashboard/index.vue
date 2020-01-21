@@ -882,28 +882,7 @@ export default {
       console.log(this.providerLiquidityReserves);
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
-      console.log(this.providerReservesDetails);
-      // testing code...
-      /*await this.CREATE_LIQUIDITY_RESERVE({
-        web3: window.web3,
-        linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
-        beneficiary: "0x0000000000000000000000000000000000000000",
-        erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
-        lockingPeriod: "1579257151",
-        lockingPrice: 100,
-        lockingPricePosition: 1,
-        depositAmount: window.web3.utils.toWei("10", "ether")
-      });*/
-
-      // testing code of fetching token reserves
-      /*await this.LOAD_TOKEN_LIQUIDITY_RESERVES({
-        erc20: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
-      });*/
-
-      // window.web3.eth.getBalance(addressWallet).then(coins => {
-      //   this.daiBlance = coins;
-      // });
-      // await this.INIT_APP(window.web3);
+      console.log(a);
     }
   },
   computed: {
