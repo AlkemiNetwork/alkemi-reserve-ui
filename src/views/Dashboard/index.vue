@@ -174,6 +174,20 @@
                                     :fields="fields"
                                   >
                                     <template v-slot:cell(btn)="row">
+                                      <div class="value-change float-left">
+                                        {{ timestampToDate(row.item.lockingPeriod.toNumber()) }}
+                                      </div>
+                                      <div class="value-change float-left">
+                                        {{ row.item.totalBalance }}
+                                      </div>
+                                      <div class="value-change float-left">
+                                      </div>
+                                      <div class="value-change float-left">
+                                        {{ row.item.earned }}
+                                      </div>
+                                      <div class="value-change float-left">
+                                        {{ row.item.earned * 100 / row.item.totalBalance }}
+                                      </div>
                                       <b-button
                                         v-if="!row.item.btn"
                                         size="sm"
@@ -892,6 +906,9 @@ export default {
         this.isShow = "form-add";
       }
       return false;
+    },
+    timestampToDate(timestamp) {
+      return moment.unix(timestamp).format("MM/DD/YYYY");
     },
     maxAvailable() {
       this.amountToDeposit = this.tokenBalance;
