@@ -5,6 +5,7 @@ import * as mutationType from "../MutationType";
 import AlkemiNetworkABI from "../../contracts/AlkemiNetwork.json";
 import LiquidityReserveABI from "../../contracts/LiquidityReserve.json";
 import ERC20ABI from "../../contracts/ERC20.json";
+import axios from "axios";
 
 const AlkemiNetwork = truffleContract(AlkemiNetworkABI);
 const LiquidityReserve = truffleContract(LiquidityReserveABI);
@@ -20,6 +21,8 @@ const state = {
   tokensBalance: [],
   providerReservesDetails: [],
   tokenLiquidityReserves: [],
+  unitCoin: "USD",
+  priceCoin: {},
   miningTransactionObject: {
     status: null,
     txHash: ''
@@ -29,6 +32,27 @@ const state = {
 const getters = {};
 
 const actions = {
+
+  [actionType.GET_PRICE_COIN]: function ({
+    commit,
+    state
+  }, params) {
+    return new Promise (( resolve, reject ) => {
+      axios(`https://market-data.alkemi.tech/exchange/bitfinex2/ticker`, {
+        method: "GET",
+        params: { symbol: `${params.name}/${state.unitCoin}` },
+        headers: {
+          Accept: "application/json",
+        },
+      }).then( result => {
+        if(!state.priceCoin[result.data.symbol]){
+          commit(mutationType.SET_PRICE_COIN, result.data);
+        }
+        resolve(result)
+      }).catch(error => reject( error ));
+    });
+  },
+
   [actionType.GET_CURRENT_NETWORK]: function ({
     commit,
   }) {
@@ -320,6 +344,9 @@ const actions = {
 
 const mutations = {
   //WEB3 Stuff
+  [mutationType.SET_PRICE_COIN](state, unitCoin) {
+    state.priceCoin[unitCoin.symbol] = unitCoin.last;
+  },
   [mutationType.SET_ACCOUNT](state, account) {
     console.log("Account set")
     console.log(account)

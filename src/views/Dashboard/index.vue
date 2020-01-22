@@ -97,13 +97,13 @@
                               </div>
                               <div class="content-mid">
                                 {{ item.total }}
-                                <div class="cost">$9344.44</div>
+                                <div class="cost">${{ item.estUSD }}</div>
                               </div>
                               <div class="content-mid">
                                 {{ item.change24h}} 
                                 <span class="percent" v-if="item.total != 0">{{item.change24h * 100 / item.total}}%</span>
                                 <span class="percent" v-if="item.total == 0">{{item.total}}%</span>
-                                <div class="cost">$334.54</div>
+                                <div class="cost">${{ item.estFluctuation }}</div>
                               </div>
                             </div>
                           </template>
@@ -125,7 +125,7 @@
                                   >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    $9344.44
+                                    ${{ item.estUSD }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="text-est">
                                       EST USD VALUE
@@ -466,6 +466,7 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
+          estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0
         },
@@ -479,6 +480,7 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
+          estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0
         },
@@ -492,6 +494,7 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
+          estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0
         },
@@ -505,6 +508,7 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
+          estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0
         },
@@ -518,6 +522,7 @@ export default {
           fluctuation: 0,
           estFluctuation: 0,
           change24h: 0,
+          estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
         },
@@ -589,6 +594,11 @@ export default {
     };
   },
   async created() {
+    this.data.map(item => {
+      this.GET_PRICE_COIN({
+        name: item.name
+      })
+    })
     if (window.web3.currentProvider.selectedAddress) {
       var addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -606,6 +616,7 @@ export default {
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
+      
     }
     else{
       this.selected = this.data[0]
@@ -618,7 +629,9 @@ export default {
       "alkemiNetwork",
       "providerLiquidityReserves",
       "providerReservesDetails",
-      "tokensBalance"
+      "tokensBalance",
+      "priceCoin",
+      "unitCoin"
     ])
   },
   watch: {
@@ -761,7 +774,8 @@ export default {
       "CREATE_LIQUIDITY_RESERVE",
       "LOAD_TOKEN_LIQUIDITY_RESERVES",
       "GET_RESERVE_DETAILS",
-      "GET_TOKEN_BALANCE"
+      "GET_TOKEN_BALANCE",
+      "GET_PRICE_COIN"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -828,22 +842,66 @@ export default {
         });
       }
       this.providerReservesDetails.forEach(reserve => {
-        switch (reserve.asset) {
-          case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa":
+        switch (reserve.asset.toLowerCase()) {
+          case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
             this.data[0].total += parseInt(reserve.deposited);
             this.data[0].assetEarning += parseInt(reserve.earned);
+            if(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]){
+              this.data[0].estUSD = (this.data[0].total)*(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`])
+              this.data[0].estFluctuation = (this.data[0].fluctuation)*(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`])
+            }else{
+              this.GET_PRICE_COIN({
+                name: this.data[0].name
+              }).then( res => {
+                this.data[0].estUSD = (this.data[0].total)*(res.data.last)
+                this.data[0].estFluctuation = (this.data[0].fluctuation)*(res.data.last)
+              })
+            }
             break;
-          case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096":
+          case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
             this.data[1].total += parseInt(reserve.deposited);
             this.data[1].assetEarning += parseInt(reserve.earned);
+            if(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]){
+              this.data[1].estUSD = (this.data[1].total)*(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`])
+              this.data[1].estFluctuation = (this.data[1].fluctuation)*(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`])
+            }else{
+              this.GET_PRICE_COIN({
+                name: this.data[1].name
+              }).then( res => {
+                this.data[1].estUSD = (this.data[1].total)*(res.data.last);
+                this.data[1].estFluctuation = (this.data[1].fluctuation)*(res.data.last)
+              })
+            }
             break;
-          case "0xf6b1c64e86c1213088a6464484ebb8488635795d":
+          case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
             this.data[2].total += parseInt(reserve.deposited);
             this.data[2].assetEarning += parseInt(reserve.earned);
+            if(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]){
+              this.data[2].estUSD = (this.data[2].total)*(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`])
+              this.data[2].estFluctuation = (this.data[2].fluctuation)*(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`])
+            }else{
+              this.GET_PRICE_COIN({
+                name: this.data[2].name
+              }).then( res => {
+                this.data[2].estUSD = (this.data[2].total)*(res.data.last);
+                this.data[2].estFluctuation = (this.data[2].fluctuation)*(res.data.last)
+              })
+            }
             break;
-          case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
+          case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
             this.data[3].total += parseInt(reserve.deposited);
             this.data[3].assetEarning += parseInt(reserve.earned);
+            if(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]){
+              this.data[3].estUSD = (this.data[3].total)*(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`])
+              this.data[3].estFluctuation = (this.data[3].fluctuation)*(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`])
+            }else{
+              this.GET_PRICE_COIN({
+                name: this.data[3].name
+              }).then( res => {
+                this.data[3].estUSD = (this.data[3].total)*(res.data.last)
+                this.data[3].estFluctuation = (this.data[3].fluctuation)*(res.data.last)
+              })
+            }
             break;
           default:
             break;
