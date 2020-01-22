@@ -225,13 +225,13 @@
         <b-form v-if="isShow == 'form-add'">
           <b-form-group
             class="text-label text-left"
-            label="AVAILABLE DAI BALANCE"
-            label-for="daiBlance"
+            :label="`AVAILABLE ${this.selected.name} BALANCE`"
+            label-for="walletAssetBalance"
           >
             <b-form-input
               class="value-available"
               type="text"
-              v-model="daiBlance"
+              v-model="this.tokenBalance"
               readonly
             ></b-form-input>
           </b-form-group>
@@ -241,7 +241,7 @@
             label-for="fundingAmount"
           >
             <b-form-input
-              v-model="enterMoney"
+              v-model="amountToDeposit"
               class="enter-money"
               type="text"
               placeholder="0.00"
@@ -299,13 +299,13 @@
             class="btn-submit"
             v-bind:class="{
               'btn-modal-add-new':
-                enterMoney && unclockDate,
+                amountToDeposit && unclockDate,
               'btn-modal-disable':
-                !enterMoney || !unclockDate
+                !amountToDeposit || !unclockDate
             }"
             @click="createReserve"
             :disabled="
-              !enterMoney || !unclockDate
+              !amountToDeposit || !unclockDate
             "
           >
             CREATE POOL
@@ -442,9 +442,9 @@ export default {
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
-      daiBlance: 0,
+      walletAssetBalance: 0,
       dayChoose: "",
-      enterMoney: "",
+      amountToDeposit: "",
       unclockDate: "",
       lockPrice: "",
       selected: null,
@@ -597,18 +597,22 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
+
       await this.INIT_APP(window.web3);
+
+      this.selectWallet(this.data[0]);
+      
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
       this.reservesCounter = this.providerLiquidityReserves.length;
-      this.selected = this.data[0]
+
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
     }
     else{
-      this.selected = this.data[0]
+      this.selectWallet(this.data[0]);
     }
   },
   computed: {
@@ -618,7 +622,7 @@ export default {
       "alkemiNetwork",
       "providerLiquidityReserves",
       "providerReservesDetails",
-      "tokensBalance"
+      "tokenBalance"
     ])
   },
   watch: {
@@ -778,7 +782,7 @@ export default {
             window.web3.eth
               .getBalance(window.web3.currentProvider.selectedAddress)
               .then(coins => {
-                this.daiBlance = coins;
+                this.walletAssetBalance = coins;
               });
           });
         } catch (error) {
@@ -815,7 +819,7 @@ export default {
         ),
         lockingPricePosition: parseInt(this.lockPricePosition),
         depositAmount: window.web3.utils.toWei(
-          this.enterMoney.toString(),
+          this.amountToDeposit.toString(),
           "ether"
         )
       });
@@ -856,6 +860,7 @@ export default {
     },
     hideModal() {
       this.$refs["modal-add-new"].hide();
+      this.amountToDeposit = 0;
     },
     showModalClaim() {
       this.$refs["modal-claim"].show();
@@ -880,7 +885,7 @@ export default {
       return false;
     },
     maxAvailable() {
-      this.enterMoney = this.daiBlance;
+      this.amountToDeposit = this.tokenBalance;
     },
     loading() {
       this.isShow = "loading";
@@ -890,7 +895,11 @@ export default {
       }, 4000);
       // clearTimeout(timerid);
     },
-    selectWallet(item)  {
+    async selectWallet(item)  {
+      await this.GET_TOKEN_BALANCE({
+        web3: window.web3, 
+        erc20: item.erc20Token
+      });
       this.selected = item;
     }
   }

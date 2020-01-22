@@ -17,7 +17,7 @@ const state = {
   etherscanBase: null,
   alkemiNetwork: null,
   providerLiquidityReserves: null,
-  tokensBalance: [],
+  tokenBalance: null,
   providerReservesDetails: [],
   tokenLiquidityReserves: [],
   miningTransactionObject: {
@@ -347,7 +347,7 @@ const mutations = {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
   },
   [mutationType.SET_TOKEN_BALANCE]: async function (state, tokenBalance) {
-    state.tokensBalance.push(tokenBalance);
+    state.tokenBalance = tokenBalance;
   },
   [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;
