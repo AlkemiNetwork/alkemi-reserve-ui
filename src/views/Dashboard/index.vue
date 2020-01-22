@@ -84,7 +84,7 @@
                     <b-card no-body>
                       <b-tabs pills card vertical>
                         <b-tab
-                        @click="selectWallet(item, key)"
+                        @click="selectWallet(item)"
                          v-for="(item, key) in data" :key="key">
                           <template v-slot:title>
                             <div class="tab-flex">
@@ -96,13 +96,13 @@
                                 <div class="name-el-money">{{ item.fullName }}</div>
                               </div>
                               <div class="content-mid">
-                                {{ data[key].total }}
+                                {{ item.total }}
                                 <div class="cost">$9344.44</div>
                               </div>
                               <div class="content-mid">
-                                {{ data[key].change24h}} 
-                                <span class="percent" v-if="data[key].total != 0">{{data[key].change24h * 100 / data[key].total}}%</span>
-                                <span class="percent" v-if="data[key].total == 0">{{data[key].total}}%</span>
+                                {{ item.change24h}} 
+                                <span class="percent" v-if="item.total != 0">{{item.change24h * 100 / item.total}}%</span>
+                                <span class="percent" v-if="item.total == 0">{{item.total}}%</span>
                                 <div class="cost">$334.54</div>
                               </div>
                             </div>
@@ -111,7 +111,7 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">{{ selected.total }}</div>
+                                  <div class="value float-left">{{ item.total }}</div>
                                   <span class="acronym-name">
                                     {{ item.name }}
                                     <span class="line-vertical-14">|</span>
@@ -136,13 +136,13 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent" v-if="selected.total != 0">+{{selected.change24h * 100 / selected.total}}%</div>
-                                      <div class="percent" v-if="selected.total == 0">+{{selected.total}}%</div>
+                                      <div class="percent" v-if="item.total != 0">+{{item.change24h * 100 / item.total}}%</div>
+                                      <div class="percent" v-if="item.total == 0">+{{item.total}}%</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        {{ selected.assetEarning }}
+                                        {{ item.assetEarning }}
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
@@ -218,7 +218,7 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          ADD {{ selected.name }} POOL
+          ADD {{ selected ? selected.name : '' }} POOL
         </span>
       </div>
       <div class="content-modal">
@@ -597,15 +597,18 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
-      this.selected = this.data[0],
       await this.INIT_APP(window.web3);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
       this.reservesCounter = this.providerLiquidityReserves.length;
+      this.selected = this.data[0]
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
+    }
+    else{
+      this.selected = this.data[0]
     }
   },
   computed: {
@@ -839,7 +842,7 @@ export default {
             this.data[2].assetEarning += parseInt(reserve.earned);
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
-            this.data[3].total.MKR += parseInt(reserve.deposited);
+            this.data[3].total += parseInt(reserve.deposited);
             this.data[3].assetEarning += parseInt(reserve.earned);
             break;
           default:
@@ -889,7 +892,6 @@ export default {
     },
     selectWallet(item)  {
       this.selected = item;
-      console.log(this.selected);
     }
   }
 };
