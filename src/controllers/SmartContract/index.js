@@ -20,6 +20,7 @@ const state = {
   tokenBalance: null,
   providerReservesDetails: [],
   tokenLiquidityReserves: [],
+  providerTokenLiquidityReserves: [],
   miningTransactionObject: {
     status: null,
     txHash: ''
@@ -279,10 +280,6 @@ const actions = {
     commit,
     state
   }, params) {
-
-    console.log("fetching token liquidity reserves");
-    console.log(params.erc20);
-
     let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
       from: state.account
     });
@@ -292,11 +289,7 @@ const actions = {
     commit,
     state
   }, params) {
-    console.log(params.web3.currentProvider);
     LiquidityReserve.setProvider(params.web3.currentProvider);
-
-    console.log("liquidity reserve to fetch details");
-    console.log(params.reserveAddress);
 
     let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
