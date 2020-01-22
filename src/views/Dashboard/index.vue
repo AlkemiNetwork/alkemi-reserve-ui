@@ -70,12 +70,12 @@
                   </div>
                   <div class="est-content">
                     <div class="float-left mr-30">
-                      <div class="title-es-content">RESERVES</div>
-                      <div class="monney">3</div>
+                      <div class="title-es-content">POOLS</div>
+                      <div class="monney">{{ this.poolsCounter }}</div>
                     </div>
                     <div>
-                      <div class="title-es-content">POOLS</div>
-                      <div class="monney">12</div>
+                      <div class="title-es-content">RESERVES</div>
+                      <div class="monney">{{ this.reservesCounter }}</div>
                     </div>
                   </div>
                 </b-col>
@@ -83,22 +83,26 @@
                   <div>
                     <b-card no-body>
                       <b-tabs pills card vertical>
-                        <b-tab>
+                        <b-tab
+                        @click="selectWallet(item)"
+                         v-for="(item, key) in data" :key="key">
                           <template v-slot:title>
                             <div class="tab-flex">
                               <div class="content-mid-img">
-                                <b-img src="/img/omg.svg"></b-img>
+                                <b-img :src="'/img/'+item.image"></b-img>
                               </div>
                               <div class="acronym-name content-mid">
-                                OMG
-                                <div class="name-el-money">Omise GO</div>
+                                {{ item.name }}
+                                <div class="name-el-money">{{ item.fullName }}</div>
                               </div>
                               <div class="content-mid">
-                                120,000.34
+                                {{ item.total }}
                                 <div class="cost">$9344.44</div>
                               </div>
                               <div class="content-mid">
-                                +1443.22 <span class="percent">(6.54%)</span>
+                                {{ item.change24h}} 
+                                <span class="percent" v-if="item.total != 0">{{item.change24h * 100 / item.total}}%</span>
+                                <span class="percent" v-if="item.total == 0">{{item.total}}%</span>
                                 <div class="cost">$334.54</div>
                               </div>
                             </div>
@@ -107,12 +111,12 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
+                                  <div class="value float-left">{{ item.total }}</div>
                                   <span class="acronym-name">
-                                    OMG
+                                    {{ item.name }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="el-name">
-                                      Omise GO
+                                      {{ item.fullName }}
                                     </span>
                                   </span>
                                   <span
@@ -132,12 +136,13 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
+                                      <div class="percent" v-if="item.total != 0">+{{item.change24h * 100 / item.total}}%</div>
+                                      <div class="percent" v-if="item.total == 0">+{{item.total}}%</div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
                                       <div class="est-value-change">
-                                        +29,322.34
+                                        {{ item.assetEarning }}
                                       </div>
                                     </div>
                                     <div class="value-change float-left">
@@ -163,118 +168,6 @@
                                       + Add New
                                     </b-button>
                                   </div>
-                                  <b-modal
-                                    hide-footer
-                                    hide-header
-                                    centered
-                                    ref="modal-add-new"
-                                    title="Using Component Methods"
-                                    id="modal-add"
-                                  >
-                                    <div class="head-modal">
-                                      <b-img src="/img/dai.svg"></b-img>
-                                      <span class="title-popup">
-                                        ADD DAI POOL
-                                      </span>
-                                    </div>
-                                    <div class="content-modal">
-                                      <b-form v-if="isShow == 'form-add'">
-                                        <b-form-group
-                                          class="text-label text-left"
-                                          label="AVAILABLE DAI BALANCE"
-                                          label-for="daiBlance"
-                                        >
-                                          <b-form-input
-                                            class="value-available"
-                                            type="text"
-                                            value="10,332.78"
-                                            readonly
-                                          ></b-form-input>
-                                        </b-form-group>
-                                        <b-form-group
-                                          class="text-label text-left input-rlt"
-                                          label="ENTER FUNDING AMOUNT"
-                                          label-for="fundingAmount"
-                                        >
-                                          <b-form-input
-                                            v-model="enterMoney"
-                                            class="enter-money"
-                                            type="text"
-                                            placeholder="0.00"
-                                          >
-                                          </b-form-input>
-                                          <b-button class="btn-position">
-                                            MAX
-                                          </b-button>
-                                        </b-form-group>
-                                        <b-form-group
-                                          v-model="unclockDate"
-                                          class="text-label text-left"
-                                          label="SELECT UNLOCK DATE"
-                                          label-for="unclockDate"
-                                        >
-                                          <div
-                                            class="choose-date"
-                                            @click="showCalendar"
-                                          >
-                                            <span>{{ dayChoose }}</span>
-                                            <b-img
-                                              src="/img/arrow-down-sign-to-navigate.png"
-                                            ></b-img>
-                                          </div>
-                                        </b-form-group>
-                                        <b-button
-                                          v-if="!enterMoney && !unclockDate"
-                                          class="btn-submit btn-modal-disable"
-                                        >
-                                          CREATE POOL
-                                        </b-button>
-                                        <b-button
-                                          v-else
-                                          class="btn-submit btn-modal-add-new"
-                                          @click="loading"
-                                        >
-                                          CREATE POOL
-                                        </b-button>
-                                        <b-button
-                                          class="btn-cancel"
-                                          @click="hideModal()"
-                                        >
-                                          Cancel
-                                        </b-button>
-                                      </b-form>
-                                      <div v-if="isShow == 'calendar'">
-                                        <FunctionalCalendar
-                                          :is-dark="true"
-                                          :is-date-picker="true"
-                                          :date-format="'dd/mm/yyyy'"
-                                          v-on:choseDay="clickDay"
-                                        ></FunctionalCalendar>
-                                        <b-button
-                                          class="btn-cancel"
-                                          @click="backForm()"
-                                        >
-                                          Back
-                                        </b-button>
-                                      </div>
-                                      <div
-                                        v-if="isShow == 'loading'"
-                                        class="processing"
-                                      >
-                                        <div>
-                                          <div class="title-process">
-                                            Processing Transaction
-                                          </div>
-                                          <div class="address-transaction">
-                                            0xbj39....1ea401
-                                          </div>
-                                          <loadingPopup
-                                            :quality="4"
-                                          ></loadingPopup>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </b-modal>
                                   <b-table
                                     fixed
                                     :items="items"
@@ -303,273 +196,6 @@
                             </template>
                           </b-card-text>
                         </b-tab>
-                        <b-tab>
-                          <template v-slot:title>
-                            <div class="tab-flex">
-                              <div class="content-mid-img">
-                                <b-img src="/img/dai.svg"></b-img>
-                              </div>
-                              <div class="acronym-name content-mid">
-                                DAI
-                                <div class="name-el-money">Maker Dai</div>
-                              </div>
-                              <div class="content-mid">
-                                2,344,333.76
-                                <div class="cost">$89,344.44</div>
-                              </div>
-                              <div class="content-mid">
-                                +22384.44 <span class="percent">(6.54%)</span>
-                                <div class="cost">$334.54</div>
-                              </div>
-                            </div>
-                          </template>
-                          <b-card-text>
-                            <template>
-                              <div>
-                                <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
-                                  <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="el-name"> Omise GO</span>
-                                  </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
-                                  <div class="clearfix"></div>
-                                  <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="text-est"> EST USD VALUE</span>
-                                  </div>
-                                </div>
-                                <div class="chart-line">
-                                  <div class="info-chart">
-                                    <div class="value-change float-left">
-                                      24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      TOKEN EARNINGS
-                                      <div class="est-value-change">
-                                        +29,322.34
-                                      </div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      USD VALUE EARNINGS
-                                      <div class="est-value-change">
-                                        + $12,333.12
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="clearfix"></div>
-                                  <chart :options="chartOptionsLine"></chart>
-                                </div>
-                              </div>
-                            </template>
-                          </b-card-text>
-                        </b-tab>
-                        <b-tab>
-                          <template v-slot:title>
-                            <div class="tab-flex">
-                              <div class="content-mid-img">
-                                <b-img src="/img/eos.svg"></b-img>
-                              </div>
-                              <div class="acronym-name content-mid">
-                                EOS
-                                <div class="name-el-money">EOS</div>
-                              </div>
-                              <div class="content-mid">
-                                182,382.28
-                                <div class="cost">$283,382.00</div>
-                              </div>
-                              <div class="content-mid">
-                                +12443.23 <span class="percent">(8.56%)</span>
-                                <div class="cost">$12,754.53</div>
-                              </div>
-                            </div>
-                          </template>
-                          <b-card-text>
-                            <template>
-                              <div>
-                                <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
-                                  <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="el-name"> Omise GO</span>
-                                  </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
-                                  <div class="clearfix"></div>
-                                  <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="text-est">EST USD VALUE</span>
-                                  </div>
-                                </div>
-                                <div class="chart-line">
-                                  <div class="info-chart">
-                                    <div class="value-change float-left">
-                                      24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      TOKEN EARNINGS
-                                      <div class="est-value-change">
-                                        +29,322.34
-                                      </div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      USD VALUE EARNINGS
-                                      <div class="est-value-change">
-                                        + $12,333.12
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="clearfix"></div>
-                                  <chart :options="chartOptionsLine"></chart>
-                                </div>
-                              </div>
-                            </template>
-                          </b-card-text>
-                        </b-tab>
-                        <b-tab>
-                          <template v-slot:title>
-                            <div class="tab-flex">
-                              <div class="content-mid-img">
-                                <b-img src="/img/mkr.svg"></b-img>
-                              </div>
-                              <div class="acronym-name content-mid">
-                                MKR
-                                <div class="name-el-money">Maker</div>
-                              </div>
-                              <div class="content-mid">
-                                65,844.57
-                                <div class="cost">$23,003.90</div>
-                              </div>
-                              <div class="content-mid">
-                                +1443.22 <span class="percent">(3.23%)</span>
-                                <div class="cost">$334.54</div>
-                              </div>
-                            </div>
-                          </template>
-                          <b-card-text>
-                            <template>
-                              <div>
-                                <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
-                                  <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="el-name"> Omise GO</span>
-                                  </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
-                                  <div class="clearfix"></div>
-                                  <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="text-est"> EST USD VALUE</span>
-                                  </div>
-                                </div>
-                                <div class="chart-line">
-                                  <div class="info-chart">
-                                    <div class="value-change float-left">
-                                      24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      TOKEN EARNINGS
-                                      <div class="est-value-change">
-                                        +29,322.34
-                                      </div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      USD VALUE EARNINGS
-                                      <div class="est-value-change">
-                                        + $12,333.12
-                                      </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                  </div>
-                                  <chart :options="chartOptionsLine"></chart>
-                                </div>
-                              </div>
-                            </template>
-                          </b-card-text>
-                        </b-tab>
-                        <b-tab>
-                          <template v-slot:title>
-                            <div class="tab-flex">
-                              <div class="content-mid-img">
-                                <b-img src="/img/bnb.svg"></b-img>
-                              </div>
-                              <div class="acronym-name content-mid">
-                                BNB
-                                <div class="name-el-money">BInance</div>
-                              </div>
-                              <div class="content-mid">
-                                <div class="cost"></div>
-                              </div>
-                              <div class="content-mid">
-                                - <span class="percent"></span>
-                                <div class="cost"></div>
-                              </div>
-                            </div>
-                          </template>
-                          <b-card-text>
-                            <template>
-                              <div>
-                                <div class="info-value">
-                                  <div class="value float-left">120,000.34</div>
-                                  <span class="acronym-name">
-                                    OMG
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="el-name"> Omise GO</span>
-                                  </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
-                                  <div class="clearfix"></div>
-                                  <div class="est-value">
-                                    $9344.44
-                                    <span class="line-vertical-14">|</span>
-                                    <span class="text-est"> EST USD VALUE</span>
-                                  </div>
-                                </div>
-                                <div class="chart-line">
-                                  <div class="info-chart">
-                                    <div class="value-change float-left">
-                                      24 HR CHANGE
-                                      <div class="percent">+5.55 %</div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      TOKEN EARNINGS
-                                      <div class="est-value-change">
-                                        +29,322.34
-                                      </div>
-                                    </div>
-                                    <div class="value-change float-left">
-                                      USD VALUE EARNINGS
-                                      <div class="est-value-change">
-                                        + $12,333.12
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="clearfix"></div>
-                                  <chart :options="chartOptionsLine"></chart>
-                                </div>
-                              </div>
-                            </template>
-                          </b-card-text>
-                        </b-tab>
                       </b-tabs>
                     </b-card>
                   </div>
@@ -581,6 +207,148 @@
       </b-row>
     </b-container>
     <div class="version">Version: {{ version }}</div>
+    <b-modal
+      hide-footer
+      hide-header
+      centered
+      ref="modal-add-new"
+      title="Using Component Methods"
+      id="modal-add"
+    >
+      <div class="head-modal">
+        <b-img src="/img/dai.svg"></b-img>
+        <span class="title-popup">
+          ADD {{ selected ? selected.name : '' }} POOL
+        </span>
+      </div>
+      <div class="content-modal">
+        <b-form v-if="isShow == 'form-add'">
+          <b-form-group
+            class="text-label text-left"
+            label="AVAILABLE DAI BALANCE"
+            label-for="daiBlance"
+          >
+            <b-form-input
+              class="value-available"
+              type="text"
+              v-model="daiBlance"
+              readonly
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left input-rlt"
+            label="ENTER FUNDING AMOUNT"
+            label-for="fundingAmount"
+          >
+            <b-form-input
+              v-model="enterMoney"
+              class="enter-money"
+              type="text"
+              placeholder="0.00"
+            >
+            </b-form-input>
+            <b-button
+              @click="maxAvailable"
+              class="btn-position"
+            >
+              MAX
+            </b-button>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left"
+            label="SELECT UNLOCK DATE"
+            label-for="unclockDate"
+          >
+            <div
+              class="choose-date"
+              @click="showCalendar"
+            >
+              <input
+                type="text"
+                v-model="unclockDate"
+                disabled
+              />
+              <b-img
+                src="/img/arrow-down-sign-to-navigate.png"
+              ></b-img>
+            </div>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left lock-price"
+            label="ENTER USD LIQIUDATION PRICE"
+            label-for="fundingAmount"
+          >
+            <div class="select-relative w-50">
+              <b-form-select
+                v-model="lockPricePosition"
+                :options="options"
+                class="enter-money float-left"
+              >
+              </b-form-select>
+              <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
+            </div>
+            <b-form-input
+              v-model="lockPrice"
+              class="enter-money w-50 float-left"
+              type="text"
+              placeholder="$ 0.00"
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-button
+            class="btn-submit"
+            v-bind:class="{
+              'btn-modal-add-new':
+                enterMoney && unclockDate,
+              'btn-modal-disable':
+                !enterMoney || !unclockDate
+            }"
+            @click="createReserve"
+            :disabled="
+              !enterMoney || !unclockDate
+            "
+          >
+            CREATE POOL
+          </b-button>
+          <b-button
+            class="btn-cancel"
+            @click="hideModal()"
+          >
+            Cancel
+          </b-button>
+        </b-form>
+        <div v-if="isShow == 'calendar'">
+          <FunctionalCalendar
+            :is-dark="true"
+            :is-date-picker="true"
+            :date-format="'dd/mm/yyyy'"
+            v-on:choseDay="clickDay"
+          ></FunctionalCalendar>
+          <b-button
+            class="btn-cancel"
+            @click="backForm()"
+          >
+            Back
+          </b-button>
+        </div>
+        <div
+          v-if="isShow == 'loading'"
+          class="processing"
+        >
+          <div>
+            <div class="title-process">
+              Processing Transaction
+            </div>
+            <div class="address-transaction">
+              0xbj39....1ea401
+            </div>
+            <loadingPopup
+              :quality="4"
+            ></loadingPopup>
+          </div>
+        </div>
+      </div>
+    </b-modal>
     <b-modal
       hide-footer
       hide-header
@@ -651,14 +419,17 @@
     </b-modal>
   </div>
 </template>
+
 <script>
+import { mapActions, mapState } from "vuex";
 import Web3 from "web3";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import loadingPopup from "../../components/loading-popup/index";
-import { mapState, mapActions } from "vuex";
+import accounting from "accounting";
 
 const currentVersion = require("../../../package.json").version;
 const moment = require("moment");
+
 export default {
   name: "dashboard",
   components: {
@@ -671,9 +442,86 @@ export default {
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
+      daiBlance: 0,
       dayChoose: "",
-      enterMoney: null,
-      unclockDate: null,
+      enterMoney: "",
+      unclockDate: "",
+      lockPrice: "",
+      selected: null,
+      lockPricePosition: "0",
+      options: [
+        { value: "0", text: 'Below' },
+        { value: "1", text: 'Above' },
+      ],
+      reservesCounter: 0,
+      poolsCounter: 0,
+      data: [
+        {
+          name: "DAI",
+          fullName: "Maker Dai",
+          image: "dai.svg",
+          erc20Token: "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          assetEarning: 0,
+          usdEarning: 0
+        },
+        {
+          name: "USDC",
+          fullName: "USD Coin",
+          image: "usdc.svg",
+          erc20Token: "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          assetEarning: 0,
+          usdEarning: 0
+        },
+        {
+          name: "LINK",
+          fullName: "LinkCoin",
+          image: "link.svg",
+          erc20Token: "0xf6b1c64e86c1213088a6464484ebb8488635795d",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          assetEarning: 0,
+          usdEarning: 0
+        },
+        {
+          name: "MKR",
+          fullName: "Maker",
+          image: "mkr.svg",
+          erc20Token: "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          assetEarning: 0,
+          usdEarning: 0
+        },
+        {
+          name: "KRWB",
+          fullName: "Korean Won",
+          image: "krwb.svg",
+          erc20Token: "0x7fca0bf31dcec373c90478c9167b8b11b7dec3a1",
+          total: 0,
+          estUSD: 0,
+          fluctuation: 0,
+          estFluctuation: 0,
+          change24h: 0,
+          assetEarning: 0,
+          usdEarning: 0,
+        },
+      ],
       chartOptionsLine: {
         grid: {
           left: 0,
@@ -737,27 +585,10 @@ export default {
           thStyle: { width: "16.66%" }
         }
       ],
-      items: [
-        {
-          created: "12 DEC 19",
-          total_size: "18,413 OMG",
-          est_USD_value: "$4373.43",
-          total_earnings: "+2,323.00 OMG",
-          total_percent_earnings: "12.23 %",
-          btn: "15 Days 2 Hrs"
-        },
-        {
-          created: "01 DEC 19",
-          total_size: "101,600.20 OMG",
-          est_USD_value: "$12,433.22",
-          total_earnings: "+16,232.12 OMG",
-          total_percent_earnings: "21.59 %",
-          btn: ""
-        }
-      ]
+      items: []
     };
   },
-  created() {
+  async created() {
     if (window.web3.currentProvider.selectedAddress) {
       var addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -766,25 +597,171 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
-      this.INIT_APP(window.web3);
+      await this.INIT_APP(window.web3);
+      await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
+      console.log("provider liquidity reserves");
+      console.log(this.providerLiquidityReserves);
+      this.reservesCounter = this.providerLiquidityReserves.length;
+      this.selected = this.data[0]
+      await this.getProviderReservesDetails();
+      console.log("provider liquidity reserves details");
+      console.log(this.providerReservesDetails);
+    }
+    else{
+      this.selected = this.data[0]
     }
   },
   computed: {
     ...mapState("ContractController", [
       "currentNetwork",
       "account",
-      "alkemiNetwork"
+      "alkemiNetwork",
+      "providerLiquidityReserves",
+      "providerReservesDetails",
+      "tokensBalance"
     ])
   },
   watch: {
     alkemiNetwork: function(value) {
-      if (value) this.LOAD_LIQUIDITY_RESERVES();
+      if (value) this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
+    }
+  },
+  filters: {
+    formatMoney: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "$",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "0.00";
+    },
+    formatMoneyHasDola: value => {
+      accounting.settings = {
+        currency: {
+          symbol: "$",
+          decimal: ".",
+          thousand: ",",
+          precision: 2,
+          format: "%s%v"
+        },
+        number: {
+          precision: 0,
+          thousand: ",",
+          decimal: "."
+        }
+      };
+      return accounting.formatMoney(value);
+    },
+    formatMoneyReturnNull: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "$",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "";
+    },
+    formatPercent: value => {
+      return accounting.formatMoney(value, { symbol: "%", format: "%v%s" });
+    },
+    formatPercentSpace: value => {
+      return accounting.formatMoney(value, { symbol: " %", format: "%v%s" });
+    },
+    formatNumberReturnZero: value => {
+      accounting.settings = {
+        currency: {
+          symbol: "",
+          decimal: ".",
+          thousand: ",",
+          precision: 2,
+          format: "%s%v"
+        },
+        number: {
+          precision: 0,
+          thousand: ",",
+          decimal: "."
+        }
+      };
+      return accounting.formatMoney(value);
+    },
+    transformMoney: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "+",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "-";
+    },
+    formatUSDEarning: value => {
+      if (value) {
+        accounting.settings = {
+          currency: {
+            symbol: "+ $",
+            decimal: ".",
+            thousand: ",",
+            precision: 2,
+            format: "%s%v"
+          },
+          number: {
+            precision: 0,
+            thousand: ",",
+            decimal: "."
+          }
+        };
+        return accounting.formatMoney(value);
+      }
+      return "-";
+    },
+    formatNumber: value => {
+      if (value) {
+        return value;
+      }
+      return "-";
     }
   },
   methods: {
     ...mapActions("ContractController", [
       "INIT_APP",
-      "LOAD_LIQUIDITY_RESERVES"
+      "LOAD_PROVIDER_LIQUIDITY_RESERVES",
+      "CREATE_LIQUIDITY_RESERVE",
+      "LOAD_TOKEN_LIQUIDITY_RESERVES",
+      "GET_RESERVE_DETAILS",
+      "GET_TOKEN_BALANCE"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -798,6 +775,11 @@ export default {
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
             console.log(this.addressWallet);
             this.isConnect = true;
+            window.web3.eth
+              .getBalance(window.web3.currentProvider.selectedAddress)
+              .then(coins => {
+                this.daiBlance = coins;
+              });
           });
         } catch (error) {
           console.log(error);
@@ -817,6 +799,56 @@ export default {
           "Non-Ethereum browser detected. You should consider trying MetaMask!"
         );
       }
+    },
+    createReserve() {
+      this.CREATE_LIQUIDITY_RESERVE({
+        web3: window.web3,
+        linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
+        beneficiary: "0x0000000000000000000000000000000000000000",
+        erc20Token: this.selected.erc20Token,
+        lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
+          .unix()
+          .toString(),
+        lockingPrice: window.web3.utils.toWei(
+          this.lockPrice.toString(),
+          "ether"
+        ),
+        lockingPricePosition: parseInt(this.lockPricePosition),
+        depositAmount: window.web3.utils.toWei(
+          this.enterMoney.toString(),
+          "ether"
+        )
+      });
+    },
+    async getProviderReservesDetails() {
+      for(let i=0; i<this.providerLiquidityReserves.length; i++) {
+        await this.GET_RESERVE_DETAILS({
+          web3: window.web3,
+          reserveAddress: this.providerLiquidityReserves[i]
+        });
+      }
+      this.providerReservesDetails.forEach(reserve => {
+        switch (reserve.asset) {
+          case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa":
+            this.data[0].total += parseInt(reserve.deposited);
+            this.data[0].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096":
+            this.data[1].total += parseInt(reserve.deposited);
+            this.data[1].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0xf6b1c64e86c1213088a6464484ebb8488635795d":
+            this.data[2].total += parseInt(reserve.deposited);
+            this.data[2].assetEarning += parseInt(reserve.earned);
+            break;
+          case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
+            this.data[3].total += parseInt(reserve.deposited);
+            this.data[3].assetEarning += parseInt(reserve.earned);
+            break;
+          default:
+            break;
+        }
+      });
     },
     /* eslint-enable */
     showModal() {
@@ -839,10 +871,16 @@ export default {
     },
     clickDay(data) {
       if (data.date) {
-        this.dayChoose = moment(data.date, "DD/MM/YYYY").format("DD MMM YYYY");
+        this.unclockDate = moment(data.date, "DD/MM/YYYY").format(
+          "DD MMM YYYY"
+        );
+        this.dayChoose = data.date;
         this.isShow = "form-add";
       }
       return false;
+    },
+    maxAvailable() {
+      this.enterMoney = this.daiBlance;
     },
     loading() {
       this.isShow = "loading";
@@ -851,6 +889,9 @@ export default {
         return this.hideModal();
       }, 4000);
       // clearTimeout(timerid);
+    },
+    selectWallet(item)  {
+      this.selected = item;
     }
   }
 };

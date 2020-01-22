@@ -159,14 +159,14 @@
     "absolutePath": "/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/IOracleGuard.sol",
     "exportedSymbols": {
       "IOracleGuard": [
-        636
+        726
       ]
     },
-    "id": 637,
+    "id": 727,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 581,
+        "id": 671,
         "literals": [
           "solidity",
           "^",
@@ -182,9 +182,9 @@
         "contractKind": "contract",
         "documentation": "@title IOracleGuard",
         "fullyImplemented": false,
-        "id": 636,
+        "id": 726,
         "linearizedBaseContracts": [
-          636
+          726
         ],
         "name": "IOracleGuard",
         "nodeType": "ContractDefinition",
@@ -192,22 +192,22 @@
           {
             "body": null,
             "documentation": "@dev Auth node to call oracle\n@notice can only be called from an authorized sender\n@param a nodes addresses",
-            "id": 587,
+            "id": 677,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "authNode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 585,
+              "id": 675,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 584,
+                  "id": 674,
                   "name": "a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 587,
+                  "scope": 677,
                   "src": "239:20:7",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -217,7 +217,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 582,
+                      "id": 672,
                       "name": "address",
                       "nodeType": "ElementaryTypeName",
                       "src": "239:7:7",
@@ -227,7 +227,7 @@
                         "typeString": "address"
                       }
                     },
-                    "id": 583,
+                    "id": 673,
                     "length": null,
                     "nodeType": "ArrayTypeName",
                     "src": "239:9:7",
@@ -243,12 +243,12 @@
               "src": "238:22:7"
             },
             "returnParameters": {
-              "id": 586,
+              "id": 676,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "269:0:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "221:49:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -257,22 +257,22 @@
           {
             "body": null,
             "documentation": "@dev Ban node\n@notice can only be called from an authorized sender\n@param a node address",
-            "id": 592,
+            "id": 682,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "dropNode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 590,
+              "id": 680,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 589,
+                  "id": 679,
                   "name": "a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 592,
+                  "scope": 682,
                   "src": "412:9:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -281,7 +281,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 588,
+                    "id": 678,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "412:7:7",
@@ -298,12 +298,12 @@
               "src": "411:11:7"
             },
             "returnParameters": {
-              "id": 591,
+              "id": 681,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "431:0:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "394:38:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -312,22 +312,22 @@
           {
             "body": null,
             "documentation": "@dev Check if contract is authorized to call oracle\n@param _contract contract address\n@return true if authorized",
-            "id": 599,
+            "id": 689,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isContractAuth",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 595,
+              "id": 685,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 594,
+                  "id": 684,
                   "name": "_contract",
                   "nodeType": "VariableDeclaration",
-                  "scope": 599,
+                  "scope": 689,
                   "src": "604:17:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -336,7 +336,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 593,
+                    "id": 683,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "604:7:7",
@@ -353,15 +353,15 @@
               "src": "603:19:7"
             },
             "returnParameters": {
-              "id": 598,
+              "id": 688,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 597,
+                  "id": 687,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 599,
+                  "scope": 689,
                   "src": "646:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -370,7 +370,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 596,
+                    "id": 686,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "646:4:7",
@@ -385,7 +385,7 @@
               ],
               "src": "645:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "580:72:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -394,22 +394,22 @@
           {
             "body": null,
             "documentation": "@dev Check if node is authorized to submit book to oracle\n@param _node node address\n@return true if authorized",
-            "id": 606,
+            "id": 696,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeAuth",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 602,
+              "id": 692,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 601,
+                  "id": 691,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 606,
+                  "scope": 696,
                   "src": "818:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -418,7 +418,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 600,
+                    "id": 690,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "818:7:7",
@@ -435,15 +435,15 @@
               "src": "817:15:7"
             },
             "returnParameters": {
-              "id": 605,
+              "id": 695,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 604,
+                  "id": 694,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 606,
+                  "scope": 696,
                   "src": "856:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -452,7 +452,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 603,
+                    "id": 693,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "856:4:7",
@@ -467,7 +467,7 @@
               ],
               "src": "855:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "798:64:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -476,22 +476,22 @@
           {
             "body": null,
             "documentation": "@dev check if node is banned\n@param _node node address\n@return true if banned",
-            "id": 613,
+            "id": 703,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeBan",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 609,
+              "id": 699,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 608,
+                  "id": 698,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 613,
+                  "scope": 703,
                   "src": "994:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -500,7 +500,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 607,
+                    "id": 697,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "994:7:7",
@@ -517,15 +517,15 @@
               "src": "993:15:7"
             },
             "returnParameters": {
-              "id": 612,
+              "id": 702,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 611,
+                  "id": 701,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 613,
+                  "scope": 703,
                   "src": "1032:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -534,7 +534,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 610,
+                    "id": 700,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1032:4:7",
@@ -549,7 +549,7 @@
               ],
               "src": "1031:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "975:63:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -558,22 +558,22 @@
           {
             "body": null,
             "documentation": "@dev check if node is slashed (node does not have minimum token amount)\n@param _node node address\n@return true if banned",
-            "id": 620,
+            "id": 710,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeSlashed",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 616,
+              "id": 706,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 615,
+                  "id": 705,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 620,
+                  "scope": 710,
                   "src": "1217:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -582,7 +582,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 614,
+                    "id": 704,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1217:7:7",
@@ -599,15 +599,15 @@
               "src": "1216:15:7"
             },
             "returnParameters": {
-              "id": 619,
+              "id": 709,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 618,
+                  "id": 708,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 620,
+                  "scope": 710,
                   "src": "1255:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -616,7 +616,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 617,
+                    "id": 707,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1255:4:7",
@@ -631,7 +631,7 @@
               ],
               "src": "1254:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1194:67:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -640,28 +640,28 @@
           {
             "body": null,
             "documentation": "@dev Get Alkemi Token address",
-            "id": 625,
+            "id": 715,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "token",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 621,
+              "id": 711,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1330:2:7"
             },
             "returnParameters": {
-              "id": 624,
+              "id": 714,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 623,
+                  "id": 713,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 625,
+                  "scope": 715,
                   "src": "1354:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -670,7 +670,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 622,
+                    "id": 712,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1354:7:7",
@@ -686,7 +686,7 @@
               ],
               "src": "1353:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1316:47:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -695,28 +695,28 @@
           {
             "body": null,
             "documentation": "@dev Get the amount of required tokens to run node",
-            "id": 630,
+            "id": 720,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "requiredToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 626,
+              "id": 716,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1461:2:7"
             },
             "returnParameters": {
-              "id": 629,
+              "id": 719,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 628,
+                  "id": 718,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 630,
+                  "scope": 720,
                   "src": "1485:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -725,7 +725,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 627,
+                    "id": 717,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1485:7:7",
@@ -740,7 +740,7 @@
               ],
               "src": "1484:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1439:55:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -749,28 +749,28 @@
           {
             "body": null,
             "documentation": "@dev Get number of nodes available to vote",
-            "id": 635,
+            "id": 725,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "nodesCounter",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 631,
+              "id": 721,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1583:2:7"
             },
             "returnParameters": {
-              "id": 634,
+              "id": 724,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 633,
+                  "id": 723,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 635,
+                  "scope": 725,
                   "src": "1607:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -779,7 +779,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 632,
+                    "id": 722,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1607:7:7",
@@ -794,14 +794,14 @@
               ],
               "src": "1606:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1562:54:7",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 637,
+        "scope": 727,
         "src": "56:1563:7"
       }
     ],
@@ -811,14 +811,14 @@
     "absolutePath": "/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/IOracleGuard.sol",
     "exportedSymbols": {
       "IOracleGuard": [
-        636
+        726
       ]
     },
-    "id": 637,
+    "id": 727,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 581,
+        "id": 671,
         "literals": [
           "solidity",
           "^",
@@ -834,9 +834,9 @@
         "contractKind": "contract",
         "documentation": "@title IOracleGuard",
         "fullyImplemented": false,
-        "id": 636,
+        "id": 726,
         "linearizedBaseContracts": [
-          636
+          726
         ],
         "name": "IOracleGuard",
         "nodeType": "ContractDefinition",
@@ -844,22 +844,22 @@
           {
             "body": null,
             "documentation": "@dev Auth node to call oracle\n@notice can only be called from an authorized sender\n@param a nodes addresses",
-            "id": 587,
+            "id": 677,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "authNode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 585,
+              "id": 675,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 584,
+                  "id": 674,
                   "name": "a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 587,
+                  "scope": 677,
                   "src": "239:20:7",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -869,7 +869,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 582,
+                      "id": 672,
                       "name": "address",
                       "nodeType": "ElementaryTypeName",
                       "src": "239:7:7",
@@ -879,7 +879,7 @@
                         "typeString": "address"
                       }
                     },
-                    "id": 583,
+                    "id": 673,
                     "length": null,
                     "nodeType": "ArrayTypeName",
                     "src": "239:9:7",
@@ -895,12 +895,12 @@
               "src": "238:22:7"
             },
             "returnParameters": {
-              "id": 586,
+              "id": 676,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "269:0:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "221:49:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -909,22 +909,22 @@
           {
             "body": null,
             "documentation": "@dev Ban node\n@notice can only be called from an authorized sender\n@param a node address",
-            "id": 592,
+            "id": 682,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "dropNode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 590,
+              "id": 680,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 589,
+                  "id": 679,
                   "name": "a",
                   "nodeType": "VariableDeclaration",
-                  "scope": 592,
+                  "scope": 682,
                   "src": "412:9:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -933,7 +933,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 588,
+                    "id": 678,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "412:7:7",
@@ -950,12 +950,12 @@
               "src": "411:11:7"
             },
             "returnParameters": {
-              "id": 591,
+              "id": 681,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "431:0:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "394:38:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -964,22 +964,22 @@
           {
             "body": null,
             "documentation": "@dev Check if contract is authorized to call oracle\n@param _contract contract address\n@return true if authorized",
-            "id": 599,
+            "id": 689,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isContractAuth",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 595,
+              "id": 685,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 594,
+                  "id": 684,
                   "name": "_contract",
                   "nodeType": "VariableDeclaration",
-                  "scope": 599,
+                  "scope": 689,
                   "src": "604:17:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -988,7 +988,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 593,
+                    "id": 683,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "604:7:7",
@@ -1005,15 +1005,15 @@
               "src": "603:19:7"
             },
             "returnParameters": {
-              "id": 598,
+              "id": 688,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 597,
+                  "id": 687,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 599,
+                  "scope": 689,
                   "src": "646:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1022,7 +1022,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 596,
+                    "id": 686,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "646:4:7",
@@ -1037,7 +1037,7 @@
               ],
               "src": "645:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "580:72:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1046,22 +1046,22 @@
           {
             "body": null,
             "documentation": "@dev Check if node is authorized to submit book to oracle\n@param _node node address\n@return true if authorized",
-            "id": 606,
+            "id": 696,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeAuth",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 602,
+              "id": 692,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 601,
+                  "id": 691,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 606,
+                  "scope": 696,
                   "src": "818:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1070,7 +1070,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 600,
+                    "id": 690,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "818:7:7",
@@ -1087,15 +1087,15 @@
               "src": "817:15:7"
             },
             "returnParameters": {
-              "id": 605,
+              "id": 695,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 604,
+                  "id": 694,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 606,
+                  "scope": 696,
                   "src": "856:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1104,7 +1104,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 603,
+                    "id": 693,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "856:4:7",
@@ -1119,7 +1119,7 @@
               ],
               "src": "855:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "798:64:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1128,22 +1128,22 @@
           {
             "body": null,
             "documentation": "@dev check if node is banned\n@param _node node address\n@return true if banned",
-            "id": 613,
+            "id": 703,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeBan",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 609,
+              "id": 699,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 608,
+                  "id": 698,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 613,
+                  "scope": 703,
                   "src": "994:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1152,7 +1152,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 607,
+                    "id": 697,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "994:7:7",
@@ -1169,15 +1169,15 @@
               "src": "993:15:7"
             },
             "returnParameters": {
-              "id": 612,
+              "id": 702,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 611,
+                  "id": 701,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 613,
+                  "scope": 703,
                   "src": "1032:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1186,7 +1186,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 610,
+                    "id": 700,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1032:4:7",
@@ -1201,7 +1201,7 @@
               ],
               "src": "1031:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "975:63:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1210,22 +1210,22 @@
           {
             "body": null,
             "documentation": "@dev check if node is slashed (node does not have minimum token amount)\n@param _node node address\n@return true if banned",
-            "id": 620,
+            "id": 710,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isNodeSlashed",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 616,
+              "id": 706,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 615,
+                  "id": 705,
                   "name": "_node",
                   "nodeType": "VariableDeclaration",
-                  "scope": 620,
+                  "scope": 710,
                   "src": "1217:13:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1234,7 +1234,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 614,
+                    "id": 704,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1217:7:7",
@@ -1251,15 +1251,15 @@
               "src": "1216:15:7"
             },
             "returnParameters": {
-              "id": 619,
+              "id": 709,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 618,
+                  "id": 708,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 620,
+                  "scope": 710,
                   "src": "1255:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1268,7 +1268,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 617,
+                    "id": 707,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1255:4:7",
@@ -1283,7 +1283,7 @@
               ],
               "src": "1254:6:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1194:67:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1292,28 +1292,28 @@
           {
             "body": null,
             "documentation": "@dev Get Alkemi Token address",
-            "id": 625,
+            "id": 715,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "token",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 621,
+              "id": 711,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1330:2:7"
             },
             "returnParameters": {
-              "id": 624,
+              "id": 714,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 623,
+                  "id": 713,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 625,
+                  "scope": 715,
                   "src": "1354:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1322,7 +1322,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 622,
+                    "id": 712,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1354:7:7",
@@ -1338,7 +1338,7 @@
               ],
               "src": "1353:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1316:47:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1347,28 +1347,28 @@
           {
             "body": null,
             "documentation": "@dev Get the amount of required tokens to run node",
-            "id": 630,
+            "id": 720,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "requiredToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 626,
+              "id": 716,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1461:2:7"
             },
             "returnParameters": {
-              "id": 629,
+              "id": 719,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 628,
+                  "id": 718,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 630,
+                  "scope": 720,
                   "src": "1485:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 627,
+                    "id": 717,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1485:7:7",
@@ -1392,7 +1392,7 @@
               ],
               "src": "1484:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1439:55:7",
             "stateMutability": "view",
             "superFunction": null,
@@ -1401,28 +1401,28 @@
           {
             "body": null,
             "documentation": "@dev Get number of nodes available to vote",
-            "id": 635,
+            "id": 725,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "nodesCounter",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 631,
+              "id": 721,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1583:2:7"
             },
             "returnParameters": {
-              "id": 634,
+              "id": 724,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 633,
+                  "id": 723,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 635,
+                  "scope": 725,
                   "src": "1607:7:7",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1431,7 +1431,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 632,
+                    "id": 722,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1607:7:7",
@@ -1446,14 +1446,14 @@
               ],
               "src": "1606:9:7"
             },
-            "scope": 636,
+            "scope": 726,
             "src": "1562:54:7",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 637,
+        "scope": 727,
         "src": "56:1563:7"
       }
     ],
@@ -1464,8 +1464,8 @@
     "version": "0.5.5+commit.47a71e8f.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-08T15:42:16.973Z",
+  "schemaVersion": "3.0.21",
+  "updatedAt": "2020-01-21T11:50:43.775Z",
   "devdoc": {
     "methods": {
       "authNode(address[])": {
