@@ -853,22 +853,22 @@ export default {
       this.providerReservesDetails.forEach(reserve => {
         switch (reserve.asset) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa":
-            this.data[0].total += parseInt(reserve.deposited);
+            this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
             this.data[0].providerReserves.push(reserve);
             break;
           case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096":
-            this.data[1].total += parseInt(reserve.deposited);
+            this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
             this.data[1].providerReserves.push(reserve);
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d":
-            this.data[2].total += parseInt(reserve.deposited);
+            this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
             this.data[2].providerReserves.push(reserve);
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290":
-            this.data[3].total += parseInt(reserve.deposited);
+            this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
             this.data[3].providerReserves.push(reserve);
             break;
