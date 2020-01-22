@@ -186,7 +186,7 @@
                                         {{ row.item.earned }}
                                       </div>
                                       <div class="value-change float-left">
-                                        {{ row.item.earned * 100 / row.item.totalBalance }}
+                                        {{ row.item.earned * 100 / row.item.totalBalance }} %
                                       </div>
                                       <b-button
                                         v-if="!row.item.btn"
