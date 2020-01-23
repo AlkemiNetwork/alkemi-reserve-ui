@@ -1,12 +1,14 @@
 # Liquidity Reserves Dashboard
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Built with Vue.js](https://img.shields.io/badge/Vue.js-black?style=flat&logo=vue.js)](https://alkemi.atlassian.net/wiki/spaces/ARCH/pages/42139840/Switchboard)
+[![Built on Ethereum](https://img.shields.io/badge/web3.js-blue?style=flat&logo=ethereum)](https://alkemi.atlassian.net/wiki/spaces/ARCH/pages/42139840/Switchboard)
 [![Twitter: AlkemiOfficial](https://img.shields.io/twitter/follow/AlkemiOfficial.svg?style=social)](https://twitter.com/AlkemiOfficial)
 
 > Web3 interface for Alkemi liquidity reserves
 
-![Liquidity Dashboard](/docs/assets/liquidity-dashboard2.gif)
+![Liquidity Dashboard](https://raw.githubusercontent.com/project-alkemi/alkemi-protocol/master/docs/assets/liquidity-dashboard2.gif)
 
 ## How do I get set up?
 
@@ -17,25 +19,25 @@
 #### Install
 
 ```bash
-npm install
+$ npm install
 ```
 
 #### Run your unit tests
 
 ```bash
-npm run-script test:unit
+$ npm run-script test:unit
 ```
 
 #### Run your end-to-end tests
 
 ```bash
-npm run-script test:e2e
+$ npm run-script test:e2e
 ```
 
 #### Lints and fixes files
 
 ```bash
-npm run-script lint
+$ npm run-script lint
 ```
 
 ### Contribution guidelines
@@ -51,21 +53,23 @@ npm run-script lint
 #### Compiles and hot-reloads for development
 
 ```bash
-npm run-script serve
+$ npm run-script serve
 ```
 
 #### Compiles and minifies for production
 
 ```bash
-npm run-script build
+$ npm run-script build
 ```
 
 #### Build and Deploy with Docker
 
 ```bash
-docker build . -t liquidity-reserve-dashboard
+# Build Docker
+$ docker build . -t liquidity-reserve-dashboard
 
-docker run -d -p 8080:80 liquidity-reserve-dashboard
+# Run Docker on port 8080
+$ docker run -d -p 8080:80 liquidity-reserve-dashboard
 ```
 
 #### Continuous Deployment for Production
@@ -100,7 +104,7 @@ This project is [MIT](https://opensource.org/licenses/MIT) licensed.
 
     MIT License
 
-    Copyright (c) 2019 Alkemi
+    Copyright (c) 2020 Alkemi
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
