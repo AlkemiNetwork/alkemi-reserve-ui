@@ -3,7 +3,13 @@ import truffleContract from "truffle-contract";
 import * as actionType from "../ActionTypes";
 import * as mutationType from "../MutationType";
 import AlkemiNetworkABI from "../../contracts/AlkemiNetwork.json";
+import LiquidityReserveABI from "../../contracts/LiquidityReserve.json";
+import ERC20ABI from "../../contracts/ERC20.json";
+import axios from "axios";
+
 const AlkemiNetwork = truffleContract(AlkemiNetworkABI);
+const LiquidityReserve = truffleContract(LiquidityReserveABI);
+const ERC20Token = truffleContract(ERC20ABI);
 
 const state = {
   web3: null,
@@ -11,12 +17,40 @@ const state = {
   currentNetwork: null,
   etherscanBase: null,
   alkemiNetwork: null,
-  liquidityReserve: null
+  providerLiquidityReserves: null,
+  tokensBalance: [],
+  providerReservesDetails: [],
+  tokenLiquidityReserves: [],
+  unitCoin: "USD",
+  priceCoin: {},
+  miningTransactionObject: {
+    status: null,
+    txHash: ""
+  }
 };
 
 const getters = {};
 
 const actions = {
+  [actionType.GET_PRICE_COIN]: function({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      axios(`https://market-data.alkemi.tech/exchange/bitfinex2/ticker`, {
+        method: "GET",
+        params: { symbol: `${params.name}/${state.unitCoin}` },
+        headers: {
+          Accept: "application/json"
+        }
+      })
+        .then(result => {
+          if (!state.priceCoin[result.data.symbol]) {
+            commit(mutationType.SET_PRICE_COIN, result.data);
+          }
+          resolve(result);
+        })
+        .catch(error => reject(error));
+    });
+  },
+
   [actionType.GET_CURRENT_NETWORK]: function({ commit }) {
     getNetIdString().then(currentNetwork => {
       commit(mutationType.SET_CURRENT_NETWORK, currentNetwork);
@@ -26,11 +60,14 @@ const actions = {
     });
   },
   [actionType.INIT_APP]: async function({ commit, dispatch }, web3) {
+    // Set the web3 instance
     AlkemiNetwork.setProvider(web3.currentProvider);
-
+    console.log("IN STORE");
+    console.log(web3);
     commit(mutationType.SET_WEB3, {
       web3
     });
+    console.log("set");
 
     dispatch(actionType.GET_CURRENT_NETWORK);
 
@@ -41,19 +78,49 @@ const actions = {
     }
 
     let alkemiNetwork = await AlkemiNetwork.deployed();
+    console.log("contract");
+    console.log(alkemiNetwork);
+
     commit(mutationType.SET_ALKEMI_NETWORK, alkemiNetwork);
   },
-  [actionType.LOAD_LIQUIDITY_RESERVES]: async function({ commit, state }) {
+  [actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES]: async function({
+    commit,
+    state
+  }) {
+    console.log("fetching provider liquidity reserves");
+    console.log(state.account);
+
+    let reserves = await state.alkemiNetwork.providerLiquidityReserves(
+      state.account,
+      {
+        from: state.account
+      }
+    );
+
+    commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
+  },
+  [actionType.CREATE_LIQUIDITY_RESERVE]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+    console.log("liquidity provider address");
+    console.log(state.account);
+
     commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
       status: "pending",
       txHash: ""
     });
 
-    let txHash = await state.alkemiNetwork.providerLiquidityReserves(
-      state.account,
-      {
-        from: state.account
-      }
+    let latest = await params.web3.eth.getBlockNumber();
+
+    let txHash = await state.alkemiNetwork.createLiquidityReserve(
+      params.linkToken,
+      params.beneficiary,
+      params.erc20Token,
+      params.lockingPeriod,
+      params.lockingPrice,
+      params.lockingPricePosition,
+      { from: state.account }
     );
 
     if (txHash) {
@@ -61,13 +128,214 @@ const actions = {
         status: "done",
         txHash: txHash.tx
       });
+
+      state.alkemiNetwork.contract.events.ReserveCreate(
+        {
+          filter: {
+            liquidityProvider: state.account
+          },
+          fromBlock: latest
+        },
+        function(error, event) {
+          console.log(event);
+          // dispatch approve token action
+          dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+            web3: params.web3,
+            erc20: params.erc20Token,
+            spender: event.returnValues[0],
+            amount: params.depositAmount
+          });
+        }
+      );
+    }
+  },
+  [actionType.CLAIM_LIQUIDITY_RESERVE]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity provider address");
+    console.log(state.account);
+
+    console.log("liquidity reserve to claim");
+    console.log(params.reserveAddress);
+
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: "pending",
+      txHash: ""
+    });
+
+    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+
+    let latest = await params.web3.eth.getBlockNumber();
+
+    let txHash = await liquidityReserve.withdraw(
+      params.amount,
+      params.oracle,
+      params.jobId,
+      params.tokenSymbol,
+      params.market,
+      params.oraclePayment,
+      { from: state.account }
+    );
+
+    if (txHash) {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+        status: "done",
+        txHash: txHash.tx
+      });
+
+      liquidityReserve.contract.events.ReserveWithdraw(
+        {
+          filter: {
+            withdrawer: state.account
+          },
+          fromBlock: latest
+        },
+        function(error, event) {
+          console.log(event);
+          // alert of withdraw
+        }
+      );
+
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+    }
+  },
+  [actionType.APPROVE_TOKEN_DEPOSIT]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+    ERC20Token.setProvider(params.web3.currentProvider);
+
+    console.log("approving token transfer from provider to AlkemiNetwork");
+    console.log(params.erc20);
+    console.log(state.account);
+
+    let erc20Token = await ERC20Token.at(params.erc20);
+    console.log(erc20Token);
+
+    let txHash = await erc20Token.approve(params.spender, params.amount, {
+      from: state.account
+    });
+
+    if (txHash) {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+        status: "done",
+        txHash: txHash.tx
+      });
+
+      dispatch(actionType.DEPOSIT_LIQUIDITY, {
+        web3: params.web3,
+        reserveAddress: params.spender,
+        amount: params.amount
+      });
+    }
+  },
+  [actionType.GET_TOKEN_BALANCE]: async function({ commit, state }, params) {
+    ERC20Token.setProvider(params.web3.currentProvider);
+
+    console.log("getting user token balance");
+    console.log(state.account);
+    console.log(params.erc20);
+
+    let erc20Token = await ERC20Token.at(params.erc20);
+    console.log(erc20Token);
+
+    let txHash = await erc20Token.balanceOf(state.account, {
+      from: state.account
+    });
+
+    if (txHash) {
+      commit(
+        mutationType.SET_TOKEN_BALANCE,
+        params.web3.utils.fromWei(txHash, "ether")
+      );
+    }
+  },
+  [actionType.DEPOSIT_LIQUIDITY]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity provider address");
+    console.log(state.account);
+
+    console.log("liquidity reserve to deposit into");
+    console.log(params.reserveAddress);
+
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: "pending",
+      txHash: ""
+    });
+
+    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+
+    let txHash = await liquidityReserve.deposit(params.amount, {
+      from: state.account,
+      gasLimit: 750000
+    });
+
+    if (txHash) {
+      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+        status: "done",
+        txHash: txHash.tx
+      });
+
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+    }
+  },
+  [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function(
+    { commit, state },
+    params
+  ) {
+    console.log("fetching token liquidity reserves");
+    console.log(params.erc20);
+
+    let reserves = await state.alkemiNetwork.tokenLiquidityReserves(
+      params.erc20,
+      {
+        from: state.account
+      }
+    );
+    commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
+  },
+  [actionType.GET_RESERVE_DETAILS]: async function({ commit, state }, params) {
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity reserve to fetch details");
+    console.log(params.reserveAddress);
+
+    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+
+    let txHash = await liquidityReserve.details({
+      from: state.account
+    });
+    if (txHash) {
+      commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+        asset: txHash[0],
+        lockingPeriod: txHash[1],
+        lockingPrice: params.web3.utils.fromWei(txHash[2], "ether"),
+        totalBalance: params.web3.utils.fromWei(txHash[3], "ether"),
+        deposited: params.web3.utils.fromWei(txHash[4], "ether"),
+        earned: params.web3.utils.fromWei(txHash[5], "ether")
+      });
     }
   }
 };
 
 const mutations = {
   //WEB3 Stuff
+  [mutationType.SET_PRICE_COIN](state, unitCoin) {
+    state.priceCoin[unitCoin.symbol] = unitCoin.last;
+  },
   [mutationType.SET_ACCOUNT](state, account) {
+    console.log("Account set");
+    console.log(account);
     state.account = account;
   },
   [mutationType.SET_CURRENT_NETWORK](state, currentNetwork) {
@@ -82,14 +350,32 @@ const mutations = {
   [mutationType.SET_ALKEMI_NETWORK]: async function(state, alkemiNetwork) {
     state.alkemiNetwork = alkemiNetwork;
   },
-  [mutationType.SET_LIQUIDITY_RESERVE]: async function(
+  [mutationType.SET_PROVIDER_LIQUIDITY_RESERVE]: async function(
     state,
-    liquidityReserve
+    providerLiquidityReserves
   ) {
-    state.liquidityReserve = liquidityReserve;
+    state.providerLiquidityReserves = providerLiquidityReserves;
+  },
+  [mutationType.SET_PROVIDER_RESERVE_DETAILS]: async function(
+    state,
+    providerReserveDetails
+  ) {
+    state.providerReservesDetails.push(providerReserveDetails);
+  },
+  [mutationType.SET_TOKEN_LIQUIDITY_RESERVE]: async function(
+    state,
+    tokenLiquidityReserves
+  ) {
+    state.tokenLiquidityReserves.push(tokenLiquidityReserves);
+  },
+  [mutationType.SET_TOKEN_BALANCE]: async function(state, tokenBalance) {
+    state.tokensBalance.push(tokenBalance);
   },
   [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;
+  },
+  [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
+    state.withdrawEventObject = withdrawEventObject;
   }
 };
 

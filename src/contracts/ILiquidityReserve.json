@@ -4,6 +4,34 @@
     {
       "constant": true,
       "inputs": [],
+      "name": "liquidityProvider",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "asset",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
       "name": "isActive",
       "outputs": [
         {
@@ -104,25 +132,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.5+commit.47a71e8f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"isActive\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isUnlocked\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isBeneficiary\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"balance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"deposit(address,uint256)\":{\"params\":{\"_token\":\"Address of the token being transferred\",\"_value\":\"Amount of tokens being transferred\"}},\"isActive()\":{\"details\":\"check if reserve is active\"},\"isBeneficiary()\":{\"details\":\"Returns true if the beneficiary is the current reserve.\"},\"isUnlocked(address)\":{\"details\":\"Returns true if one of the liquidity provder's conditions are valid\"},\"withdraw(address,uint256)\":{\"details\":\"Withdraw `_value` `_token` from the reserve\",\"params\":{\"_token\":\"Address of the token being transferred\",\"_value\":\"Amount of tokens being transferred\"}}},\"title\":\"ILiquidityReserve\"},\"userdoc\":{\"methods\":{\"deposit(address,uint256)\":{\"notice\":\"Deposit `_value` `_token` to the reserve\"},\"withdraw(address,uint256)\":{\"notice\":\"this function can only be called by the liquidity provider or by the settlement contract\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol\":\"ILiquidityReserve\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol\":{\"keccak256\":\"0x88b8aa431584f17b443ea9db708bc6f1bbe4eb5e7c247ee0ade9cbeaebcdfe36\",\"urls\":[\"bzzr://983260462742c8031e3bb40b75eae0317a8e39abec0c99a3846daf66271ec19e\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.5+commit.47a71e8f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"isActive\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"isUnlocked\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"asset\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"liquidityProvider\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isBeneficiary\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"balance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"deposit(address,uint256)\":{\"params\":{\"_token\":\"Address of the token being transferred\",\"_value\":\"Amount of tokens being transferred\"}},\"isActive()\":{\"details\":\"check if reserve is active\"},\"isBeneficiary()\":{\"details\":\"Returns true if the beneficiary is the current reserve.\"},\"isUnlocked(address)\":{\"details\":\"Returns true if one of the liquidity provder's conditions are valid\"},\"liquidityProvider()\":{\"details\":\"Returns the address of the current liquidity provider.\"},\"withdraw(address,uint256)\":{\"details\":\"Withdraw `_value` `_token` from the reserve\",\"params\":{\"_token\":\"Address of the token being transferred\",\"_value\":\"Amount of tokens being transferred\"}}},\"title\":\"ILiquidityReserve\"},\"userdoc\":{\"methods\":{\"asset()\":{\"notice\":\"check if reserve is active\"},\"deposit(address,uint256)\":{\"notice\":\"Deposit `_value` `_token` to the reserve\"},\"withdraw(address,uint256)\":{\"notice\":\"this function can only be called by the liquidity provider or by the settlement contract\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol\":\"ILiquidityReserve\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol\":{\"keccak256\":\"0xcb2ba5bd7b5c1f46b3db5c179ed0f5260539b3df573c0a08a81de89c979e5341\",\"urls\":[\"bzzr://fc6ea7adc6e7fea82da3263cbf0b63374da394cbd8291a563410cf3fb56f95db\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\n\n/**\n  * @title ILiquidityReserve\n  */\ncontract ILiquidityReserve {\n    /**\n   * @dev check if reserve is active\n   */\n    function isActive() external view returns (bool);\n\n    /**\n   * @notice Deposit `_value` `_token` to the reserve\n   * @param _token Address of the token being transferred\n   * @param _value Amount of tokens being transferred\n   */\n    function deposit(address _token, uint256 _value) external payable;\n\n    /**\n   * @dev Withdraw `_value` `_token` from the reserve\n   * @notice this function can only be called by the liquidity provider or by the settlement contract\n   * @param _token Address of the token being transferred\n   * @param _value Amount of tokens being transferred\n   */\n    function withdraw(address _token, uint256 _value) external;\n\n    /**\n   * @dev Returns true if one of the liquidity provder's conditions are valid\n   */\n    function isUnlocked(address _token) public view returns (bool);\n\n    /**\n   * @dev Returns true if the beneficiary is the current reserve.\n   */\n    function isBeneficiary() external view returns (bool);\n\n    function balance(address _token) public view returns (uint256);\n}\n",
+  "source": "pragma solidity ^0.5.0;\n\n/**\n  * @title ILiquidityReserve\n  */\ncontract ILiquidityReserve {\n    /**\n   * @dev Returns the address of the current liquidity provider.\n   */\n    function liquidityProvider() public view returns (address);\n\n    /**\n     * @notice check if reserve is active\n     */\n    function asset() external view returns (address);\n\n    /**\n   * @dev check if reserve is active\n   */\n    function isActive() external view returns (bool);\n\n    /**\n   * @notice Deposit `_value` `_token` to the reserve\n   * @param _token Address of the token being transferred\n   * @param _value Amount of tokens being transferred\n   */\n    function deposit(address _token, uint256 _value) external payable;\n\n    /**\n   * @dev Withdraw `_value` `_token` from the reserve\n   * @notice this function can only be called by the liquidity provider or by the settlement contract\n   * @param _token Address of the token being transferred\n   * @param _value Amount of tokens being transferred\n   */\n    function withdraw(address _token, uint256 _value) external;\n\n    /**\n   * @dev Returns true if one of the liquidity provder's conditions are valid\n   */\n    function isUnlocked(address _token) public view returns (bool);\n\n    /**\n   * @dev Returns true if the beneficiary is the current reserve.\n   */\n    function isBeneficiary() external view returns (bool);\n\n    function balance(address _token) public view returns (uint256);\n}\n",
   "sourcePath": "/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol",
   "ast": {
     "absolutePath": "/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol",
     "exportedSymbols": {
       "ILiquidityReserve": [
-        547
+        637
       ]
     },
-    "id": 548,
+    "id": 638,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 508,
+        "id": 588,
         "literals": [
           "solidity",
           "^",
@@ -138,39 +166,149 @@
         "contractKind": "contract",
         "documentation": "@title ILiquidityReserve",
         "fullyImplemented": false,
-        "id": 547,
+        "id": 637,
         "linearizedBaseContracts": [
-          547
+          637
         ],
         "name": "ILiquidityReserve",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
+            "documentation": "@dev Returns the address of the current liquidity provider.",
+            "id": 593,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "liquidityProvider",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 589,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "201:2:4"
+            },
+            "returnParameters": {
+              "id": 592,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 591,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 593,
+                  "src": "225:7:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 590,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "225:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "224:9:4"
+            },
+            "scope": 637,
+            "src": "175:59:4",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@notice check if reserve is active",
+            "id": 598,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "asset",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 594,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "312:2:4"
+            },
+            "returnParameters": {
+              "id": 597,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 596,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 598,
+                  "src": "338:7:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 595,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "338:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "337:9:4"
+            },
+            "scope": 637,
+            "src": "298:49:4",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
             "documentation": "@dev check if reserve is active",
-            "id": 513,
+            "id": 603,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isActive",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 509,
+              "id": 599,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "164:2:4"
+              "src": "421:2:4"
             },
             "returnParameters": {
-              "id": 512,
+              "id": 602,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 511,
+                  "id": 601,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 513,
-                  "src": "190:4:4",
+                  "scope": 603,
+                  "src": "447:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -178,10 +316,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 510,
+                    "id": 600,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "190:4:4",
+                    "src": "447:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -191,10 +329,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "189:6:4"
+              "src": "446:6:4"
             },
-            "scope": 547,
-            "src": "147:49:4",
+            "scope": 637,
+            "src": "404:49:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -202,23 +340,23 @@
           {
             "body": null,
             "documentation": "@notice Deposit `_value` `_token` to the reserve\n@param _token Address of the token being transferred\n@param _value Amount of tokens being transferred",
-            "id": 520,
+            "id": 610,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deposit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 518,
+              "id": 608,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 515,
+                  "id": 605,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "399:14:4",
+                  "scope": 610,
+                  "src": "656:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -226,10 +364,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 514,
+                    "id": 604,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "399:7:4",
+                    "src": "656:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -241,11 +379,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 517,
+                  "id": 607,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "415:14:4",
+                  "scope": 610,
+                  "src": "672:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -253,10 +391,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 516,
+                    "id": 606,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "415:7:4",
+                    "src": "672:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -266,16 +404,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "398:32:4"
+              "src": "655:32:4"
             },
             "returnParameters": {
-              "id": 519,
+              "id": 609,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "447:0:4"
+              "src": "704:0:4"
             },
-            "scope": 547,
-            "src": "382:66:4",
+            "scope": 637,
+            "src": "639:66:4",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "external"
@@ -283,23 +421,23 @@
           {
             "body": null,
             "documentation": "@dev Withdraw `_value` `_token` from the reserve\n@notice this function can only be called by the liquidity provider or by the settlement contract\n@param _token Address of the token being transferred\n@param _value Amount of tokens being transferred",
-            "id": 527,
+            "id": 617,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "withdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 525,
+              "id": 615,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 522,
+                  "id": 612,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 527,
-                  "src": "754:14:4",
+                  "scope": 617,
+                  "src": "1011:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -307,10 +445,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 521,
+                    "id": 611,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "754:7:4",
+                    "src": "1011:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -322,11 +460,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 524,
+                  "id": 614,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 527,
-                  "src": "770:14:4",
+                  "scope": 617,
+                  "src": "1027:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -334,10 +472,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 523,
+                    "id": 613,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "770:7:4",
+                    "src": "1027:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -347,16 +485,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "753:32:4"
+              "src": "1010:32:4"
             },
             "returnParameters": {
-              "id": 526,
+              "id": 616,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "794:0:4"
+              "src": "1051:0:4"
             },
-            "scope": 547,
-            "src": "736:59:4",
+            "scope": 637,
+            "src": "993:59:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -364,23 +502,23 @@
           {
             "body": null,
             "documentation": "@dev Returns true if one of the liquidity provder's conditions are valid",
-            "id": 534,
+            "id": 624,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isUnlocked",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 530,
+              "id": 620,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 529,
+                  "id": 619,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 534,
-                  "src": "913:14:4",
+                  "scope": 624,
+                  "src": "1170:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -388,10 +526,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 528,
+                    "id": 618,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "913:7:4",
+                    "src": "1170:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -402,19 +540,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "912:16:4"
+              "src": "1169:16:4"
             },
             "returnParameters": {
-              "id": 533,
+              "id": 623,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 532,
+                  "id": 622,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 534,
-                  "src": "950:4:4",
+                  "scope": 624,
+                  "src": "1207:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -422,10 +560,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 531,
+                    "id": 621,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "950:4:4",
+                    "src": "1207:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -435,10 +573,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "949:6:4"
+              "src": "1206:6:4"
             },
-            "scope": 547,
-            "src": "893:63:4",
+            "scope": 637,
+            "src": "1150:63:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -446,29 +584,29 @@
           {
             "body": null,
             "documentation": "@dev Returns true if the beneficiary is the current reserve.",
-            "id": 539,
+            "id": 629,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isBeneficiary",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 535,
+              "id": 625,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1064:2:4"
+              "src": "1321:2:4"
             },
             "returnParameters": {
-              "id": 538,
+              "id": 628,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 537,
+                  "id": 627,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 539,
-                  "src": "1090:4:4",
+                  "scope": 629,
+                  "src": "1347:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -476,10 +614,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 536,
+                    "id": 626,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1090:4:4",
+                    "src": "1347:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -489,10 +627,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1089:6:4"
+              "src": "1346:6:4"
             },
-            "scope": 547,
-            "src": "1042:54:4",
+            "scope": 637,
+            "src": "1299:54:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -500,23 +638,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 546,
+            "id": 636,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "balance",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 542,
+              "id": 632,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 541,
+                  "id": 631,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 546,
-                  "src": "1119:14:4",
+                  "scope": 636,
+                  "src": "1376:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -524,10 +662,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 540,
+                    "id": 630,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1119:7:4",
+                    "src": "1376:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -538,19 +676,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1118:16:4"
+              "src": "1375:16:4"
             },
             "returnParameters": {
-              "id": 545,
+              "id": 635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 544,
+                  "id": 634,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 546,
-                  "src": "1156:7:4",
+                  "scope": 636,
+                  "src": "1413:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -558,10 +696,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 543,
+                    "id": 633,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1156:7:4",
+                    "src": "1413:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -571,33 +709,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1155:9:4"
+              "src": "1412:9:4"
             },
-            "scope": 547,
-            "src": "1102:63:4",
+            "scope": 637,
+            "src": "1359:63:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 548,
-        "src": "63:1104:4"
+        "scope": 638,
+        "src": "63:1361:4"
       }
     ],
-    "src": "0:1168:4"
+    "src": "0:1425:4"
   },
   "legacyAST": {
     "absolutePath": "/Users/haythem96/Projects/Alkemi/alkemi-protocol/contracts/interfaces/ILiquidityReserve.sol",
     "exportedSymbols": {
       "ILiquidityReserve": [
-        547
+        637
       ]
     },
-    "id": 548,
+    "id": 638,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 508,
+        "id": 588,
         "literals": [
           "solidity",
           "^",
@@ -613,39 +751,149 @@
         "contractKind": "contract",
         "documentation": "@title ILiquidityReserve",
         "fullyImplemented": false,
-        "id": 547,
+        "id": 637,
         "linearizedBaseContracts": [
-          547
+          637
         ],
         "name": "ILiquidityReserve",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": null,
+            "documentation": "@dev Returns the address of the current liquidity provider.",
+            "id": 593,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "liquidityProvider",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 589,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "201:2:4"
+            },
+            "returnParameters": {
+              "id": 592,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 591,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 593,
+                  "src": "225:7:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 590,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "225:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "224:9:4"
+            },
+            "scope": 637,
+            "src": "175:59:4",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@notice check if reserve is active",
+            "id": 598,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "asset",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 594,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "312:2:4"
+            },
+            "returnParameters": {
+              "id": 597,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 596,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 598,
+                  "src": "338:7:4",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 595,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "338:7:4",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "337:9:4"
+            },
+            "scope": 637,
+            "src": "298:49:4",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
             "documentation": "@dev check if reserve is active",
-            "id": 513,
+            "id": 603,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isActive",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 509,
+              "id": 599,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "164:2:4"
+              "src": "421:2:4"
             },
             "returnParameters": {
-              "id": 512,
+              "id": 602,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 511,
+                  "id": 601,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 513,
-                  "src": "190:4:4",
+                  "scope": 603,
+                  "src": "447:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -653,10 +901,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 510,
+                    "id": 600,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "190:4:4",
+                    "src": "447:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -666,10 +914,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "189:6:4"
+              "src": "446:6:4"
             },
-            "scope": 547,
-            "src": "147:49:4",
+            "scope": 637,
+            "src": "404:49:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -677,23 +925,23 @@
           {
             "body": null,
             "documentation": "@notice Deposit `_value` `_token` to the reserve\n@param _token Address of the token being transferred\n@param _value Amount of tokens being transferred",
-            "id": 520,
+            "id": 610,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deposit",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 518,
+              "id": 608,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 515,
+                  "id": 605,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "399:14:4",
+                  "scope": 610,
+                  "src": "656:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -701,10 +949,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 514,
+                    "id": 604,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "399:7:4",
+                    "src": "656:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -716,11 +964,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 517,
+                  "id": 607,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 520,
-                  "src": "415:14:4",
+                  "scope": 610,
+                  "src": "672:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -728,10 +976,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 516,
+                    "id": 606,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "415:7:4",
+                    "src": "672:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -741,16 +989,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "398:32:4"
+              "src": "655:32:4"
             },
             "returnParameters": {
-              "id": 519,
+              "id": 609,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "447:0:4"
+              "src": "704:0:4"
             },
-            "scope": 547,
-            "src": "382:66:4",
+            "scope": 637,
+            "src": "639:66:4",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "external"
@@ -758,23 +1006,23 @@
           {
             "body": null,
             "documentation": "@dev Withdraw `_value` `_token` from the reserve\n@notice this function can only be called by the liquidity provider or by the settlement contract\n@param _token Address of the token being transferred\n@param _value Amount of tokens being transferred",
-            "id": 527,
+            "id": 617,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "withdraw",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 525,
+              "id": 615,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 522,
+                  "id": 612,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 527,
-                  "src": "754:14:4",
+                  "scope": 617,
+                  "src": "1011:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -782,10 +1030,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 521,
+                    "id": 611,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "754:7:4",
+                    "src": "1011:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -797,11 +1045,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 524,
+                  "id": 614,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 527,
-                  "src": "770:14:4",
+                  "scope": 617,
+                  "src": "1027:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -809,10 +1057,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 523,
+                    "id": 613,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "770:7:4",
+                    "src": "1027:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -822,16 +1070,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "753:32:4"
+              "src": "1010:32:4"
             },
             "returnParameters": {
-              "id": 526,
+              "id": 616,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "794:0:4"
+              "src": "1051:0:4"
             },
-            "scope": 547,
-            "src": "736:59:4",
+            "scope": 637,
+            "src": "993:59:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -839,23 +1087,23 @@
           {
             "body": null,
             "documentation": "@dev Returns true if one of the liquidity provder's conditions are valid",
-            "id": 534,
+            "id": 624,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isUnlocked",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 530,
+              "id": 620,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 529,
+                  "id": 619,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 534,
-                  "src": "913:14:4",
+                  "scope": 624,
+                  "src": "1170:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -863,10 +1111,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 528,
+                    "id": 618,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "913:7:4",
+                    "src": "1170:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -877,19 +1125,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "912:16:4"
+              "src": "1169:16:4"
             },
             "returnParameters": {
-              "id": 533,
+              "id": 623,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 532,
+                  "id": 622,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 534,
-                  "src": "950:4:4",
+                  "scope": 624,
+                  "src": "1207:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -897,10 +1145,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 531,
+                    "id": 621,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "950:4:4",
+                    "src": "1207:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -910,10 +1158,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "949:6:4"
+              "src": "1206:6:4"
             },
-            "scope": 547,
-            "src": "893:63:4",
+            "scope": 637,
+            "src": "1150:63:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -921,29 +1169,29 @@
           {
             "body": null,
             "documentation": "@dev Returns true if the beneficiary is the current reserve.",
-            "id": 539,
+            "id": 629,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isBeneficiary",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 535,
+              "id": 625,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1064:2:4"
+              "src": "1321:2:4"
             },
             "returnParameters": {
-              "id": 538,
+              "id": 628,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 537,
+                  "id": 627,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 539,
-                  "src": "1090:4:4",
+                  "scope": 629,
+                  "src": "1347:4:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -951,10 +1199,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 536,
+                    "id": 626,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1090:4:4",
+                    "src": "1347:4:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -964,10 +1212,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1089:6:4"
+              "src": "1346:6:4"
             },
-            "scope": 547,
-            "src": "1042:54:4",
+            "scope": 637,
+            "src": "1299:54:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
@@ -975,23 +1223,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 546,
+            "id": 636,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "balance",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 542,
+              "id": 632,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 541,
+                  "id": 631,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 546,
-                  "src": "1119:14:4",
+                  "scope": 636,
+                  "src": "1376:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -999,10 +1247,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 540,
+                    "id": 630,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1119:7:4",
+                    "src": "1376:7:4",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1013,19 +1261,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1118:16:4"
+              "src": "1375:16:4"
             },
             "returnParameters": {
-              "id": 545,
+              "id": 635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 544,
+                  "id": 634,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 546,
-                  "src": "1156:7:4",
+                  "scope": 636,
+                  "src": "1413:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1033,10 +1281,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 543,
+                    "id": 633,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1156:7:4",
+                    "src": "1413:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1046,28 +1294,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1155:9:4"
+              "src": "1412:9:4"
             },
-            "scope": 547,
-            "src": "1102:63:4",
+            "scope": 637,
+            "src": "1359:63:4",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 548,
-        "src": "63:1104:4"
+        "scope": 638,
+        "src": "63:1361:4"
       }
     ],
-    "src": "0:1168:4"
+    "src": "0:1425:4"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.5+commit.47a71e8f.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.20",
-  "updatedAt": "2020-01-08T15:42:16.957Z",
+  "schemaVersion": "3.0.21",
+  "updatedAt": "2020-01-21T11:50:43.758Z",
   "devdoc": {
     "methods": {
       "deposit(address,uint256)": {
@@ -1085,6 +1333,9 @@
       "isUnlocked(address)": {
         "details": "Returns true if one of the liquidity provder's conditions are valid"
       },
+      "liquidityProvider()": {
+        "details": "Returns the address of the current liquidity provider."
+      },
       "withdraw(address,uint256)": {
         "details": "Withdraw `_value` `_token` from the reserve",
         "params": {
@@ -1097,6 +1348,9 @@
   },
   "userdoc": {
     "methods": {
+      "asset()": {
+        "notice": "check if reserve is active"
+      },
       "deposit(address,uint256)": {
         "notice": "Deposit `_value` `_token` to the reserve"
       },

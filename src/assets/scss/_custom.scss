@@ -296,7 +296,7 @@ body {
 		}
 	}
 	.content-modal{
-		height: 530px;
+		height: 620px;
 		padding: 35px;
 		text-align: center;
 		.text-label{
@@ -376,6 +376,14 @@ body {
 				color: $color-white;
 			}
 		}
+		.lock-price{
+			.bv-no-focus-ring{
+				display: flex;
+				> .select-relative{
+					margin-right: 10px;
+				}
+			}
+		}
 		.choose-date{
 			position: relative;
 			min-height: 38px;
@@ -411,6 +419,11 @@ body {
 			}
 			> span{
 				text-transform: none;
+			}
+			> input{
+				background:$color-woodsmoke;
+				border: none;
+				color: $color-white
 			}
 		}
 		.btn-modal-add-new{
