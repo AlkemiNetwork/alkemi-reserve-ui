@@ -246,7 +246,7 @@
                                     </template>
                                     <template v-slot:cell(btn)="row">
                                       <b-button
-                                        v-if="!row.item.btn"
+                                        v-if="getTimeLocal() >= row.item.lockingPeriod"
                                         size="sm"
                                         class="btn-claim float-right"
                                         @click="showModalClaim"
@@ -255,11 +255,11 @@
                                       </b-button>
 
                                       <b-button
-                                        v-if="row.item.btn"
+                                        v-else
                                         size="sm"
                                         class="btn-claim-value float-right"
                                       >
-                                        12412h
+                                        {{ diffDay(row.item.lockingPeriod) }}
                                       </b-button>
                                     </template>
                                   </b-table>
@@ -1046,6 +1046,18 @@ export default {
           web3: window.web3,
           erc20: item.erc20Token
         });
+    },
+    getTimeLocal(){
+      let formatDate = moment().format("DD-MM-YYYY");
+      return moment(formatDate, "DD-MM-YYYY").unix().toString();
+    },
+    diffDay(day){
+      if (day) {
+        let dayUnclock = moment.unix(day).format('DD-MM-YYYY HH:mm');
+        var before = moment(dayUnclock,'DD-MM-YYYY HH:mm');
+        let now = moment();
+        return moment(before - now).format('D[ Days ] H[ Hrs]');
+      }
     }
   }
 };
