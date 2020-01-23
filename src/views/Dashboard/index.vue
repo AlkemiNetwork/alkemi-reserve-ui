@@ -84,26 +84,38 @@
                     <b-card no-body>
                       <b-tabs pills card vertical>
                         <b-tab
-                        @click="selectWallet(item)"
-                         v-for="(item, key) in data" :key="key">
+                          @click="selectWallet(item)"
+                          v-for="(item, key) in data"
+                          :key="key"
+                        >
                           <template v-slot:title>
                             <div class="tab-flex">
                               <div class="content-mid-img">
-                                <b-img :src="'/img/'+item.image"></b-img>
+                                <b-img :src="'/img/' + item.image"></b-img>
                               </div>
                               <div class="acronym-name content-mid">
                                 {{ item.name }}
-                                <div class="name-el-money">{{ item.fullName }}</div>
+                                <div class="name-el-money">
+                                  {{ item.fullName }}
+                                </div>
                               </div>
                               <div class="content-mid">
                                 {{ item.total }}
                                 <div class="cost">${{ item.estUSD }}</div>
                               </div>
                               <div class="content-mid">
-                                {{ item.change24h}} 
-                                <span class="percent" v-if="item.total != 0">{{item.change24h * 100 / item.total}}%</span>
-                                <span class="percent" v-if="item.total == 0">{{item.total}}%</span>
-                                <div class="cost">${{ item.estFluctuation }}</div>
+                                {{ item.change24h }}
+                                <span class="percent" v-if="item.total != 0"
+                                  >{{
+                                    (item.change24h * 100) / item.total
+                                  }}%</span
+                                >
+                                <span class="percent" v-if="item.total == 0"
+                                  >{{ item.total }}%</span
+                                >
+                                <div class="cost">
+                                  ${{ item.estFluctuation }}
+                                </div>
                               </div>
                             </div>
                           </template>
@@ -111,7 +123,9 @@
                             <template>
                               <div>
                                 <div class="info-value">
-                                  <div class="value float-left">{{ item.total }}</div>
+                                  <div class="value float-left">
+                                    {{ item.total }}
+                                  </div>
                                   <span class="acronym-name">
                                     {{ item.name }}
                                     <span class="line-vertical-14">|</span>
@@ -136,8 +150,20 @@
                                   <div class="info-chart">
                                     <div class="value-change float-left">
                                       24 HR CHANGE
-                                      <div class="percent" v-if="item.total != 0">+{{item.change24h * 100 / item.total}}%</div>
-                                      <div class="percent" v-if="item.total == 0">+{{item.total}}%</div>
+                                      <div
+                                        class="percent"
+                                        v-if="item.total != 0"
+                                      >
+                                        +{{
+                                          (item.change24h * 100) / item.total
+                                        }}%
+                                      </div>
+                                      <div
+                                        class="percent"
+                                        v-if="item.total == 0"
+                                      >
+                                        +{{ item.total }}%
+                                      </div>
                                     </div>
                                     <div class="value-change float-left">
                                       TOKEN EARNINGS
@@ -170,9 +196,54 @@
                                   </div>
                                   <b-table
                                     fixed
-                                    :items="items"
+                                    :items="item.providerReserves"
                                     :fields="fields"
                                   >
+                                    <template v-slot:cell(lockingPeriod)="row">
+                                      <div class="value-change float-left">
+                                        {{
+                                          timestampToDate(
+                                            row.item.lockingPeriod.toNumber()
+                                          ) | formatDate
+                                        }}
+                                      </div>
+                                    </template>
+                                    <template v-slot:cell(earned)="row">
+                                      <div class="value-change float-left">
+                                        + {{ row.item.earned }}
+                                        {{ selected.name }}
+                                      </div>
+                                    </template>
+                                    <template
+                                      v-slot:cell(total_percent_earnings)="row"
+                                    >
+                                      <div
+                                        class="value-change float-left percent"
+                                      >
+                                        {{
+                                          row.item.earned > 0
+                                            ? (row.item.earned * 100) /
+                                              row.item.totalBalance
+                                            : 0
+                                        }}
+                                        %
+                                      </div>
+                                    </template>
+                                    <template v-slot:cell(est_USD_value)="row">
+                                      <div class="value-change float-left">
+                                        ${{
+                                          row.item.earned > 0 &&
+                                          priceCoin[
+                                            `${selected.name}/${unitCoin}`
+                                          ]
+                                            ? row.item.earned *
+                                              priceCoin[
+                                                `${selected.name}/${unitCoin}`
+                                              ]
+                                            : 0
+                                        }}
+                                      </div>
+                                    </template>
                                     <template v-slot:cell(btn)="row">
                                       <b-button
                                         v-if="!row.item.btn"
@@ -182,12 +253,13 @@
                                       >
                                         CLAIM
                                       </b-button>
+
                                       <b-button
                                         v-if="row.item.btn"
                                         size="sm"
                                         class="btn-claim-value float-right"
                                       >
-                                        {{ row.item.btn }}
+                                        12412h
                                       </b-button>
                                     </template>
                                   </b-table>
@@ -218,20 +290,20 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          ADD {{ selected ? selected.name : '' }} POOL
+          ADD {{ selected ? selected.name : "" }} POOL
         </span>
       </div>
       <div class="content-modal">
         <b-form v-if="isShow == 'form-add'">
           <b-form-group
             class="text-label text-left"
-            label="AVAILABLE DAI BALANCE"
-            label-for="daiBlance"
+            :label="`AVAILABLE ${selected ? selected.name : ''} BALANCE`"
+            label-for="walletAssetBalance"
           >
             <b-form-input
               class="value-available"
               type="text"
-              v-model="daiBlance"
+              v-model="tokenBalance"
               readonly
             ></b-form-input>
           </b-form-group>
@@ -241,16 +313,13 @@
             label-for="fundingAmount"
           >
             <b-form-input
-              v-model="enterMoney"
+              v-model="amountToDeposit"
               class="enter-money"
               type="text"
               placeholder="0.00"
             >
             </b-form-input>
-            <b-button
-              @click="maxAvailable"
-              class="btn-position"
-            >
+            <b-button @click="maxAvailable" class="btn-position">
               MAX
             </b-button>
           </b-form-group>
@@ -259,18 +328,9 @@
             label="SELECT UNLOCK DATE"
             label-for="unclockDate"
           >
-            <div
-              class="choose-date"
-              @click="showCalendar"
-            >
-              <input
-                type="text"
-                v-model="unclockDate"
-                disabled
-              />
-              <b-img
-                src="/img/arrow-down-sign-to-navigate.png"
-              ></b-img>
+            <div class="choose-date" @click="showCalendar">
+              <input type="text" v-model="unclockDate" disabled />
+              <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
             </div>
           </b-form-group>
           <b-form-group
@@ -298,22 +358,15 @@
           <b-button
             class="btn-submit"
             v-bind:class="{
-              'btn-modal-add-new':
-                enterMoney && unclockDate,
-              'btn-modal-disable':
-                !enterMoney || !unclockDate
+              'btn-modal-add-new': amountToDeposit && unclockDate,
+              'btn-modal-disable': !amountToDeposit || !unclockDate
             }"
             @click="createReserve"
-            :disabled="
-              !enterMoney || !unclockDate
-            "
+            :disabled="!amountToDeposit || !unclockDate"
           >
             CREATE POOL
           </b-button>
-          <b-button
-            class="btn-cancel"
-            @click="hideModal()"
-          >
+          <b-button class="btn-cancel" @click="hideModal()">
             Cancel
           </b-button>
         </b-form>
@@ -324,17 +377,11 @@
             :date-format="'dd/mm/yyyy'"
             v-on:choseDay="clickDay"
           ></FunctionalCalendar>
-          <b-button
-            class="btn-cancel"
-            @click="backForm()"
-          >
+          <b-button class="btn-cancel" @click="backForm()">
             Back
           </b-button>
         </div>
-        <div
-          v-if="isShow == 'loading'"
-          class="processing"
-        >
+        <div v-if="isShow == 'loading'" class="processing">
           <div>
             <div class="title-process">
               Processing Transaction
@@ -342,9 +389,7 @@
             <div class="address-transaction">
               0xbj39....1ea401
             </div>
-            <loadingPopup
-              :quality="4"
-            ></loadingPopup>
+            <loadingPopup :quality="4"></loadingPopup>
           </div>
         </div>
       </div>
@@ -442,16 +487,16 @@ export default {
       isShow: "form-add",
       isConnect: false,
       addressWallet: "",
-      daiBlance: 0,
+      walletAssetBalance: 0,
       dayChoose: "",
-      enterMoney: "",
+      amountToDeposit: "",
       unclockDate: "",
       lockPrice: "",
       selected: null,
       lockPricePosition: "0",
       options: [
-        { value: "0", text: 'Below' },
-        { value: "1", text: 'Above' },
+        { value: "0", text: "Below" },
+        { value: "1", text: "Above" }
       ],
       reservesCounter: 0,
       poolsCounter: 0,
@@ -468,7 +513,8 @@ export default {
           change24h: 0,
           estchange24h: 0,
           assetEarning: 0,
-          usdEarning: 0
+          usdEarning: 0,
+          providerReserves: []
         },
         {
           name: "USDC",
@@ -482,7 +528,8 @@ export default {
           change24h: 0,
           estchange24h: 0,
           assetEarning: 0,
-          usdEarning: 0
+          usdEarning: 0,
+          providerReserves: []
         },
         {
           name: "LINK",
@@ -496,7 +543,8 @@ export default {
           change24h: 0,
           estchange24h: 0,
           assetEarning: 0,
-          usdEarning: 0
+          usdEarning: 0,
+          providerReserves: []
         },
         {
           name: "MKR",
@@ -510,7 +558,8 @@ export default {
           change24h: 0,
           estchange24h: 0,
           assetEarning: 0,
-          usdEarning: 0
+          usdEarning: 0,
+          providerReserves: []
         },
         {
           name: "KRWB",
@@ -525,7 +574,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-        },
+          providerReserves: []
+        }
       ],
       chartOptionsLine: {
         grid: {
@@ -560,12 +610,12 @@ export default {
       },
       fields: [
         {
-          key: "created",
+          key: "lockingPeriod",
           label: "Created",
           thStyle: { width: "16.66%" }
         },
         {
-          key: "total_size",
+          key: "totalBalance",
           label: "Total Size",
           thStyle: { width: "16.66%" }
         },
@@ -575,7 +625,7 @@ export default {
           thStyle: { width: "16.66%" }
         },
         {
-          key: "total_earnings",
+          key: "earned",
           label: "Total Earnings",
           thStyle: { width: "16.66%" }
         },
@@ -597,8 +647,8 @@ export default {
     this.data.map(item => {
       this.GET_PRICE_COIN({
         name: item.name
-      })
-    })
+      });
+    });
     if (window.web3.currentProvider.selectedAddress) {
       var addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -607,19 +657,21 @@ export default {
         addressWallet.substr(addressWallet.length - 4, 4);
       this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
+
       await this.INIT_APP(window.web3);
+
+      this.selectWallet(this.data[0]);
+
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
       this.reservesCounter = this.providerLiquidityReserves.length;
-      this.selected = this.data[0]
+
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
-      
-    }
-    else{
-      this.selected = this.data[0]
+    } else {
+      this.selectWallet(this.data[0]);
     }
   },
   computed: {
@@ -629,6 +681,7 @@ export default {
       "alkemiNetwork",
       "providerLiquidityReserves",
       "providerReservesDetails",
+      "tokenBalance",
       "tokensBalance",
       "priceCoin",
       "unitCoin"
@@ -765,6 +818,13 @@ export default {
         return value;
       }
       return "-";
+    },
+    formatDate: value => {
+      let datFormat = moment(value, "MM-DD-YYYY").format("DD MMM YY");
+      if (datFormat) {
+        return datFormat;
+      }
+      return "-";
     }
   },
   methods: {
@@ -792,7 +852,7 @@ export default {
             window.web3.eth
               .getBalance(window.web3.currentProvider.selectedAddress)
               .then(coins => {
-                this.daiBlance = coins;
+                this.walletAssetBalance = coins;
               });
           });
         } catch (error) {
@@ -829,78 +889,104 @@ export default {
         ),
         lockingPricePosition: parseInt(this.lockPricePosition),
         depositAmount: window.web3.utils.toWei(
-          this.enterMoney.toString(),
+          this.amountToDeposit.toString(),
           "ether"
         )
       });
     },
     async getProviderReservesDetails() {
-      for(let i=0; i<this.providerLiquidityReserves.length; i++) {
+      for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
           web3: window.web3,
           reserveAddress: this.providerLiquidityReserves[i]
         });
       }
-      this.providerReservesDetails.forEach(reserve => {
+
+      this.providerReservesDetails.map(reserve => {
+        console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
             this.data[0].total += parseInt(reserve.deposited);
             this.data[0].assetEarning += parseInt(reserve.earned);
-            if(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]){
-              this.data[0].estUSD = (this.data[0].total)*(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`])
-              this.data[0].estFluctuation = (this.data[0].fluctuation)*(this.priceCoin[`${this.data[0].name}/${this.unitCoin}`])
-            }else{
+            this.data[0].providerReserves.push(reserve);
+            if (this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]) {
+              this.data[0].estUSD =
+                this.data[0].total *
+                this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
+              this.data[0].estFluctuation =
+                this.data[0].fluctuation *
+                this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
+            } else {
               this.GET_PRICE_COIN({
                 name: this.data[0].name
-              }).then( res => {
-                this.data[0].estUSD = (this.data[0].total)*(res.data.last)
-                this.data[0].estFluctuation = (this.data[0].fluctuation)*(res.data.last)
-              })
+              }).then(res => {
+                this.data[0].estUSD = this.data[0].total * res.data.last;
+                this.data[0].estFluctuation =
+                  this.data[0].fluctuation * res.data.last;
+              });
             }
             break;
           case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
             this.data[1].total += parseInt(reserve.deposited);
             this.data[1].assetEarning += parseInt(reserve.earned);
-            if(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]){
-              this.data[1].estUSD = (this.data[1].total)*(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`])
-              this.data[1].estFluctuation = (this.data[1].fluctuation)*(this.priceCoin[`${this.data[1].name}/${this.unitCoin}`])
-            }else{
+            this.data[1].providerReserves.push(reserve);
+            if (this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]) {
+              this.data[1].estUSD =
+                this.data[1].total *
+                this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
+              this.data[1].estFluctuation =
+                this.data[1].fluctuation *
+                this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
+            } else {
               this.GET_PRICE_COIN({
                 name: this.data[1].name
-              }).then( res => {
-                this.data[1].estUSD = (this.data[1].total)*(res.data.last);
-                this.data[1].estFluctuation = (this.data[1].fluctuation)*(res.data.last)
-              })
+              }).then(res => {
+                this.data[1].estUSD = this.data[1].total * res.data.last;
+                this.data[1].estFluctuation =
+                  this.data[1].fluctuation * res.data.last;
+              });
             }
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
             this.data[2].total += parseInt(reserve.deposited);
             this.data[2].assetEarning += parseInt(reserve.earned);
-            if(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]){
-              this.data[2].estUSD = (this.data[2].total)*(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`])
-              this.data[2].estFluctuation = (this.data[2].fluctuation)*(this.priceCoin[`${this.data[2].name}/${this.unitCoin}`])
-            }else{
+            this.data[2].providerReserves.push(reserve);
+            if (this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]) {
+              this.data[2].estUSD =
+                this.data[2].total *
+                this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
+              this.data[2].estFluctuation =
+                this.data[2].fluctuation *
+                this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
+            } else {
               this.GET_PRICE_COIN({
                 name: this.data[2].name
-              }).then( res => {
-                this.data[2].estUSD = (this.data[2].total)*(res.data.last);
-                this.data[2].estFluctuation = (this.data[2].fluctuation)*(res.data.last)
-              })
+              }).then(res => {
+                this.data[2].estUSD = this.data[2].total * res.data.last;
+                this.data[2].estFluctuation =
+                  this.data[2].fluctuation * res.data.last;
+              });
             }
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
             this.data[3].total += parseInt(reserve.deposited);
             this.data[3].assetEarning += parseInt(reserve.earned);
-            if(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]){
-              this.data[3].estUSD = (this.data[3].total)*(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`])
-              this.data[3].estFluctuation = (this.data[3].fluctuation)*(this.priceCoin[`${this.data[3].name}/${this.unitCoin}`])
-            }else{
+            this.data[3].providerReserves.push(reserve);
+            if (this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]) {
+              this.data[3].estUSD =
+                this.data[3].total *
+                this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+              this.data[3].estFluctuation =
+                this.data[3].fluctuation *
+                this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+            } else {
               this.GET_PRICE_COIN({
                 name: this.data[3].name
-              }).then( res => {
-                this.data[3].estUSD = (this.data[3].total)*(res.data.last)
-                this.data[3].estFluctuation = (this.data[3].fluctuation)*(res.data.last)
-              })
+              }).then(res => {
+                this.data[3].estUSD = this.data[3].total * res.data.last;
+                this.data[3].estFluctuation =
+                  this.data[3].fluctuation * res.data.last;
+              });
             }
             break;
           default:
@@ -914,6 +1000,7 @@ export default {
     },
     hideModal() {
       this.$refs["modal-add-new"].hide();
+      this.amountToDeposit = 0;
     },
     showModalClaim() {
       this.$refs["modal-claim"].show();
@@ -929,7 +1016,7 @@ export default {
     },
     clickDay(data) {
       if (data.date) {
-        this.unclockDate = moment(data.date, "DD/MM/YYYY").format(
+        this.unclockDate = moment(data.date, "DD-MM-YYYY").format(
           "DD MMM YYYY"
         );
         this.dayChoose = data.date;
@@ -937,8 +1024,12 @@ export default {
       }
       return false;
     },
+    timestampToDate(timestamp) {
+      console.log(timestamp);
+      return moment.unix(timestamp).format("MM/DD/YYYY");
+    },
     maxAvailable() {
-      this.enterMoney = this.daiBlance;
+      this.amountToDeposit = this.tokenBalance;
     },
     loading() {
       this.isShow = "loading";
@@ -948,8 +1039,13 @@ export default {
       }, 4000);
       // clearTimeout(timerid);
     },
-    selectWallet(item)  {
+    async selectWallet(item) {
       this.selected = item;
+      if (window.web3.currentProvider.selectedAddress)
+        await this.GET_TOKEN_BALANCE({
+          web3: window.web3,
+          erc20: item.erc20Token
+        });
     }
   }
 };
