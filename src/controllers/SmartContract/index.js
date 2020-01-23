@@ -18,9 +18,10 @@ const state = {
   etherscanBase: null,
   alkemiNetwork: null,
   providerLiquidityReserves: null,
-  tokensBalance: [],
+  tokenBalance: null,
   providerReservesDetails: [],
   tokenLiquidityReserves: [],
+  providerTokenLiquidityReserves: [],
   unitCoin: "USD",
   priceCoin: {},
   miningTransactionObject: {
@@ -288,27 +289,20 @@ const actions = {
       dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
     }
   },
-  [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function(
-    { commit, state },
-    params
-  ) {
-    console.log("fetching token liquidity reserves");
-    console.log(params.erc20);
-
-    let reserves = await state.alkemiNetwork.tokenLiquidityReserves(
-      params.erc20,
-      {
-        from: state.account
-      }
-    );
+  [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function ({
+    commit,
+    state
+  }, params) {
+    let reserves = await state.alkemiNetwork.tokenLiquidityReserves(params.erc20, {
+      from: state.account
+    });
     commit(mutationType.SET_TOKEN_LIQUIDITY_RESERVE, reserves);
   },
-  [actionType.GET_RESERVE_DETAILS]: async function({ commit, state }, params) {
-    console.log(params.web3.currentProvider);
+  [actionType.GET_RESERVE_DETAILS]: async function ({
+    commit,
+    state
+  }, params) {
     LiquidityReserve.setProvider(params.web3.currentProvider);
-
-    console.log("liquidity reserve to fetch details");
-    console.log(params.reserveAddress);
 
     let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
@@ -368,8 +362,8 @@ const mutations = {
   ) {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
   },
-  [mutationType.SET_TOKEN_BALANCE]: async function(state, tokenBalance) {
-    state.tokensBalance.push(tokenBalance);
+  [mutationType.SET_TOKEN_BALANCE]: async function (state, tokenBalance) {
+    state.tokenBalance = tokenBalance;
   },
   [mutationType.SET_MINING_TRANSACTION_OBJECT](state, miningTransactionObject) {
     state.miningTransactionObject = miningTransactionObject;

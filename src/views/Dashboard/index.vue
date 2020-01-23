@@ -661,7 +661,6 @@ export default {
       await this.INIT_APP(window.web3);
 
       this.selectWallet(this.data[0]);
-
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
@@ -670,7 +669,8 @@ export default {
       await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
-    } else {
+    }
+    else{
       this.selectWallet(this.data[0]);
     }
   },
@@ -682,7 +682,6 @@ export default {
       "providerLiquidityReserves",
       "providerReservesDetails",
       "tokenBalance",
-      "tokensBalance",
       "priceCoin",
       "unitCoin"
     ])
@@ -906,7 +905,7 @@ export default {
         console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
-            this.data[0].total += parseInt(reserve.deposited);
+            this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
             this.data[0].providerReserves.push(reserve);
             if (this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]) {
@@ -927,7 +926,7 @@ export default {
             }
             break;
           case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
-            this.data[1].total += parseInt(reserve.deposited);
+            this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
             this.data[1].providerReserves.push(reserve);
             if (this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]) {
@@ -948,7 +947,7 @@ export default {
             }
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
-            this.data[2].total += parseInt(reserve.deposited);
+            this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
             this.data[2].providerReserves.push(reserve);
             if (this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]) {
@@ -969,7 +968,7 @@ export default {
             }
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
-            this.data[3].total += parseInt(reserve.deposited);
+            this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
             this.data[3].providerReserves.push(reserve);
             if (this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]) {
@@ -1039,13 +1038,13 @@ export default {
       }, 4000);
       // clearTimeout(timerid);
     },
-    async selectWallet(item) {
+    async selectWallet(item)  {
+      await this.GET_TOKEN_BALANCE({
+        web3: window.web3, 
+        erc20: item.erc20Token
+      });
       this.selected = item;
-      if (window.web3.currentProvider.selectedAddress)
-        await this.GET_TOKEN_BALANCE({
-          web3: window.web3,
-          erc20: item.erc20Token
-        });
+      console.log(this.selected);
     }
   }
 };
