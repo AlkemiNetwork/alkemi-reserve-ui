@@ -211,7 +211,7 @@
                                     <template v-slot:cell(earned)="row">
                                       <div class="value-change float-left">
                                         + {{ row.item.earned }}
-                                        {{ selected.name }}
+                                        {{ selectedAsset.name }}
                                       </div>
                                     </template>
                                     <template
@@ -234,11 +234,11 @@
                                         ${{
                                           row.item.earned > 0 &&
                                           priceCoin[
-                                            `${selected.name}/${unitCoin}`
+                                            `${selectedAsset.name}/${unitCoin}`
                                           ]
                                             ? row.item.earned *
                                               priceCoin[
-                                                `${selected.name}/${unitCoin}`
+                                                `${selectedAsset.name}/${unitCoin}`
                                               ]
                                             : 0
                                         }}
@@ -249,7 +249,7 @@
                                         v-if="getTimeLocal() >= row.item.lockingPeriod"
                                         size="sm"
                                         class="btn-claim float-right"
-                                        @click="showModalClaim"
+                                        @click="showModalClaim(row.item)"
                                       >
                                         CLAIM
                                       </b-button>
@@ -290,14 +290,14 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          ADD {{ selected ? selected.name : "" }} POOL
+          ADD {{ selectedAsset ? selectedAsset.name : "" }} POOL
         </span>
       </div>
       <div class="content-modal">
         <b-form v-if="isShow == 'form-add'">
           <b-form-group
             class="text-label text-left"
-            :label="`AVAILABLE ${selected ? selected.name : ''} BALANCE`"
+            :label="`AVAILABLE ${selectedAsset ? selectedAsset.name : ''} BALANCE`"
             label-for="walletAssetBalance"
           >
             <b-form-input
@@ -405,32 +405,22 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          CLAIM ADD DAI POOL
+          CLAIM {{ selectedAsset.name }} RESERVE
         </span>
       </div>
       <div class="content-modal content-modal-claim">
         <b-form>
           <b-form-group
             class="text-label text-left"
-            label="TOTAL CLAIMABLE OMG BALANCE"
+            label="TOTAL CLAIMABLE BALANCE"
             label-for="totalClaim"
           >
             <b-form-input
               class="value-available"
               type="text"
-              value="10,332.78"
+              :value="`${ selectedReserve.totalBalance }`"
               readonly
             ></b-form-input>
-          </b-form-group>
-          <b-form-group
-            class="text-label text-left"
-            label="SELECT WALLET"
-            label-for="selectWallet"
-          >
-            <div class="select-relative">
-              <b-form-select class="select-wallet"></b-form-select>
-              <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
-            </div>
           </b-form-group>
           <b-form-group
             class="text-label text-left"
@@ -440,16 +430,16 @@
             <div class="line-horizontal"></div>
             <div class="wrap-summary">
               <div>
-                <label class="">Initial Pool Size:</label>
-                <span>101,600.20</span>
+                <label class="">Initial Reserve Deposit:</label>
+                <span>{{ selectedReserve.deposited }}</span>
               </div>
               <div>
                 <label>Token Earnings:</label>
-                <span>16.232.12</span>
+                <span>{{ selectedReserve.earned }}</span>
               </div>
               <div>
                 <label>Total % Gains:</label>
-                <span class="percent">21:59%</span>
+                <span class="percent">{{ selectedReserve.earned * 100 / selectedReserve.totalBalance }}%</span>
               </div>
             </div>
           </b-form-group>
@@ -492,7 +482,8 @@ export default {
       amountToDeposit: "",
       unclockDate: "",
       lockPrice: "",
-      selected: null,
+      selectedAsset: null,
+      selectedReserve: "",
       lockPricePosition: "0",
       options: [
         { value: "0", text: "Below" },
@@ -878,7 +869,7 @@ export default {
         web3: window.web3,
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
         beneficiary: "0x0000000000000000000000000000000000000000",
-        erc20Token: this.selected.erc20Token,
+        erc20Token: this.selectedAsset.erc20Token,
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
@@ -1001,10 +992,14 @@ export default {
       this.$refs["modal-add-new"].hide();
       this.amountToDeposit = 0;
     },
-    showModalClaim() {
+    showModalClaim(selectedReserve) {
+      this.selectedReserve = selectedReserve;
       this.$refs["modal-claim"].show();
+
+      console.log(this.selectedReserve);
     },
     hideModalClaim() {
+      this.selectedReserve = "";
       this.$refs["modal-claim"].hide();
     },
     showCalendar() {
@@ -1043,8 +1038,8 @@ export default {
         web3: window.web3, 
         erc20: item.erc20Token
       });
-      this.selected = item;
-      console.log(this.selected);
+      this.selectedAsset = item;
+      console.log(this.selectedAsset);
     },
     getTimeLocal(){
       let formatDate = moment().format("DD-MM-YYYY");
