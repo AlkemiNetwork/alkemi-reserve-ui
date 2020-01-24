@@ -419,6 +419,22 @@
             ></b-form-input>
           </b-form-group>
           <b-form-group
+            class="text-label text-left input-rlt"
+            label="ENTER AMOUNT TO CLAIM"
+            label-for="claimingAmount"
+          >
+            <b-form-input
+              v-model="amountToWithdraw"
+              class="enter-money"
+              type="text"
+              placeholder="0.00"
+            >
+            </b-form-input>
+            <b-button @click="maxClaimableAmount(selectedReserve.totalBalance)" class="btn-position">
+              MAX
+            </b-button>
+          </b-form-group>
+          <b-form-group
             class="text-label text-left"
             label="SUMMARY"
             label-for="summary"
@@ -476,6 +492,7 @@ export default {
       walletAssetBalance: 0,
       dayChoose: "",
       amountToDeposit: "",
+      amountToWithdraw: "",
       unclockDate: "",
       lockPrice: "",
       selectedAsset: null,
@@ -888,7 +905,7 @@ export default {
       this.CLAIM_LIQUIDITY_RESERVE({
         web3: window.web3,
         reserveAddress: reserve.address,
-        amount: window.web3.utils.toWei(reserve.deposited, "ether"),
+        amount: window.web3.utils.toWei(this.amountToWithdraw, "ether"),
         oracle: "0x7AFe1118Ea78C1eae84ca8feE5C65Bc76CcF879e",
         jobId: window.web3.utils.fromAscii("0e9e244b9c374cd1a5c714caf25b0be5"),
         tokenSymbol: reserve.assetSymbol,
@@ -1044,6 +1061,9 @@ export default {
     },
     maxAvailable() {
       this.amountToDeposit = this.tokenBalance;
+    },
+    maxClaimableAmount(maxAmount) {
+      this.amountToWithdraw = maxAmount;
     },
     loading() {
       this.isShow = "loading";
