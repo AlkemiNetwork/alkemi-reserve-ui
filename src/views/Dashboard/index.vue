@@ -443,7 +443,7 @@
               </div>
             </div>
           </b-form-group>
-          <b-button class="btn-claim" @click="loading">
+          <b-button class="btn-claim" @click="claimReserve(selectedReserve)">
             CLAIM BALANCE
           </b-button>
           <b-button class="btn-cancel" @click="hideModalClaim()">
@@ -825,7 +825,8 @@ export default {
       "LOAD_TOKEN_LIQUIDITY_RESERVES",
       "GET_RESERVE_DETAILS",
       "GET_TOKEN_BALANCE",
-      "GET_PRICE_COIN"
+      "GET_PRICE_COIN",
+      "CLAIM_LIQUIDITY_RESERVE"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -884,6 +885,21 @@ export default {
         )
       });
     },
+    claimReserve(reserve) {
+      console.log("reserve to claim");
+      console.log(reserve);
+
+      this.CLAIM_LIQUIDITY_RESERVE({
+        web3: window.web3,
+        reserveAddress: reserve.address,
+        amount: window.web3.utils.toWei(reserve.deposited, "ether"),
+        oracle: "0x7AFe1118Ea78C1eae84ca8feE5C65Bc76CcF879e",
+        jobId: window.web3.utils.fromAscii("0e9e244b9c374cd1a5c714caf25b0be5"),
+        tokenSymbol: reserve.assetSymbol,
+        market: "USD",
+        oraclePayment: window.web3.utils.toWei("1", "ether"),
+      });
+    },
     async getProviderReservesDetails() {
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
@@ -892,10 +908,12 @@ export default {
         });
       }
 
-      this.providerReservesDetails.map(reserve => {
+      this.providerReservesDetails.map((reserve, key) => {
         console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "DAI";
             this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
             this.data[0].providerReserves.push(reserve);
@@ -917,6 +935,8 @@ export default {
             }
             break;
           case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "LINK";
             this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
             this.data[1].providerReserves.push(reserve);
@@ -938,6 +958,8 @@ export default {
             }
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
             this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
             this.data[2].providerReserves.push(reserve);
@@ -959,6 +981,8 @@ export default {
             }
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
+            reserve.assetSymbol = "KRWB";
+            reserve.address = this.providerLiquidityReserves[key];
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
             this.data[3].providerReserves.push(reserve);

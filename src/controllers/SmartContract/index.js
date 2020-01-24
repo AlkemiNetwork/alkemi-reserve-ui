@@ -98,6 +98,13 @@ const actions = {
       }
     );
 
+    for (let i = 0; i < reserves.length; i++) {
+      if(reserves[i] == "0x0000000000000000000000000000000000000000") {
+        reserves.splice(i,1);
+      }
+    }
+
+
     commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function(
