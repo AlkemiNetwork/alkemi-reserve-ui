@@ -602,7 +602,7 @@ export default {
       fields: [
         {
           key: "lockingPeriod",
-          label: "Created",
+          label: "Unlocking Time",
           thStyle: { width: "16.66%" }
         },
         {
