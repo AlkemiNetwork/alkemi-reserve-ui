@@ -133,10 +133,6 @@
                                       {{ item.fullName }}
                                     </span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
                                     ${{ item.estUSD }}
@@ -185,7 +181,7 @@
                                   ></chart>
                                 </div>
                                 <div class="form-reserve">
-                                  <div class="float-left">RESERVE POOLS</div>
+                                  <div class="float-left">POOL RESERVES</div>
                                   <div class="float-right">
                                     <b-button
                                       variant="add-new"
