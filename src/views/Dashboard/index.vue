@@ -133,10 +133,6 @@
                                       {{ item.fullName }}
                                     </span>
                                   </span>
-                                  <span
-                                    class="address-in-content float-right"
-                                    >{{ addressWallet }}</span
-                                  >
                                   <div class="clearfix"></div>
                                   <div class="est-value">
                                     ${{ item.estUSD }}
@@ -185,7 +181,7 @@
                                   ></chart>
                                 </div>
                                 <div class="form-reserve">
-                                  <div class="float-left">RESERVE POOLS</div>
+                                  <div class="float-left">POOL RESERVES</div>
                                   <div class="float-right">
                                     <b-button
                                       variant="add-new"
@@ -211,7 +207,7 @@
                                     <template v-slot:cell(earned)="row">
                                       <div class="value-change float-left">
                                         + {{ row.item.earned }}
-                                        {{ selected.name }}
+                                        {{ selectedAsset.name }}
                                       </div>
                                     </template>
                                     <template
@@ -234,32 +230,39 @@
                                         ${{
                                           row.item.earned > 0 &&
                                           priceCoin[
-                                            `${selected.name}/${unitCoin}`
+                                            `${selectedAsset.name}/${unitCoin}`
                                           ]
                                             ? row.item.earned *
                                               priceCoin[
-                                                `${selected.name}/${unitCoin}`
+                                                `${selectedAsset.name}/${unitCoin}`
                                               ]
                                             : 0
                                         }}
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <b-button
-                                        v-if="!row.item.btn"
+                                      <!--<b-button
+                                        v-if="getTimeLocal() >= row.item.lockingPeriod"
                                         size="sm"
                                         class="btn-claim float-right"
-                                        @click="showModalClaim"
+                                        @click="showModalClaim(row.item)"
                                       >
                                         CLAIM
                                       </b-button>
 
                                       <b-button
-                                        v-if="row.item.btn"
+                                        v-else
                                         size="sm"
                                         class="btn-claim-value float-right"
                                       >
-                                        12412h
+                                        {{ diffDay(row.item.lockingPeriod) }}
+                                      </b-button>-->
+                                      <b-button
+                                        size="sm"
+                                        class="btn-claim float-right"
+                                        @click="showModalClaim(row.item)"
+                                      >
+                                        CLAIM
                                       </b-button>
                                     </template>
                                   </b-table>
@@ -290,14 +293,14 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          ADD {{ selected ? selected.name : "" }} POOL
+          ADD {{ selectedAsset ? selectedAsset.name : "" }} POOL
         </span>
       </div>
       <div class="content-modal">
         <b-form v-if="isShow == 'form-add'">
           <b-form-group
             class="text-label text-left"
-            :label="`AVAILABLE ${selected ? selected.name : ''} BALANCE`"
+            :label="`AVAILABLE ${selectedAsset ? selectedAsset.name : ''} BALANCE`"
             label-for="walletAssetBalance"
           >
             <b-form-input
@@ -405,32 +408,38 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          CLAIM ADD DAI POOL
+          CLAIM {{ selectedAsset.name }} RESERVE
         </span>
       </div>
       <div class="content-modal content-modal-claim">
         <b-form>
           <b-form-group
             class="text-label text-left"
-            label="TOTAL CLAIMABLE OMG BALANCE"
+            label="TOTAL CLAIMABLE BALANCE"
             label-for="totalClaim"
           >
             <b-form-input
               class="value-available"
               type="text"
-              value="10,332.78"
+              :value="`${ selectedReserve.totalBalance }`"
               readonly
             ></b-form-input>
           </b-form-group>
           <b-form-group
-            class="text-label text-left"
-            label="SELECT WALLET"
-            label-for="selectWallet"
+            class="text-label text-left input-rlt"
+            label="ENTER AMOUNT TO CLAIM"
+            label-for="claimingAmount"
           >
-            <div class="select-relative">
-              <b-form-select class="select-wallet"></b-form-select>
-              <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
-            </div>
+            <b-form-input
+              v-model="amountToWithdraw"
+              class="enter-money"
+              type="text"
+              placeholder="0.00"
+            >
+            </b-form-input>
+            <b-button @click="maxClaimableAmount(selectedReserve.totalBalance)" class="btn-position">
+              MAX
+            </b-button>
           </b-form-group>
           <b-form-group
             class="text-label text-left"
@@ -440,20 +449,20 @@
             <div class="line-horizontal"></div>
             <div class="wrap-summary">
               <div>
-                <label class="">Initial Pool Size:</label>
-                <span>101,600.20</span>
+                <label class="">Initial Reserve Deposit:</label>
+                <span>{{ selectedReserve.deposited }}</span>
               </div>
               <div>
                 <label>Token Earnings:</label>
-                <span>16.232.12</span>
+                <span>{{ selectedReserve.earned }}</span>
               </div>
               <div>
                 <label>Total % Gains:</label>
-                <span class="percent">21:59%</span>
+                <span class="percent">{{ selectedReserve.earned * 100 / selectedReserve.totalBalance }}%</span>
               </div>
             </div>
           </b-form-group>
-          <b-button class="btn-claim" @click="loading">
+          <b-button class="btn-claim" @click="claimReserve(selectedReserve)">
             CLAIM BALANCE
           </b-button>
           <b-button class="btn-cancel" @click="hideModalClaim()">
@@ -490,9 +499,11 @@ export default {
       walletAssetBalance: 0,
       dayChoose: "",
       amountToDeposit: "",
+      amountToWithdraw: "",
       unclockDate: "",
       lockPrice: "",
-      selected: null,
+      selectedAsset: null,
+      selectedReserve: "",
       lockPricePosition: "0",
       options: [
         { value: "0", text: "Below" },
@@ -611,7 +622,7 @@ export default {
       fields: [
         {
           key: "lockingPeriod",
-          label: "Created",
+          label: "Unlocking Time",
           thStyle: { width: "16.66%" }
         },
         {
@@ -834,7 +845,8 @@ export default {
       "LOAD_TOKEN_LIQUIDITY_RESERVES",
       "GET_RESERVE_DETAILS",
       "GET_TOKEN_BALANCE",
-      "GET_PRICE_COIN"
+      "GET_PRICE_COIN",
+      "CLAIM_LIQUIDITY_RESERVE"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -878,7 +890,7 @@ export default {
         web3: window.web3,
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
         beneficiary: "0x0000000000000000000000000000000000000000",
-        erc20Token: this.selected.erc20Token,
+        erc20Token: this.selectedAsset.erc20Token,
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
@@ -893,6 +905,21 @@ export default {
         )
       });
     },
+    claimReserve(reserve) {
+      console.log("reserve to claim");
+      console.log(reserve);
+
+      this.CLAIM_LIQUIDITY_RESERVE({
+        web3: window.web3,
+        reserveAddress: reserve.address,
+        amount: window.web3.utils.toWei(this.amountToWithdraw, "ether"),
+        oracle: "0x7AFe1118Ea78C1eae84ca8feE5C65Bc76CcF879e",
+        jobId: window.web3.utils.fromAscii("0e9e244b9c374cd1a5c714caf25b0be5"),
+        tokenSymbol: reserve.assetSymbol,
+        market: "USD",
+        oraclePayment: window.web3.utils.toWei("1", "ether"),
+      });
+    },
     async getProviderReservesDetails() {
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
@@ -901,10 +928,12 @@ export default {
         });
       }
 
-      this.providerReservesDetails.map(reserve => {
+      this.providerReservesDetails.map((reserve, key) => {
         console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "DAI";
             this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
             this.data[0].providerReserves.push(reserve);
@@ -926,6 +955,8 @@ export default {
             }
             break;
           case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "LINK";
             this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
             this.data[1].providerReserves.push(reserve);
@@ -947,6 +978,8 @@ export default {
             }
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
+            reserve.address = this.providerLiquidityReserves[key];
+            reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
             this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
             this.data[2].providerReserves.push(reserve);
@@ -968,6 +1001,8 @@ export default {
             }
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
+            reserve.assetSymbol = "KRWB";
+            reserve.address = this.providerLiquidityReserves[key];
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
             this.data[3].providerReserves.push(reserve);
@@ -1001,10 +1036,14 @@ export default {
       this.$refs["modal-add-new"].hide();
       this.amountToDeposit = 0;
     },
-    showModalClaim() {
+    showModalClaim(selectedReserve) {
+      this.selectedReserve = selectedReserve;
       this.$refs["modal-claim"].show();
+
+      console.log(this.selectedReserve);
     },
     hideModalClaim() {
+      this.selectedReserve = "";
       this.$refs["modal-claim"].hide();
     },
     showCalendar() {
@@ -1030,6 +1069,9 @@ export default {
     maxAvailable() {
       this.amountToDeposit = this.tokenBalance;
     },
+    maxClaimableAmount(maxAmount) {
+      this.amountToWithdraw = maxAmount;
+    },
     loading() {
       this.isShow = "loading";
       setTimeout(() => {
@@ -1043,8 +1085,20 @@ export default {
         web3: window.web3, 
         erc20: item.erc20Token
       });
-      this.selected = item;
-      console.log(this.selected);
+      this.selectedAsset = item;
+      console.log(this.selectedAsset);
+    },
+    getTimeLocal(){
+      let formatDate = moment().format("DD-MM-YYYY");
+      return moment(formatDate, "DD-MM-YYYY").unix().toString();
+    },
+    diffDay(day){
+      if (day) {
+        let dayUnclock = moment.unix(day).format('DD-MM-YYYY HH:mm');
+        var before = moment(dayUnclock,'DD-MM-YYYY HH:mm');
+        let now = moment();
+        return moment(before - now).format('D[ Days ] H[ Hrs]');
+      }
     }
   }
 };

@@ -98,6 +98,13 @@ const actions = {
       }
     );
 
+    for (let i = 0; i < reserves.length; i++) {
+      if(reserves[i] == "0x0000000000000000000000000000000000000000") {
+        reserves.splice(i,1);
+      }
+    }
+
+
     commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function(
@@ -188,6 +195,8 @@ const actions = {
         txHash: txHash.tx
       });
 
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+
       liquidityReserve.contract.events.ReserveWithdraw(
         {
           filter: {
@@ -196,12 +205,24 @@ const actions = {
           fromBlock: latest
         },
         function(error, event) {
+          console.log("reserve withdraw event");
           console.log(event);
-          // alert of withdraw
+          // alert of withdraw 
         }
       );
 
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      liquidityReserve.contract.events.PriceUnlock(
+        {
+          fromBlock: latest
+        },
+        function(error, event) {
+          console.log("price unlocking event");
+          console.log(event);
+          // alert of price unlocking
+
+          dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+        }
+      );
     }
   },
   [actionType.APPROVE_TOKEN_DEPOSIT]: async function(
