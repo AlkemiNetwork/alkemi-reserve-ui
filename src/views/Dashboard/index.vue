@@ -241,7 +241,7 @@
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <b-button
+                                      <!--<b-button
                                         v-if="getTimeLocal() >= row.item.lockingPeriod"
                                         size="sm"
                                         class="btn-claim float-right"
@@ -256,6 +256,13 @@
                                         class="btn-claim-value float-right"
                                       >
                                         {{ diffDay(row.item.lockingPeriod) }}
+                                      </b-button>-->
+                                      <b-button
+                                        size="sm"
+                                        class="btn-claim float-right"
+                                        @click="showModalClaim(row.item)"
+                                      >
+                                        CLAIM
                                       </b-button>
                                     </template>
                                   </b-table>

@@ -195,6 +195,8 @@ const actions = {
         txHash: txHash.tx
       });
 
+      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+
       liquidityReserve.contract.events.ReserveWithdraw(
         {
           filter: {
@@ -203,12 +205,24 @@ const actions = {
           fromBlock: latest
         },
         function(error, event) {
+          console.log("reserve withdraw event");
           console.log(event);
-          // alert of withdraw
+          // alert of withdraw 
         }
       );
 
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      liquidityReserve.contract.events.PriceUnlock(
+        {
+          fromBlock: latest
+        },
+        function(error, event) {
+          console.log("price unlocking event");
+          console.log(event);
+          // alert of price unlocking
+
+          dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+        }
+      );
     }
   },
   [actionType.APPROVE_TOKEN_DEPOSIT]: async function(
