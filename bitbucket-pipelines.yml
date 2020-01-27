@@ -46,7 +46,7 @@ pipelines:
             - echo "Updating Readme.md to Confluence Documentation"
             - curl -LO https://github.com/justmiles/go-markdown2confluence/releases/download/v3.0.2/markdown2confluence_3.0.2_linux_x86_64.tar.gz
             - tar -xzvf markdown2confluence_3.0.2_linux_x86_64.tar.gz -C /usr/local/bin/ markdown2confluence
-            - markdown2confluence -u $CONFLUENCE_USER -p $CONFLUENCE_PASSWORD -e $CONFLUENCE_ENDPOINT -s 'ARCH' --parent 'Alkemi Protocol Contracts' -t 'Liquidity Reserve Dashboard' -d README.md
+            - markdown2confluence -u $CONFLUENCE_USER -p $CONFLUENCE_PASSWORD -e $CONFLUENCE_ENDPOINT -s 'ARCH' --parent 'Repositories' -t 'liquidity-reserve-dashboard' -d README.md
       - step:
           name:                        "Deploy to Staging"
           deployment:                  staging
