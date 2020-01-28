@@ -27,7 +27,9 @@ const state = {
   miningTransactionObject: {
     status: null,
     txHash: ""
-  }
+  },
+  isLoading: false,
+  isLoadingClaim : false,
 };
 
 const getters = {};
@@ -118,6 +120,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
+    commit(mutationType.SET_STATUS_LOADING, true);
 
     let latest = await params.web3.eth.getBlockNumber();
 
@@ -130,7 +133,6 @@ const actions = {
       params.lockingPricePosition,
       { from: state.account }
     );
-
     if (txHash) {
       commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
         status: "done",
@@ -175,54 +177,58 @@ const actions = {
       txHash: ""
     });
 
-    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+    commit(mutationType.SET_STATUS_CLAIM_LOADING, true);
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
-    let latest = await params.web3.eth.getBlockNumber();
+      let latest = await params.web3.eth.getBlockNumber();
 
-    let txHash = await liquidityReserve.withdraw(
-      params.amount,
-      params.oracle,
-      params.jobId,
-      params.tokenSymbol,
-      params.market,
-      params.oraclePayment,
-      { from: state.account }
-    );
+      let txHash = await liquidityReserve.withdraw(
+        params.amount,
+        params.oracle,
+        params.jobId,
+        params.tokenSymbol,
+        params.market,
+        params.oraclePayment,
+        { from: state.account }
+      );
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        commit(mutationType.SET_STATUS_CLAIM_LOADING, false);
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
 
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
-      });
-
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-
-      liquidityReserve.contract.events.ReserveWithdraw(
-        {
-          filter: {
-            withdrawer: state.account
+        liquidityReserve.contract.events.ReserveWithdraw(
+          {
+            filter: {
+              withdrawer: state.account
+            },
+            fromBlock: latest
           },
-          fromBlock: latest
-        },
-        function(error, event) {
-          console.log("reserve withdraw event");
-          console.log(event);
-          // alert of withdraw 
-        }
-      );
+          function(error, event) {
+            console.log("reserve withdraw event");
+            console.log(event);
+            // alert of withdraw 
+          }
+        );
 
-      liquidityReserve.contract.events.PriceUnlock(
-        {
-          fromBlock: latest
-        },
-        function(error, event) {
-          console.log("price unlocking event");
-          console.log(event);
-          // alert of price unlocking
+        liquidityReserve.contract.events.PriceUnlock(
+          {
+            fromBlock: latest
+          },
+          function(error, event) {
+            console.log("price unlocking event");
+            console.log(event);
+            // alert of price unlocking
 
-          dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-        }
-      );
+            dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+          }
+        );
+      }
+    } catch(err){
+      commit(mutationType.SET_STATUS_CLAIM_LOADING, false);
     }
   },
   [actionType.APPROVE_TOKEN_DEPOSIT]: async function(
@@ -294,20 +300,23 @@ const actions = {
       txHash: ""
     });
 
-    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
-
-    let txHash = await liquidityReserve.deposit(params.amount, {
-      from: state.account,
-      gasLimit: 750000
-    });
-
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+      let txHash = await liquidityReserve.deposit(params.amount, {
+        from: state.account,
+        gasLimit: 750000
       });
-
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        commit(mutationType.SET_STATUS_LOADING, false);
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      }
+    }
+    catch(err) {
+      commit(mutationType.SET_STATUS_LOADING, false);
     }
   },
   [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function ({
@@ -391,7 +400,14 @@ const mutations = {
   },
   [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
+  },
+  [mutationType.SET_STATUS_LOADING](state, isLoading) {
+    state.isLoading = isLoading;
+  },
+  [mutationType.SET_STATUS_CLAIM_LOADING](state, isLoadingClaim) {
+    state.isLoadingClaim = isLoadingClaim;
   }
+  
 };
 
 export default {

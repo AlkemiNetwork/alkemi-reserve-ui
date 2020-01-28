@@ -60,13 +60,14 @@
                 <b-col md="2" class="pdr-0 pt-15">
                   <div class="est-content">
                     <div class="title-es-content">EST PORTFOLIO USD VALUE:</div>
-                    <div class="monney">$1,354,884.45</div>
+                    <div class="monney">{{ estPortfolio + estEarnings | formatMoney }}</div>
                   </div>
                   <div class="est-content">
                     <div class="title-es-content">EST USD EARNINGS 24 hr:</div>
-                    <div class="monney mb-20">$7,729.09</div>
+                    <div class="monney mb-20">{{ estEarnings | formatMoney }}</div>
                     <div class="title-es-content">CHANGE 24hr:</div>
-                    <div class="change-number">+12.22%</div>
+                    <div v-if="(estPortfolio + estEarnings) != 0" class="change-number">+{{ (totalChange24h * 100) / (estPortfolio + estEarnings) | formatPercent }}</div>
+                    <div v-else class="change-number">+{{ totalChange24h | formatPercent}}</div>
                   </div>
                   <div class="est-content">
                     <div class="float-left mr-30">
@@ -207,7 +208,7 @@
                                     <template v-slot:cell(earned)="row">
                                       <div class="value-change float-left">
                                         + {{ row.item.earned }}
-                                        {{ selectedAsset.name }}
+                                        {{ item.name }}
                                       </div>
                                     </template>
                                     <template
@@ -230,11 +231,11 @@
                                         ${{
                                           row.item.earned > 0 &&
                                           priceCoin[
-                                            `${selectedAsset.name}/${unitCoin}`
+                                            `${item.name}/${unitCoin}`
                                           ]
                                             ? row.item.earned *
                                               priceCoin[
-                                                `${selectedAsset.name}/${unitCoin}`
+                                                `${item.name}/${unitCoin}`
                                               ]
                                             : 0
                                         }}
@@ -408,11 +409,11 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          CLAIM {{ selectedAsset.name }} RESERVE
+          CLAIM {{ selectedAsset ? selectedAsset.name : '' }} RESERVE
         </span>
       </div>
       <div class="content-modal content-modal-claim">
-        <b-form>
+        <b-form v-if="isShowClaim == 'form-claim'">
           <b-form-group
             class="text-label text-left"
             label="TOTAL CLAIMABLE BALANCE"
@@ -469,6 +470,17 @@
             Cancel
           </b-button>
         </b-form>
+        <div v-if="isShowClaim == 'loading'" class="processing">
+          <div>
+            <div class="title-process">
+              Processing Transaction
+            </div>
+            <div class="address-transaction">
+              0xbj39....1ea401
+            </div>
+            <loadingPopup :quality="4"></loadingPopup>
+          </div>
+        </div>
       </div>
     </b-modal>
   </div>
@@ -494,6 +506,7 @@ export default {
     return {
       version: currentVersion,
       isShow: "form-add",
+      isShowClaim: "form-claim",
       isConnect: false,
       addressWallet: "",
       walletAssetBalance: 0,
@@ -505,6 +518,9 @@ export default {
       selectedAsset: null,
       selectedReserve: "",
       lockPricePosition: "0",
+      estPortfolio: 0,
+      estEarnings: 0,
+      totalChange24h: 0,
       options: [
         { value: "0", text: "Below" },
         { value: "1", text: "Above" }
@@ -694,12 +710,30 @@ export default {
       "providerReservesDetails",
       "tokenBalance",
       "priceCoin",
-      "unitCoin"
+      "unitCoin",
+      "isLoading",
+      "isLoadingClaim"
     ])
   },
   watch: {
     alkemiNetwork: function(value) {
       if (value) this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
+    },
+    isLoading: function(value) {
+      if(value){
+        this.isShow = "loading";
+      }else{
+        this.isShow = "form-add";
+        this.hideModal();
+      }
+    },
+    isLoadingClaim: function(value) {
+      if(value){
+        this.isShowClaim = "loading";
+      }else{
+        this.isShowClaim = "form-claim";
+        this.hideModalClaim();
+      }
     }
   },
   filters: {
@@ -937,6 +971,12 @@ export default {
             this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
             this.data[0].providerReserves.push(reserve);
+            this.estPortfolio +=
+              parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
+            this.estEarnings +=
+              parseInt(reserve.earned) *
+              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]) {
               this.data[0].estUSD =
                 this.data[0].total *
@@ -960,6 +1000,12 @@ export default {
             this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
             this.data[1].providerReserves.push(reserve);
+            this.estPortfolio +=
+              parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
+            this.estEarnings +=
+              parseInt(reserve.earned) *
+              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]) {
               this.data[1].estUSD =
                 this.data[1].total *
@@ -983,6 +1029,12 @@ export default {
             this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
             this.data[2].providerReserves.push(reserve);
+            this.estPortfolio +=
+              parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
+            this.estEarnings +=
+              parseInt(reserve.earned) *
+              this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]) {
               this.data[2].estUSD =
                 this.data[2].total *
@@ -1006,6 +1058,12 @@ export default {
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
             this.data[3].providerReserves.push(reserve);
+            this.estPortfolio +=
+              parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+            this.estEarnings +=
+              parseInt(reserve.earned) *
+              this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]) {
               this.data[3].estUSD =
                 this.data[3].total *
@@ -1063,7 +1121,6 @@ export default {
       return false;
     },
     timestampToDate(timestamp) {
-      console.log(timestamp);
       return moment.unix(timestamp).format("MM/DD/YYYY");
     },
     maxAvailable() {
@@ -1072,21 +1129,15 @@ export default {
     maxClaimableAmount(maxAmount) {
       this.amountToWithdraw = maxAmount;
     },
-    loading() {
-      this.isShow = "loading";
-      setTimeout(() => {
-        this.isShow = "form-add";
-        return this.hideModal();
-      }, 4000);
-      // clearTimeout(timerid);
-    },
     async selectWallet(item)  {
-      await this.GET_TOKEN_BALANCE({
-        web3: window.web3, 
-        erc20: item.erc20Token
-      });
-      this.selectedAsset = item;
-      console.log(this.selectedAsset);
+      if(window.web3.currentProvider.selectedAddress){
+        await this.GET_TOKEN_BALANCE({
+          web3: window.web3, 
+          erc20: item.erc20Token
+        });
+        this.selectedAsset = item;
+        console.log(this.selectedAsset);
+      }
     },
     getTimeLocal(){
       let formatDate = moment().format("DD-MM-YYYY");
@@ -1095,9 +1146,8 @@ export default {
     diffDay(day){
       if (day) {
         let dayUnclock = moment.unix(day).format('DD-MM-YYYY HH:mm');
-        var before = moment(dayUnclock,'DD-MM-YYYY HH:mm');
-        let now = moment();
-        return moment(before - now).format('D[ Days ] H[ Hrs]');
+        let before = moment(dayUnclock,'DD-MM-YYYY HH:mm');
+        return moment(before - moment()).format('D[ Days ] H[ Hrs]');
       }
     }
   }
