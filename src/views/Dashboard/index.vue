@@ -385,17 +385,6 @@
             Back
           </b-button>
         </div>
-        <div v-if="isShow == 'loading'" class="processing">
-          <div>
-            <div class="title-process">
-              Processing Transaction
-            </div>
-            <div class="address-transaction">
-              0xbj39....1ea401
-            </div>
-            <loadingPopup :quality="4"></loadingPopup>
-          </div>
-        </div>
       </div>
     </b-modal>
     <b-modal
@@ -413,7 +402,7 @@
         </span>
       </div>
       <div class="content-modal content-modal-claim">
-        <b-form v-if="isShowClaim == 'form-claim'">
+        <b-form>
           <b-form-group
             class="text-label text-left"
             label="TOTAL CLAIMABLE BALANCE"
@@ -470,19 +459,9 @@
             Cancel
           </b-button>
         </b-form>
-        <div v-if="isShowClaim == 'loading'" class="processing">
-          <div>
-            <div class="title-process">
-              Processing Transaction
-            </div>
-            <div class="address-transaction">
-              0xbj39....1ea401
-            </div>
-            <loadingPopup :quality="4"></loadingPopup>
-          </div>
-        </div>
       </div>
     </b-modal>
+    <MiningTransaction></MiningTransaction>
   </div>
 </template>
 
@@ -490,7 +469,7 @@
 import { mapActions, mapState } from "vuex";
 import Web3 from "web3";
 import { FunctionalCalendar } from "vue-functional-calendar";
-import loadingPopup from "../../components/loading-popup/index";
+import MiningTransaction from "../../components/widgets/MiningTransaction";
 import accounting from "accounting";
 
 const currentVersion = require("../../../package.json").version;
@@ -500,13 +479,15 @@ export default {
   name: "dashboard",
   components: {
     FunctionalCalendar,
-    loadingPopup
+    MiningTransaction
   },
   data() {
     return {
       version: currentVersion,
       isShow: "form-add",
       isShowClaim: "form-claim",
+      txStatus: "",
+      txHash: "",
       isConnect: false,
       addressWallet: "",
       walletAssetBalance: 0,
@@ -710,9 +691,7 @@ export default {
       "providerReservesDetails",
       "tokenBalance",
       "priceCoin",
-      "unitCoin",
-      "isLoading",
-      "isLoadingClaim"
+      "unitCoin"
     ])
   },
   watch: {
@@ -938,6 +917,8 @@ export default {
           "ether"
         )
       });
+      
+      this.hideModal();
     },
     claimReserve(reserve) {
       console.log("reserve to claim");
@@ -953,6 +934,8 @@ export default {
         market: "USD",
         oraclePayment: window.web3.utils.toWei("1", "ether"),
       });
+
+      this.hideModalClaim();
     },
     async getProviderReservesDetails() {
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
@@ -1097,8 +1080,6 @@ export default {
     showModalClaim(selectedReserve) {
       this.selectedReserve = selectedReserve;
       this.$refs["modal-claim"].show();
-
-      console.log(this.selectedReserve);
     },
     hideModalClaim() {
       this.selectedReserve = "";
