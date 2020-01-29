@@ -1,30 +1,43 @@
 <template>
-  <div v-if="miningTransactionObject.status != null" class="processing" style="background-color: #DEDDDE;width:600px">
-    <div>
-      <div v-if="miningTransactionObject.status == 'uploading'" class="title-process">
-        Uploading content to IPFS
+  <div>
+    <b-modal
+      hide-footer
+      hide-header
+      centered
+      ref="modal-loading"
+      title="Using Component Methods"
+      id="modal-loading"
+    >
+      <div class="content-modal">
+        <div class="processing">
+          <div v-if="miningTransactionObject.status != null">
+            <div v-if="miningTransactionObject.status == 'uploading'" class="title-process">
+              Uploading content to IPFS
+            </div>
+            <div v-if="miningTransactionObject.status == 'pending'" class="title-process">
+              Pending Transaction
+            </div>
+            <div v-if="miningTransactionObject.status == 'done'" class="title-process">
+              Transaction Mined
+            </div>
+            <div v-if="miningTransactionObject.status == 'done'">
+              Transaction has been mined! You can view the transaction info on
+              EtherScan
+              <clickable-transaction :transaction="miningTransactionObject.txHash" />.
+            </div>
+            <div class="address-transaction">
+              {{ dotDotDot(miningTransactionObject.txHash) }}
+            </div>
+            <loadingPopup v-if="(miningTransactionObject.status == 'pending') || (miningTransactionObject.status == 'uploading')" :quality="4"></loadingPopup>
+            <b-button-group v-if="miningTransactionObject.status == 'done'">
+              <b-button @click="modalClosed" variant="akm">
+                Close
+              </b-button>
+            </b-button-group>
+          </div>
+        </div>
       </div>
-      <div v-if="miningTransactionObject.status == 'pending'" class="title-process">
-        Pending Transaction
-      </div>
-      <div v-if="miningTransactionObject.status == 'done'" class="title-process">
-        Transaction Mined
-      </div>
-      <loadingPopup v-if="(miningTransactionObject.status == 'pending') || (miningTransactionObject.status == 'uploading')" :quality="4"></loadingPopup>
-      <div style="padding:30px" v-if="miningTransactionObject.status == 'done'">
-        Transaction has been mined! You can view the transaction info on
-        EtherScan
-        <clickable-transaction :transaction="miningTransactionObject.txHash" />.
-      </div>
-      <div class="address-transaction">
-        {{ miningTransactionObject.txHash }}
-      </div>
-      <b-button-group v-if="miningTransactionObject.status == 'done'">
-        <b-button @click="modalClosed" variant="akm">
-          Close
-        </b-button>
-      </b-button-group>
-    </div>
+    </b-modal>
   </div>
 </template>
 
@@ -39,8 +52,23 @@ export default {
     loadingPopup 
   },
   data: () => ({
-    showDialog: true
+    showDialog: true,
   }),
+  computed: {
+    ...mapState("ContractController", [
+      "etherscanBase",
+      "miningTransactionObject"
+    ])
+  },
+  watch: {
+    miningTransactionObject: function(miningTransObject) {
+      if (miningTransObject.status !== null) {
+        this.showModalLoading()
+      } else {
+        this.hideModalLoading()
+      }
+    }
+  },
   methods: {
     ...mapActions("ContractController", [
       "CLOSE_MINING_DIALOG"
@@ -48,13 +76,28 @@ export default {
     modalClosed() {
       console.log("CLOSED");
       this.CLOSE_MINING_DIALOG();
-    }
-  },
-  computed: {
-    ...mapState("ContractController", [
-      "etherscanBase",
-      "miningTransactionObject"
-    ])
+    },
+    showModalLoading() {
+      this.$refs["modal-loading"].show()
+    },
+    hideModalLoading() {
+      this.$refs["modal-loading"].hide()
+    },
+    dotDotDot: function(tx) {
+      if (tx) {
+        return (
+            tx.substr(0, 6) +
+            "..." +
+            tx.substr(
+              tx.length - 6,
+              tx.length
+            )
+          )
+      }
+      else {
+        return ""
+      }
+    },
   }
 };
 </script>

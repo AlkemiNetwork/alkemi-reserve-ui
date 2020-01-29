@@ -408,6 +408,11 @@ const mutations = {
   ) {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
   },
+  [mutationType.SET_EMPTY_TOKEN_LIQUIDITY_RESERVE]: async function(
+    state
+  ) {
+    state.providerReservesDetails = [];
+  },
   [mutationType.SET_TOKEN_BALANCE]: async function (state, tokenBalance) {
     state.tokenBalance = tokenBalance;
   },

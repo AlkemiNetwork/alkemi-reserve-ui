@@ -529,24 +529,49 @@ body {
 				}
 			}
 		}
-		.processing{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			.title-process{
-				font-size: $font-size-18;
-				color: $color-blue;
-			}
-			.address-transaction{
-				font-size: $font-size-18;
-				color: $color-white;
-			}
-			> div{
-				line-height: 40px;
-			}
+	}
+}
+#modal-loading{
+	.modal-body{
+		padding: 0;
+	}
+	.modal-content{
+		background: $color-shark;
+	}
+	.content-modal{
+		height: 400px;
+		padding: 35px;
+	}
+}
+.processing{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	color: $color-white;
+	.title-process{
+		margin-bottom: 15px;
+		font-size: $font-size-18;
+		color: $color-white;
+	}
+	.address-transaction{
+		margin-top: 15px;
+		font-size: $font-size-18;
+		color: $color-white;
+	}
+	> div{
+		text-align: center;
+		width: 100%;
+	}
+	.btn-group{
+		margin-top: 30px;
+		.btn{
+			color: $color-white;
+			background: $color-blue;
+			border-radius: 0;
 		}
 	}
+	
 }
 .vfc-styles-conditional-class{
 	.vfc-main-container{

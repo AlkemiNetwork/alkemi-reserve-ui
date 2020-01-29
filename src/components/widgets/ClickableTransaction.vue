@@ -16,19 +16,6 @@ export default {
   },
   computed: {
     ...mapState("ContractController", ["etherscanBase"]),
-    dotDotDot: function() {
-      if (this.transaction) {
-        return (
-          this.transaction.substr(0, 6) +
-          "..." +
-          this.transaction.substr(
-            this.transaction.length - 6,
-            this.transaction.length
-          )
-        );
-      }
-      return "";
-    },
     buildLink: function() {
       return `${this.etherscanBase}/tx/${this.transaction}`;
     }
