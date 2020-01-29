@@ -104,7 +104,6 @@ const actions = {
       }
     }
 
-
     commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function(
@@ -119,42 +118,47 @@ const actions = {
       txHash: ""
     });
 
-    let latest = await params.web3.eth.getBlockNumber();
+    try {
+      let latest = await params.web3.eth.getBlockNumber();
 
-    let txHash = await state.alkemiNetwork.createLiquidityReserve(
-      params.linkToken,
-      params.beneficiary,
-      params.erc20Token,
-      params.lockingPeriod,
-      params.lockingPrice,
-      params.lockingPricePosition,
-      { from: state.account }
-    );
-
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
-      });
-
-      state.alkemiNetwork.contract.events.ReserveCreate(
-        {
-          filter: {
-            liquidityProvider: state.account
-          },
-          fromBlock: latest
-        },
-        function(error, event) {
-          console.log(event);
-          // dispatch approve token action
-          dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
-            web3: params.web3,
-            erc20: params.erc20Token,
-            spender: event.returnValues[0],
-            amount: params.depositAmount
-          });
-        }
+      let txHash = await state.alkemiNetwork.createLiquidityReserve(
+        params.linkToken,
+        params.beneficiary,
+        params.erc20Token,
+        params.lockingPeriod,
+        params.lockingPrice,
+        params.lockingPricePosition,
+        { from: state.account }
       );
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+
+        state.alkemiNetwork.contract.events.ReserveCreate(
+          {
+            filter: {
+              liquidityProvider: state.account
+            },
+            fromBlock: latest
+          },
+          function(error, event) {
+            console.log(event);
+            // dispatch approve token action
+            dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+              web3: params.web3,
+              erc20: params.erc20Token,
+              spender: event.returnValues[0],
+              amount: params.depositAmount
+            });
+          }
+        );
+      }
+    }
+    catch(err) {
+      console.log(err);
+      dispatch(actionType.CLOSE_MINING_DIALOG);
     }
   },
   [actionType.CLAIM_LIQUIDITY_RESERVE]: async function(
@@ -175,54 +179,60 @@ const actions = {
       txHash: ""
     });
 
-    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
-    let latest = await params.web3.eth.getBlockNumber();
+      let latest = await params.web3.eth.getBlockNumber();
 
-    let txHash = await liquidityReserve.withdraw(
-      params.amount,
-      params.oracle,
-      params.jobId,
-      params.tokenSymbol,
-      params.market,
-      params.oraclePayment,
-      { from: state.account }
-    );
+      let txHash = await liquidityReserve.withdraw(
+        params.amount,
+        params.oracle,
+        params.jobId,
+        params.tokenSymbol,
+        params.market,
+        params.oraclePayment,
+        { 
+          gasLimit: 750000,
+          from: state.account 
+        }
+      );
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
 
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
-      });
-
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-
-      liquidityReserve.contract.events.ReserveWithdraw(
-        {
-          filter: {
-            withdrawer: state.account
+        liquidityReserve.contract.events.ReserveWithdraw(
+          {
+            filter: {
+              withdrawer: state.account
+            },
+            fromBlock: latest
           },
-          fromBlock: latest
-        },
-        function(error, event) {
-          console.log("reserve withdraw event");
-          console.log(event);
-          // alert of withdraw 
-        }
-      );
+          function(error, event) {
+            console.log("reserve withdraw event");
+            console.log(event);
+            // alert of withdraw 
+          }
+        );
 
-      liquidityReserve.contract.events.PriceUnlock(
-        {
-          fromBlock: latest
-        },
-        function(error, event) {
-          console.log("price unlocking event");
-          console.log(event);
-          // alert of price unlocking
+        liquidityReserve.contract.events.PriceUnlock(
+          {
+            fromBlock: latest
+          },
+          function(error, event) {
+            console.log("price unlocking event");
+            console.log(event);
+            // alert of price unlocking
 
-          dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-        }
-      );
+            dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+          }
+        );
+      }
+    } catch(err){
+      console.log(err);
+      dispatch(actionType.CLOSE_MINING_DIALOG);
     }
   },
   [actionType.APPROVE_TOKEN_DEPOSIT]: async function(
@@ -234,6 +244,11 @@ const actions = {
     console.log("approving token transfer from provider to AlkemiNetwork");
     console.log(params.erc20);
     console.log(state.account);
+
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: "pending",
+      txHash: ""
+    });
 
     let erc20Token = await ERC20Token.at(params.erc20);
     console.log(erc20Token);
@@ -294,20 +309,22 @@ const actions = {
       txHash: ""
     });
 
-    let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
-
-    let txHash = await liquidityReserve.deposit(params.amount, {
-      from: state.account,
-      gasLimit: 750000
-    });
-
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+      let txHash = await liquidityReserve.deposit(params.amount, {
+        from: state.account,
+        gasLimit: 750000
       });
-
-      dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      }
+    }
+    catch(err) {
+      console.log(err);
     }
   },
   [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function ({
@@ -340,6 +357,14 @@ const actions = {
         earned: params.web3.utils.fromWei(txHash[5], "ether")
       });
     }
+  },
+  [actionType.CLOSE_MINING_DIALOG]: async function ({
+    commit,
+  }) {
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: null,
+      txHash: ""
+    });
   }
 };
 
@@ -391,7 +416,7 @@ const mutations = {
   },
   [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
-  }
+  }  
 };
 
 export default {
