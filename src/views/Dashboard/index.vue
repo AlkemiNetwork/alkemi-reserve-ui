@@ -102,7 +102,7 @@
                               </div>
                               <div class="content-mid">
                                 {{ item.total }}
-                                <div class="cost">${{ item.estUSD }}</div>
+                                <div class="cost">{{ item.estUSD | formatMoney }}</div>
                               </div>
                               <div class="content-mid">
                                 {{ item.change24h }}
@@ -136,7 +136,7 @@
                                   </span>
                                   <div class="clearfix"></div>
                                   <div class="est-value">
-                                    ${{ item.estUSD }}
+                                    {{ item.estUSD | formatMoney }}
                                     <span class="line-vertical-14">|</span>
                                     <span class="text-est">
                                       EST USD VALUE
@@ -228,16 +228,17 @@
                                     </template>
                                     <template v-slot:cell(est_USD_value)="row">
                                       <div class="value-change float-left">
-                                        ${{
-                                          row.item.earned > 0 &&
+                                        {{
+                                          (row.item.deposited > 0 &&
                                           priceCoin[
                                             `${item.name}/${unitCoin}`
                                           ]
-                                            ? row.item.earned *
+                                            ? row.item.deposited *
                                               priceCoin[
                                                 `${item.name}/${unitCoin}`
                                               ]
-                                            : 0
+                                            : 0)
+                                          | formatMoney
                                         }}
                                       </div>
                                     </template>
@@ -466,7 +467,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import Web3 from "web3";
 import { FunctionalCalendar } from "vue-functional-calendar";
 import MiningTransaction from "../../components/widgets/MiningTransaction";
@@ -670,11 +671,8 @@ export default {
 
       this.selectWallet(this.data[0]);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
-      console.log("provider liquidity reserves");
-      console.log(this.providerLiquidityReserves);
       this.reservesCounter = this.providerLiquidityReserves.length;
-
-      await this.getProviderReservesDetails();
+      //await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
     }
@@ -695,23 +693,9 @@ export default {
     ])
   },
   watch: {
-    alkemiNetwork: function(value) {
-      if (value) this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
-    },
-    isLoading: function(value) {
-      if(value){
-        this.isShow = "loading";
-      }else{
-        this.isShow = "form-add";
-        this.hideModal();
-      }
-    },
-    isLoadingClaim: function(value) {
-      if(value){
-        this.isShowClaim = "loading";
-      }else{
-        this.isShowClaim = "form-claim";
-        this.hideModalClaim();
+    providerLiquidityReserves: function(value) {
+      if (value) {
+        this.getProviderReservesDetails();
       }
     }
   },
@@ -861,6 +845,9 @@ export default {
       "GET_PRICE_COIN",
       "CLAIM_LIQUIDITY_RESERVE"
     ]),
+     ...mapMutations("ContractController", [
+      "SET_EMPTY_PROVIDER_RESERVE_DETAILS"
+    ]),
     connectWallet() {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
@@ -904,6 +891,7 @@ export default {
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
         beneficiary: "0x0000000000000000000000000000000000000000",
         erc20Token: this.selectedAsset.erc20Token,
+        createdAt: moment().unix().toString(),
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
@@ -938,6 +926,7 @@ export default {
       this.hideModalClaim();
     },
     async getProviderReservesDetails() {
+      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
           web3: window.web3,
@@ -945,7 +934,14 @@ export default {
         });
       }
 
+      let providerReservesDai = [];
+      let providerReservesUSDC = [];
+      let providerReservesLink = [];
+      let providerReservesMrk = [];
+      let providerReservesKrwb = [];
+
       this.providerReservesDetails.map((reserve, key) => {
+        console.log("reserve detailsss");
         console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
@@ -953,11 +949,15 @@ export default {
             reserve.assetSymbol = "DAI";
             this.data[0].total += parseInt(reserve.totalBalance);
             this.data[0].assetEarning += parseInt(reserve.earned);
-            this.data[0].providerReserves.push(reserve);
-            this.estPortfolio +=
-              parseInt(reserve.deposited) *
-              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
-            this.estEarnings +=
+            providerReservesDai.push(reserve);
+            this.estPortfolio =
+              this.estPortfolio +
+              (parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]);
+              console.log(this.estPortfolio, '2222', (parseInt(reserve.deposited) *
+              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]));
+            this.estEarnings =
+              this.estEarnings +
               parseInt(reserve.earned) *
               this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]) {
@@ -982,13 +982,15 @@ export default {
             reserve.assetSymbol = "LINK";
             this.data[1].total += parseInt(reserve.totalBalance);
             this.data[1].assetEarning += parseInt(reserve.earned);
-            this.data[1].providerReserves.push(reserve);
-            this.estPortfolio +=
-              parseInt(reserve.deposited) *
-              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
-            this.estEarnings +=
-              parseInt(reserve.earned) *
-              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
+            providerReservesUSDC.push(reserve);
+            // this.estPortfolio =
+            //   this.estPortfolio +
+            //   parseInt(reserve.deposited) *
+            //   this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
+            // this.estEarnings =
+            //   this.estEarnings +
+            //   (parseInt(reserve.earned) *
+            //   this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]) {
               this.data[1].estUSD =
                 this.data[1].total *
@@ -1011,13 +1013,15 @@ export default {
             reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
             this.data[2].total += parseInt(reserve.totalBalance);
             this.data[2].assetEarning += parseInt(reserve.earned);
-            this.data[2].providerReserves.push(reserve);
-            this.estPortfolio +=
-              parseInt(reserve.deposited) *
-              this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
-            this.estEarnings +=
-              parseInt(reserve.earned) *
-              this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
+            providerReservesLink.push(reserve);
+            // this.estPortfolio =
+            //   this.estPortfolio +
+            //   parseInt(reserve.deposited) *
+            //   this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
+            // this.estEarnings =
+            //   this.estEarnings +
+            //   (parseInt(reserve.earned) *
+            //   this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]) {
               this.data[2].estUSD =
                 this.data[2].total *
@@ -1040,13 +1044,15 @@ export default {
             reserve.address = this.providerLiquidityReserves[key];
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
-            this.data[3].providerReserves.push(reserve);
-            this.estPortfolio +=
-              parseInt(reserve.deposited) *
-              this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
-            this.estEarnings +=
-              parseInt(reserve.earned) *
-              this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+            providerReservesMrk.push(reserve);
+            // this.estPortfolio =
+            //   this.estPortfolio +
+            //   parseInt(reserve.deposited) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+            // this.estEarnings =
+            //   this.estEarnings +
+            //   (parseInt(reserve.earned) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]) {
               this.data[3].estUSD =
                 this.data[3].total *
@@ -1067,6 +1073,11 @@ export default {
           default:
             break;
         }
+        this.data[0].providerReserves = providerReservesDai;
+        this.data[1].providerReserves = providerReservesUSDC;
+        this.data[2].providerReserves = providerReservesLink;
+        this.data[3].providerReserves = providerReservesMrk;
+        this.data[4].providerReserves = providerReservesKrwb;
       });
     },
     /* eslint-enable */
@@ -1130,6 +1141,9 @@ export default {
         let before = moment(dayUnclock,'DD-MM-YYYY HH:mm');
         return moment(before - moment()).format('D[ Days ] H[ Hrs]');
       }
+    },
+    containsObject(obj, list) {
+      return list.some(elem => elem === obj)
     }
   }
 };

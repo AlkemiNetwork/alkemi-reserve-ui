@@ -125,6 +125,7 @@ const actions = {
         params.linkToken,
         params.beneficiary,
         params.erc20Token,
+        params.createdAt,
         params.lockingPeriod,
         params.lockingPrice,
         params.lockingPricePosition,
@@ -350,11 +351,12 @@ const actions = {
     if (txHash) {
       commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
         asset: txHash[0],
-        lockingPeriod: txHash[1],
-        lockingPrice: params.web3.utils.fromWei(txHash[2], "ether"),
-        totalBalance: params.web3.utils.fromWei(txHash[3], "ether"),
-        deposited: params.web3.utils.fromWei(txHash[4], "ether"),
-        earned: params.web3.utils.fromWei(txHash[5], "ether")
+        created: txHash[1],
+        lockingPeriod: txHash[2],
+        lockingPrice: params.web3.utils.fromWei(txHash[3], "ether"),
+        totalBalance: params.web3.utils.fromWei(txHash[4], "ether"),
+        deposited: params.web3.utils.fromWei(txHash[5], "ether"),
+        earned: params.web3.utils.fromWei(txHash[6], "ether")
       });
     }
   },
@@ -407,6 +409,11 @@ const mutations = {
     tokenLiquidityReserves
   ) {
     state.tokenLiquidityReserves.push(tokenLiquidityReserves);
+  },
+  [mutationType.SET_EMPTY_PROVIDER_RESERVE_DETAILS]: async function(
+    state
+  ) {
+    state.providerReservesDetails = [];
   },
   [mutationType.SET_TOKEN_BALANCE]: async function (state, tokenBalance) {
     state.tokenBalance = tokenBalance;
