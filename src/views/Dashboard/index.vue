@@ -671,8 +671,6 @@ export default {
 
       this.selectWallet(this.data[0]);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
-      this.reservesCounter = this.providerLiquidityReserves.length;
-      //await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
     }
@@ -926,6 +924,8 @@ export default {
       this.hideModalClaim();
     },
     async getProviderReservesDetails() {
+      this.reservesCounter = this.providerLiquidityReserves.length;
+
       await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
