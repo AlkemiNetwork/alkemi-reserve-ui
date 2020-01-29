@@ -1,13 +1,4 @@
 <template>
-  <div>
-    <b-modal
-      hide-footer
-      hide-header
-      centered
-      ref="modal-loading"
-      title="Using Component Methods"
-      id="modal-loading"
-    >
       <div class="content-modal">
         <div class="processing">
           <div v-if="miningTransactionObject.status != null">
@@ -37,8 +28,6 @@
           </div>
         </div>
       </div>
-    </b-modal>
-  </div>
 </template>
 
 <script>
@@ -60,7 +49,7 @@ export default {
       "miningTransactionObject"
     ])
   },
-  watch: {
+  /*watch: {
     miningTransactionObject: function(miningTransObject) {
       if (miningTransObject.status !== null) {
         this.showModalLoading()
@@ -68,7 +57,7 @@ export default {
         this.hideModalLoading()
       }
     }
-  },
+  },*/
   methods: {
     ...mapActions("ContractController", [
       "CLOSE_MINING_DIALOG"
@@ -77,12 +66,13 @@ export default {
       console.log("CLOSED");
       this.CLOSE_MINING_DIALOG();
     },
-    showModalLoading() {
+    /*showModalLoading() {
       this.$refs["modal-loading"].show()
     },
     hideModalLoading() {
       this.$refs["modal-loading"].hide()
-    },
+      this.CLOSE_MINING_DIALOG();
+    },*/
     dotDotDot: function(tx) {
       if (tx) {
         return (

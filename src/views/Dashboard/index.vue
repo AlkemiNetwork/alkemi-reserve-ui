@@ -670,8 +670,9 @@ export default {
       await this.INIT_APP(window.web3);
 
       this.selectWallet(this.data[0]);
-      // await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
+      await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       this.reservesCounter = this.providerLiquidityReserves.length;
+      //await this.getProviderReservesDetails();
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
     }
@@ -688,14 +689,10 @@ export default {
       "providerReservesDetails",
       "tokenBalance",
       "priceCoin",
-      "unitCoin",
-      "miningTransactionObject",
+      "unitCoin"
     ])
   },
   watch: {
-    alkemiNetwork: function(value) {
-      if (value) this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
-    },
     providerLiquidityReserves: function(value) {
       if (value) {
         this.getProviderReservesDetails();
@@ -849,7 +846,7 @@ export default {
       "CLAIM_LIQUIDITY_RESERVE"
     ]),
      ...mapMutations("ContractController", [
-      "SET_EMPTY_TOKEN_LIQUIDITY_RESERVE"
+      "SET_EMPTY_PROVIDER_RESERVE_DETAILS"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -894,6 +891,7 @@ export default {
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
         beneficiary: "0x0000000000000000000000000000000000000000",
         erc20Token: this.selectedAsset.erc20Token,
+        createdAt: moment().unix().toString(),
         lockingPeriod: moment(this.dayChoose, "DD-MM-YYYY")
           .unix()
           .toString(),
@@ -928,19 +926,22 @@ export default {
       this.hideModalClaim();
     },
     async getProviderReservesDetails() {
-      await this.SET_EMPTY_TOKEN_LIQUIDITY_RESERVE();
+      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
           web3: window.web3,
           reserveAddress: this.providerLiquidityReserves[i]
         });
       }
+
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesLink = [];
-      let providerReservesKrwb = [];
       let providerReservesMrk = [];
+      let providerReservesKrwb = [];
+
       this.providerReservesDetails.map((reserve, key) => {
+        console.log("reserve detailsss");
         console.log(reserve);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
@@ -1075,8 +1076,8 @@ export default {
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
         this.data[2].providerReserves = providerReservesLink;
-        this.data[3].providerReserves = providerReservesKrwb;
-        this.data[4].providerReserves = providerReservesMrk;
+        this.data[3].providerReserves = providerReservesMrk;
+        this.data[4].providerReserves = providerReservesKrwb;
       });
     },
     /* eslint-enable */
