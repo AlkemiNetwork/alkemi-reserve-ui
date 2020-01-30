@@ -1,4 +1,17 @@
 <template>
+    <b-modal
+      hide-footer
+      hide-header
+      v-if="miningTransactionObject.status != null"
+      ref="modal-loading"
+      title="Using Component Methods"
+      id="modal-loading"
+      v-model="showDialog"
+      centered
+      no-close-on-esc
+      no-close-on-backdrop
+      hide-header-close 
+   >
       <div class="content-modal">
         <div class="processing">
           <div v-if="miningTransactionObject.status != null">
@@ -28,6 +41,7 @@
           </div>
         </div>
       </div>
+    </b-modal>
 </template>
 
 <script>
