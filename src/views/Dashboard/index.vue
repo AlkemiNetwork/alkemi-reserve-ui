@@ -553,7 +553,7 @@ export default {
         },
         {
           name: "LINK",
-          fullName: "LinkCoin",
+          fullName: "LINK Token",
           image: "link.svg",
           erc20Token: "0xf6b1c64e86c1213088a6464484ebb8488635795d",
           total: 0,
