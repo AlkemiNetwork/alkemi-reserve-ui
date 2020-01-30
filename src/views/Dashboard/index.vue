@@ -171,7 +171,7 @@
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $0.00
+                                        $0.00
                                       </div>
                                     </div>
                                   </div>
