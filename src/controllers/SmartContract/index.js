@@ -351,12 +351,14 @@ const actions = {
     if (txHash) {
       commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
         asset: txHash[0],
-        created: txHash[1],
-        lockingPeriod: txHash[2],
-        lockingPrice: params.web3.utils.fromWei(txHash[3], "ether"),
-        totalBalance: params.web3.utils.fromWei(txHash[4], "ether"),
-        deposited: params.web3.utils.fromWei(txHash[5], "ether"),
-        earned: params.web3.utils.fromWei(txHash[6], "ether")
+        beneficiary: txHash[1],
+        createdAt: txHash[2],
+        lockingPeriod: txHash[3],
+        lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+        lockingPricePosition: txHash[5],
+        totalBalance: params.web3.utils.fromWei(txHash[6], "ether"),
+        deposited: params.web3.utils.fromWei(txHash[7], "ether"),
+        earned: params.web3.utils.fromWei(txHash[8], "ether")
       });
     }
   },

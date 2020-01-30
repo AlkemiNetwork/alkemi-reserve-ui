@@ -206,11 +206,11 @@
                                       
                                       </div>
                                     </template>
-                                      <template v-slot:cell(created)="row">
+                                      <template v-slot:cell(createdAt)="row">
                                       <div class="value-change float-left">
                                         {{
                                           timestampToDate(
-                                            row.item.created.toNumber()
+                                            row.item.createdAt.toNumber()
                                           ) | formatDate
                                         }}
                                       </div>
@@ -630,7 +630,7 @@ export default {
       },
       fields: [
        {
-          key: "created",
+          key: "createdAt",
           label: "Created",
           thStyle: { width: "16.66%" }
         },
