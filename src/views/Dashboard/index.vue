@@ -171,7 +171,7 @@
                                     <div class="value-change float-left">
                                       USD VALUE EARNINGS
                                       <div class="est-value-change">
-                                        + $12,333.12
+                                        $0.00
                                       </div>
                                     </div>
                                   </div>
@@ -203,18 +203,24 @@
                                             row.item.lockingPeriod.toNumber()
                                           ) | formatDate
                                         }}
+                                      
+                                      </div>
+                                    </template>
+                                      <template v-slot:cell(createdAt)="row">
+                                      <div class="value-change float-left">
+                                        {{
+                                          timestampToDate(
+                                            row.item.createdAt.toNumber()
+                                          ) | formatDate
+                                        }}
                                       </div>
                                     </template>
                                     <template v-slot:cell(earned)="row">
-                                      <div class="value-change float-left">
+                                      <div class="value-change float-left pdr-10">
                                         + {{ row.item.earned }}
-                                        {{ item.name }}
+
                                       </div>
-                                    </template>
-                                    <template
-                                      v-slot:cell(total_percent_earnings)="row"
-                                    >
-                                      <div
+                                     <div
                                         class="value-change float-left percent"
                                       >
                                         {{
@@ -224,6 +230,27 @@
                                             : 0
                                         }}
                                         %
+                                      </div>
+                                    </template>
+                                    <template v-slot:cell(deposited)="row">
+                                      <div class="value-change float-left pdr-10">
+                                      {{ row.item.deposited }} {{selectedAsset.name}}
+                                      </div>
+                                    </template>
+                                    <template v-slot:cell(lockingPrice)="row">
+                                      <div class="value-change float-left">
+                                        {{
+                                          (row.item.lockingPrice > 0 &&
+                                          priceCoin[
+                                            `${item.name}/${unitCoin}`
+                                          ]
+                                            ? row.item.lockingPrice *
+                                              priceCoin[
+                                                `${item.name}/${unitCoin}`
+                                              ]
+                                            : 0)
+                                          | formatMoney
+                                        }}
                                       </div>
                                     </template>
                                     <template v-slot:cell(est_USD_value)="row">
@@ -353,7 +380,7 @@
             @click="createReserve"
             :disabled="!amountToDeposit || !unclockDate"
           >
-            CREATE POOL
+            CREATE RESERVE
           </b-button>
           <b-button class="btn-cancel" @click="hideModal()">
             Cancel
@@ -526,7 +553,7 @@ export default {
         },
         {
           name: "LINK",
-          fullName: "LinkCoin",
+          fullName: "LINK Token",
           image: "link.svg",
           erc20Token: "0xf6b1c64e86c1213088a6464484ebb8488635795d",
           total: 0,
@@ -602,14 +629,14 @@ export default {
         color: ["#14DC94"]
       },
       fields: [
-        {
-          key: "lockingPeriod",
-          label: "Unlocking Time",
+       {
+          key: "createdAt",
+          label: "Created",
           thStyle: { width: "16.66%" }
         },
         {
-          key: "totalBalance",
-          label: "Total Size",
+          key: "deposited",
+          label: "Reserve Total",
           thStyle: { width: "16.66%" }
         },
         {
@@ -618,13 +645,18 @@ export default {
           thStyle: { width: "16.66%" }
         },
         {
-          key: "earned",
-          label: "Total Earnings",
+          key: "lockingPeriod",
+          label: "Unlocking on",
+          thStyle: { width: "16.66%" }
+        },
+           {
+          key: "lockingPrice",
+          label: "Unlock Price",
           thStyle: { width: "16.66%" }
         },
         {
-          key: "total_percent_earnings",
-          label: "Total % Earnings",
+          key: "earned",
+          label: "Total Earnings",
           thStyle: { width: "16.66%" }
         },
         {
@@ -938,7 +970,7 @@ export default {
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesLink = [];
-      let providerReservesMrk = [];
+      let providerReservesMkr = [];
       let providerReservesKrwb = [];
 
       this.providerReservesDetails.map((reserve, key) => {
@@ -1045,7 +1077,7 @@ export default {
             reserve.address = this.providerLiquidityReserves[key];
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
-            providerReservesMrk.push(reserve);
+            providerReservesMkr.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
             //   parseInt(reserve.deposited) *
@@ -1074,11 +1106,29 @@ export default {
           default:
             break;
         }
+
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
         this.data[2].providerReserves = providerReservesLink;
-        this.data[3].providerReserves = providerReservesMrk;
+        this.data[3].providerReserves = providerReservesMkr;
         this.data[4].providerReserves = providerReservesKrwb;
+
+        // pools counter
+        if(providerReservesDai.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesUSDC.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesLink.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesMkr.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesKrwb.length > 0) {
+          this.poolsCounter++;
+        }
       });
     },
     /* eslint-enable */
@@ -1123,13 +1173,12 @@ export default {
       this.amountToWithdraw = maxAmount;
     },
     async selectWallet(item)  {
+       this.selectedAsset = item;
       if(window.web3.currentProvider.selectedAddress){
         await this.GET_TOKEN_BALANCE({
           web3: window.web3, 
           erc20: item.erc20Token
         });
-        this.selectedAsset = item;
-        console.log(this.selectedAsset);
       }
     },
     getTimeLocal(){
