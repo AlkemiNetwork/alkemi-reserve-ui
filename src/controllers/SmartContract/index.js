@@ -98,9 +98,9 @@ const actions = {
       }
     );
 
-    for (let i = 0; i < reserves.length; i++) {
+    for (let i = 0; i < reserves.length; i++) {      
       if(reserves[i] == "0x0000000000000000000000000000000000000000") {
-        reserves.splice(i,1);
+        reserves.splice(i);
       }
     }
 

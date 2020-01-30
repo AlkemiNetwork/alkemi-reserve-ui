@@ -243,22 +243,6 @@
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <!--<b-button
-                                        v-if="getTimeLocal() >= row.item.lockingPeriod"
-                                        size="sm"
-                                        class="btn-claim float-right"
-                                        @click="showModalClaim(row.item)"
-                                      >
-                                        CLAIM
-                                      </b-button>
-
-                                      <b-button
-                                        v-else
-                                        size="sm"
-                                        class="btn-claim-value float-right"
-                                      >
-                                        {{ diffDay(row.item.lockingPeriod) }}
-                                      </b-button>-->
                                       <b-button
                                         size="sm"
                                         class="btn-claim float-right"
@@ -671,8 +655,9 @@ export default {
 
       this.selectWallet(this.data[0]);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
-      this.reservesCounter = this.providerLiquidityReserves.length;
-      //await this.getProviderReservesDetails();
+      //await this.getProviderReserves();
+      console.log("provider liquidity reserves");
+      console.log(this.providerLiquidityReserves);
       console.log("provider liquidity reserves details");
       console.log(this.providerReservesDetails);
     }
@@ -846,7 +831,8 @@ export default {
       "CLAIM_LIQUIDITY_RESERVE"
     ]),
      ...mapMutations("ContractController", [
-      "SET_EMPTY_PROVIDER_RESERVE_DETAILS"
+      "SET_EMPTY_PROVIDER_RESERVE_DETAILS",
+      "SET_PROVIDER_LIQUIDITY_RESERVE"
     ]),
     connectWallet() {
       if (window.ethereum) {
@@ -926,7 +912,22 @@ export default {
       this.hideModalClaim();
     },
     async getProviderReservesDetails() {
+      this.reservesCounter = this.providerLiquidityReserves.length;
+
+      this.data[0].total = 0;
+      this.data[0].assetEarning = 0;
+      this.data[1].total = 0;
+      this.data[1].assetEarning = 0;
+      this.data[2].total = 0;
+      this.data[2].assetEarning = 0;
+      this.data[3].total = 0;
+      this.data[3].assetEarning = 0;
+      this.data[4].total = 0;
+      this.data[4].assetEarning = 0;
+      this.estPortfolio = 0;
+      this.estEarnings = 0;
       await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
+
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
         await this.GET_RESERVE_DETAILS({
           web3: window.web3,
