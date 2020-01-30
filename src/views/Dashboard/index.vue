@@ -380,7 +380,7 @@
             @click="createReserve"
             :disabled="!amountToDeposit || !unclockDate"
           >
-            CREATE POOL
+            CREATE RESERVE
           </b-button>
           <b-button class="btn-cancel" @click="hideModal()">
             Cancel
@@ -970,7 +970,7 @@ export default {
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesLink = [];
-      let providerReservesMrk = [];
+      let providerReservesMkr = [];
       let providerReservesKrwb = [];
 
       this.providerReservesDetails.map((reserve, key) => {
@@ -1077,7 +1077,7 @@ export default {
             reserve.address = this.providerLiquidityReserves[key];
             this.data[3].total += parseInt(reserve.totalBalance);
             this.data[3].assetEarning += parseInt(reserve.earned);
-            providerReservesMrk.push(reserve);
+            providerReservesMkr.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
             //   parseInt(reserve.deposited) *
@@ -1106,11 +1106,29 @@ export default {
           default:
             break;
         }
+
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
         this.data[2].providerReserves = providerReservesLink;
-        this.data[3].providerReserves = providerReservesMrk;
+        this.data[3].providerReserves = providerReservesMkr;
         this.data[4].providerReserves = providerReservesKrwb;
+
+        // pools counter
+        if(providerReservesDai.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesUSDC.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesLink.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesMkr.length > 0) {
+          this.poolsCounter++;
+        }
+        if(providerReservesKrwb.length > 0) {
+          this.poolsCounter++;
+        }
       });
     },
     /* eslint-enable */
