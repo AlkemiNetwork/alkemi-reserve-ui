@@ -45,7 +45,7 @@ body {
 	}
 	.monney{
 		color: $color-white;
-		font-size: 26px;
+		font-size: $font-size-24;
 		font-family: $font-poppins;
 	}
 	.est-content{
@@ -55,7 +55,7 @@ body {
 		padding: 20px 25px 15px 25px;
 	}
 	.change-number{
-		font-size: 26px;
+		font-size: $font-size-24;
 		color: $color-green;
 		font-family: $font-poppins;
 	}
@@ -198,7 +198,7 @@ body {
 							td{
 								vertical-align: middle;
 								padding: 0.75rem 0;
-								font-size: $font-size-14;
+								font-size: $font-size-12;
 								color: $color-white;
 								border: {
 									top: none !important;
@@ -233,7 +233,7 @@ body {
 			border-collapse: collapse;
 		}
 		.content-mid{
-			font-size: 18px;
+			font-size: $font-size-16;
 			min-width: 125px;
 			border-collapse: collapse;
 			.cost{
