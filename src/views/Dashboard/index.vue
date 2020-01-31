@@ -981,6 +981,7 @@ export default {
       let providerReservesETH = [];
       let providerReservesRep = [];
       let providerReservesWbtc = [];
+      this.poolsCounter = 0;
 
       this.providerReservesDetails.map((reserve, key) => {
         console.log(reserve.asset);
@@ -1145,33 +1146,30 @@ export default {
           default:
             break;
         }
-
-        console.log("usdc reserves");
-        console.log(this.data[1].providerReserves);
-
-        this.data[0].providerReserves = providerReservesDai;
-        this.data[1].providerReserves = providerReservesUSDC;
-        this.data[2].providerReserves = providerReservesETH;
-        this.data[3].providerReserves = providerReservesRep;
-        this.data[4].providerReserves = providerReservesWbtc;
-
-        // pools counter
-        if(providerReservesDai.length > 0) {
-          this.poolsCounter++;
-        }
-        if(providerReservesUSDC.length > 0) {
-          this.poolsCounter++;
-        }
-        if(providerReservesETH.length > 0) {
-          this.poolsCounter++;
-        }
-        if(providerReservesRep.length > 0) {
-          this.poolsCounter++;
-        }
-        if(providerReservesWbtc.length > 0) {
-          this.poolsCounter++;
-        }
       });
+      
+      this.data[0].providerReserves = providerReservesDai;
+      this.data[1].providerReserves = providerReservesUSDC;
+      this.data[2].providerReserves = providerReservesETH;
+      this.data[3].providerReserves = providerReservesRep;
+      this.data[4].providerReserves = providerReservesWbtc;
+
+      // pools counter
+      if(providerReservesDai.length > 0) {
+        this.poolsCounter++;
+      }
+      if(providerReservesUSDC.length > 0) {
+        this.poolsCounter++;
+      }
+      if(providerReservesETH.length > 0) {
+        this.poolsCounter++;
+      }
+      if(providerReservesRep.length > 0) {
+        this.poolsCounter++;
+      }
+      if(providerReservesWbtc.length > 0) {
+        this.poolsCounter++;
+      }
     },
     /* eslint-enable */
     showModal() {
