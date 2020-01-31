@@ -240,18 +240,6 @@
                                     <template v-slot:cell(lockingPrice)="row">
                                       <div class="value-change float-left">
                                         {{row.item.lockingPricePosition.toNumber() ? '+' : '-'}}
-                                        <!--{{
-                                          (row.item.lockingPrice > 0 &&
-                                          priceCoin[
-                                            `${item.name}/${unitCoin}`
-                                          ]
-                                            ? row.item.lockingPrice *
-                                              priceCoin[
-                                                `${item.name}/${unitCoin}`
-                                              ]
-                                            : 0)
-                                          | formatMoney
-                                        }}-->
                                         {{ row.item.lockingPrice | formatMoney }}
                                       </div>
                                     </template>
@@ -571,10 +559,10 @@ export default {
           providerReserves: []
         },
         {
-          name: "MKR",
-          fullName: "Maker",
+          name: "REP",
+          fullName: "Augur",
           image: "mkr.svg",
-          erc20Token: "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290",
+          erc20Token: "0x6e894660985207feb7cf89Faf048998c71E8EE89",
           total: 0,
           estUSD: 0,
           fluctuation: 0,
@@ -991,7 +979,7 @@ export default {
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesETH = [];
-      let providerReservesMkr = [];
+      let providerReservesRep = [];
       let providerReservesWbtc = [];
 
       this.providerReservesDetails.map((reserve, key) => {
@@ -1092,12 +1080,12 @@ export default {
               });
             }
             break;
-          case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
+          case "0x6e894660985207feb7cf89Faf048998c71E8EE89".toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
             this.data[3].total += parseFloat(reserve.totalBalance);
             this.data[3].assetEarning += parseFloat(reserve.earned);
-            providerReservesMkr.push(reserve);
+            providerReservesRep.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
             //   parseFloat(reserve.deposited) *
@@ -1164,7 +1152,7 @@ export default {
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
         this.data[2].providerReserves = providerReservesETH;
-        this.data[3].providerReserves = providerReservesMkr;
+        this.data[3].providerReserves = providerReservesRep;
         this.data[4].providerReserves = providerReservesWbtc;
 
         // pools counter
@@ -1177,7 +1165,7 @@ export default {
         if(providerReservesETH.length > 0) {
           this.poolsCounter++;
         }
-        if(providerReservesMkr.length > 0) {
+        if(providerReservesRep.length > 0) {
           this.poolsCounter++;
         }
         if(providerReservesWbtc.length > 0) {
