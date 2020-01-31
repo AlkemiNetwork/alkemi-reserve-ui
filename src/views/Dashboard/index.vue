@@ -985,7 +985,7 @@ export default {
       this.providerReservesDetails.map((reserve, key) => {
         console.log(reserve.asset);
         switch (reserve.asset.toLowerCase()) {
-          case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
+          case this.data[0].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "DAI";
             this.data[0].total += parseFloat(reserve.totalBalance);
@@ -1016,7 +1016,7 @@ export default {
               });
             }
             break;
-          case "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b".toLowerCase():
+          case this.data[1].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "USDC";
             this.data[1].total += parseFloat(reserve.totalBalance);
@@ -1049,7 +1049,7 @@ export default {
               });
             }
             break;
-          case "0x0000000000000000000000000000000000000000".toLowerCase():
+          case this.data[2].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "ETH";
             this.data[2].total += parseFloat(reserve.totalBalance);
@@ -1080,7 +1080,7 @@ export default {
               });
             }
             break;
-          case "0x6e894660985207feb7cf89Faf048998c71E8EE89".toLowerCase():
+          case this.data[3].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
             this.data[3].total += parseFloat(reserve.totalBalance);
@@ -1111,7 +1111,7 @@ export default {
               });
             }
             break;
-          case "0x577D296678535e4903D59A4C929B718e1D575e0A".toLowerCase():
+          case this.data[4].erc20Token.toLowerCase():
            reserve.assetSymbol = "WBTC";
             reserve.address = this.providerLiquidityReserves[key];
             this.data[4].total += parseFloat(reserve.totalBalance);
