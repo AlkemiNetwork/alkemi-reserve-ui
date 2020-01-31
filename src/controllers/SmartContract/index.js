@@ -414,7 +414,7 @@ const actions = {
       from: state.account
     });
     if (txHash) {
-      if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+      if(txHash[0] == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
         commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
           asset: txHash[0],
           beneficiary: txHash[1],
