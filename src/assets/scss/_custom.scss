@@ -247,7 +247,7 @@ body {
 	}
 }
 .acronym-name{
-	min-width: 80px !important;
+	min-width: 135px !important;
 	color: $color-white;
 	.name-el-money{
 		color: $color-boulder;
@@ -518,6 +518,19 @@ body {
 									&.vfc-hover:hover{
 										cursor: pointer;
 									}
+									&.vfc-disabled:hover {
+										cursor: no-drop !important;
+									}
+									&.vfc-today:hover {
+										cursor: no-drop !important;
+									}
+									&.vfc-today {
+										color: $color-white;
+									}
+								}
+								.vfc-marked {
+									background-color: transparent !important;
+									color: rgba(133, 133, 133, 0.2);
 								}
 								span.vfc-span-day.vfc-today{
 									background-color: $color-blue !important;
