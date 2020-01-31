@@ -239,6 +239,7 @@
                                     </template>
                                     <template v-slot:cell(lockingPrice)="row">
                                       <div class="value-change float-left">
+                                        {{row.item.lockingPricePosition.toNumber() ? '+' : '-'}}
                                         {{
                                           (row.item.lockingPrice > 0 &&
                                           priceCoin[
@@ -391,6 +392,7 @@
             :is-dark="true"
             :is-date-picker="true"
             :date-format="'dd/mm/yyyy'"
+            :disabledDates="['beforeToday',dateNow]"
             v-on:choseDay="clickDay"
           ></FunctionalCalendar>
           <b-button class="btn-cancel" @click="backForm()">
@@ -495,6 +497,7 @@ export default {
   },
   data() {
     return {
+      dateNow : null,
       version: currentVersion,
       isShow: "form-add",
       isShowClaim: "form-claim",
@@ -552,10 +555,10 @@ export default {
           providerReserves: []
         },
         {
-          name: "LINK",
-          fullName: "LINK Token",
-          image: "link.svg",
-          erc20Token: "0xf6b1c64e86c1213088a6464484ebb8488635795d",
+          name: "ETH",
+          fullName: "Ethereum",
+          image: "eth.svg",
+          erc20Token: "0x0000000000000000000000000000000000000000",
           total: 0,
           estUSD: 0,
           fluctuation: 0,
@@ -582,10 +585,10 @@ export default {
           providerReserves: []
         },
         {
-          name: "KRWB",
-          fullName: "Korean Won",
-          image: "krwb.svg",
-          erc20Token: "0x7fca0bf31dcec373c90478c9167b8b11b7dec3a1",
+          name: "wBTC",
+          fullName: "Wrapped BTC",
+          image: "wbtc.svg",
+          erc20Token: "0x577D296678535e4903D59A4C929B718e1D575e0A",
           total: 0,
           estUSD: 0,
           fluctuation: 0,
@@ -669,6 +672,7 @@ export default {
     };
   },
   async created() {
+    this.dateNow = moment().format('DD/MM/YYYY');
     this.data.map(item => {
       this.GET_PRICE_COIN({
         name: item.name
@@ -866,12 +870,18 @@ export default {
       "SET_EMPTY_PROVIDER_RESERVE_DETAILS",
       "SET_PROVIDER_LIQUIDITY_RESERVE"
     ]),
-    connectWallet() {
+    async connectWallet() {
+       this.selectWallet(this.data[0]);
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
+         
           window.ethereum.enable().then(addressWallet => {
-            this.INIT_APP(window.web3);
+            this.INIT_APP(window.web3)
+            .then(result=>{
+              console.log(result)
+              this.LOAD_PROVIDER_LIQUIDITY_RESERVES();  
+            })
             this.addressWallet =
               addressWallet[0].substr(0, 4) +
               "..." +
@@ -892,6 +902,7 @@ export default {
             )
           );
           this.INIT_APP(window.web3);
+          
         }
       } else if (window.web3) {
         console.log("Running legacy web3 provider");
@@ -978,9 +989,9 @@ export default {
 
       let providerReservesDai = [];
       let providerReservesUSDC = [];
-      let providerReservesLink = [];
+      let providerReservesETH = [];
       let providerReservesMkr = [];
-      let providerReservesKrwb = [];
+      let providerReservesWbtc = [];
 
       this.providerReservesDetails.map((reserve, key) => {
         console.log(reserve.asset);
@@ -995,8 +1006,6 @@ export default {
               this.estPortfolio +
               (parseFloat(reserve.deposited) *
               this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]);
-              console.log(this.estPortfolio, '2222', (parseFloat(reserve.deposited) *
-              this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]));
             this.estEarnings =
               this.estEarnings +
               parseFloat(reserve.earned) *
@@ -1051,12 +1060,12 @@ export default {
               });
             }
             break;
-          case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
+          case "0x0000000000000000000000000000000000000000".toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
-            reserve.assetSymbol = "LINK";
+            reserve.assetSymbol = "ETH";
             this.data[2].total += parseFloat(reserve.totalBalance);
             this.data[2].assetEarning += parseFloat(reserve.earned);
-            providerReservesLink.push(reserve);
+            providerReservesETH.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
             //   parseFloat(reserve.deposited) *
@@ -1113,20 +1122,20 @@ export default {
               });
             }
             break;
-          case "0x7fca0bf31dcec373c90478c9167b8b11b7dec3a1".toLowerCase():
-            reserve.assetSymbol = "KRWB";
+          case "0x577D296678535e4903D59A4C929B718e1D575e0A".toLowerCase():
+           reserve.assetSymbol = "WBTC";
             reserve.address = this.providerLiquidityReserves[key];
             this.data[4].total += parseFloat(reserve.totalBalance);
             this.data[4].assetEarning += parseFloat(reserve.earned);
-            providerReservesKrwb.push(reserve);
+            providerReservesWbtc.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
-            //   parseFloat(reserve.deposited) *
-            //   this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+            //   parseInt(reserve.deposited) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
             // this.estEarnings =
             //   this.estEarnings +
-            //   (parseFloat(reserve.earned) *
-            //   this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]);
+            //   (parseInt(reserve.earned) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]) {
               this.data[4].estUSD =
                 this.data[4].total *
@@ -1153,9 +1162,9 @@ export default {
 
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
-        this.data[2].providerReserves = providerReservesLink;
+        this.data[2].providerReserves = providerReservesETH;
         this.data[3].providerReserves = providerReservesMkr;
-        this.data[4].providerReserves = providerReservesKrwb;
+        this.data[4].providerReserves = providerReservesWbtc;
 
         // pools counter
         if(providerReservesDai.length > 0) {
@@ -1164,13 +1173,13 @@ export default {
         if(providerReservesUSDC.length > 0) {
           this.poolsCounter++;
         }
-        if(providerReservesLink.length > 0) {
+        if(providerReservesETH.length > 0) {
           this.poolsCounter++;
         }
         if(providerReservesMkr.length > 0) {
           this.poolsCounter++;
         }
-        if(providerReservesKrwb.length > 0) {
+        if(providerReservesWbtc.length > 0) {
           this.poolsCounter++;
         }
       });
@@ -1198,7 +1207,7 @@ export default {
       this.isShow = "form-add";
     },
     clickDay(data) {
-      if (data.date) {
+      if (moment(data.date, "DD-MM-YYYY") > moment()) {
         this.unclockDate = moment(data.date, "DD-MM-YYYY").format(
           "DD MMM YYYY"
         );
@@ -1236,9 +1245,6 @@ export default {
         return moment(before - moment()).format('D[ Days ] H[ Hrs]');
       }
     },
-    containsObject(obj, list) {
-      return list.some(elem => elem === obj)
-    }
   }
 };
 </script>
