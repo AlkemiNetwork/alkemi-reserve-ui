@@ -279,27 +279,37 @@ const actions = {
     console.log(state.account);
     console.log(params.erc20);
 
-    let erc20Token = await ERC20Token.at(params.erc20);
-    console.log(erc20Token);
+    if (params.erc20 != "0x0000000000000000000000000000000000000000") {
+      let erc20Token = await ERC20Token.at(params.erc20);
+      console.log(erc20Token);
 
-    let txHash = await erc20Token.balanceOf(state.account, {
-      from: state.account
-    });
+      let txHash = await erc20Token.balanceOf(state.account, {
+        from: state.account
+      });
 
-    if (txHash) {
-      if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
-        commit(
-          mutationType.SET_TOKEN_BALANCE,
-          params.web3.utils.fromWei(txHash, "ether") * 10**12
-        );
-      }
-      else {
-        commit(
-          mutationType.SET_TOKEN_BALANCE,
-          params.web3.utils.fromWei(txHash, "ether")
-        );
+      if (txHash) {
+        if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether") * 10**12
+          );
+        }
+        else {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether")
+          );
+        }
       }
     }
+    else {
+      let balance = await params.web3.eth.getBalance(state.account);
+      commit(
+        mutationType.SET_TOKEN_BALANCE,
+        params.web3.utils.fromWei(balance, "ether")
+      );
+    }
+    
   },
   [actionType.DEPOSIT_LIQUIDITY]: async function(
     { commit, dispatch, state },
