@@ -146,13 +146,22 @@ const actions = {
           },
           function(error, event) {
             console.log(event);
-            // dispatch approve token action
-            dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
-              web3: params.web3,
-              erc20: params.erc20Token,
-              spender: event.returnValues[0],
-              amount: params.depositAmount
-            });
+            if (params.erc20Token != "0x0000000000000000000000000000000000000000") {
+              // dispatch approve token action
+              dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+                web3: params.web3,
+                erc20: params.erc20Token,
+                spender: event.returnValues[0],
+                amount: params.depositAmount
+              });
+            }
+            else {
+              dispatch(actionType.DEPOSIT_ETH_LIQUIDITY, {
+                web3: params.web3,
+                reserveAddress: event.returnValues[0],
+                amount: params.depositAmount
+              });
+            }
           }
         );
       }
@@ -265,7 +274,7 @@ const actions = {
         txHash: txHash.tx
       });
 
-      dispatch(actionType.DEPOSIT_LIQUIDITY, {
+      dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
         web3: params.web3,
         reserveAddress: params.spender,
         amount: params.amount
@@ -311,7 +320,7 @@ const actions = {
     }
     
   },
-  [actionType.DEPOSIT_LIQUIDITY]: async function(
+  [actionType.DEPOSIT_TOKEN_LIQUIDITY]: async function(
     { commit, dispatch, state },
     params
   ) {
@@ -334,6 +343,45 @@ const actions = {
       let txHash = await liquidityReserve.deposit(params.amount, {
         from: state.account,
         gasLimit: 750000
+      });
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      }
+    }
+    catch(err) {
+      console.log(err);
+    }
+  },
+  [actionType.DEPOSIT_ETH_LIQUIDITY]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+
+    console.log("depositing ettttthhhhh");
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity provider address");
+    console.log(state.account);
+
+    console.log("liquidity reserve to deposit into");
+    console.log(params.reserveAddress);
+
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: "pending",
+      txHash: ""
+    });
+
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+      let txHash = await liquidityReserve.deposit(params.amount, {
+        from: state.account,
+        gasLimit: 750000,
+        value: params.amount
       });
       if (txHash) {
         commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
