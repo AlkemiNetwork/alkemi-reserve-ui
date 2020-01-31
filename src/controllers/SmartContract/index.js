@@ -360,8 +360,6 @@ const actions = {
     { commit, dispatch, state },
     params
   ) {
-
-    console.log("depositing ettttthhhhh");
     console.log(params.web3.currentProvider);
     LiquidityReserve.setProvider(params.web3.currentProvider);
 

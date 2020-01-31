@@ -240,7 +240,7 @@
                                     <template v-slot:cell(lockingPrice)="row">
                                       <div class="value-change float-left">
                                         {{row.item.lockingPricePosition.toNumber() ? '+' : '-'}}
-                                        {{
+                                        <!--{{
                                           (row.item.lockingPrice > 0 &&
                                           priceCoin[
                                             `${item.name}/${unitCoin}`
@@ -251,7 +251,8 @@
                                               ]
                                             : 0)
                                           | formatMoney
-                                        }}
+                                        }}-->
+                                        {{ row.item.lockingPrice | formatMoney }}
                                       </div>
                                     </template>
                                     <template v-slot:cell(est_USD_value)="row">
