@@ -303,6 +303,12 @@ const actions = {
             params.web3.utils.fromWei(txHash, "ether") * 10**12
           );
         }
+        else if (params.erc20 == "0x577D296678535e4903D59A4C929B718e1D575e0A") {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether") * 10**10
+          );
+        }
         else {
           commit(
             mutationType.SET_TOKEN_BALANCE,
@@ -426,7 +432,20 @@ const actions = {
           deposited: params.web3.utils.fromWei(txHash[7], "ether") * 10**12,
           earned: params.web3.utils.fromWei(txHash[8], "ether") * 10**12
         });
-        }
+      }
+      else if (txHash[0] == "0x577D296678535e4903D59A4C929B718e1D575e0A") {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether") * 10**10,
+          deposited: params.web3.utils.fromWei(txHash[7], "ether") * 10**10,
+          earned: params.web3.utils.fromWei(txHash[8], "ether") * 10**10
+        });
+      }
       else {
         commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
           asset: txHash[0],
