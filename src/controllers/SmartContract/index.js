@@ -255,7 +255,8 @@ const actions = {
     console.log(erc20Token);
 
     let txHash = await erc20Token.approve(params.spender, params.amount, {
-      from: state.account
+      from: state.account,
+      gasLimit: 750000
     });
 
     if (txHash) {
@@ -286,10 +287,18 @@ const actions = {
     });
 
     if (txHash) {
-      commit(
-        mutationType.SET_TOKEN_BALANCE,
-        params.web3.utils.fromWei(txHash, "ether")
-      );
+      if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+        commit(
+          mutationType.SET_TOKEN_BALANCE,
+          params.web3.utils.fromWei(txHash, "ether") * 10**12
+        );
+      }
+      else {
+        commit(
+          mutationType.SET_TOKEN_BALANCE,
+          params.web3.utils.fromWei(txHash, "ether")
+        );
+      }
     }
   },
   [actionType.DEPOSIT_LIQUIDITY]: async function(
@@ -349,17 +358,32 @@ const actions = {
       from: state.account
     });
     if (txHash) {
-      commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
-        asset: txHash[0],
-        beneficiary: txHash[1],
-        createdAt: txHash[2],
-        lockingPeriod: txHash[3],
-        lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
-        lockingPricePosition: txHash[5],
-        totalBalance: params.web3.utils.fromWei(txHash[6], "ether"),
-        deposited: params.web3.utils.fromWei(txHash[7], "ether"),
-        earned: params.web3.utils.fromWei(txHash[8], "ether")
-      });
+      if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether") * 10**12,
+          deposited: params.web3.utils.fromWei(txHash[7], "ether") * 10**12,
+          earned: params.web3.utils.fromWei(txHash[8], "ether") * 10**12
+        });
+        }
+      else {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether"),
+          deposited: params.web3.utils.fromWei(txHash[7], "ether"),
+          earned: params.web3.utils.fromWei(txHash[8], "ether")
+        });
+        }
     }
   },
   [actionType.CLOSE_MINING_DIALOG]: async function ({

@@ -540,7 +540,7 @@ export default {
           name: "USDC",
           fullName: "USD Coin",
           image: "usdc.svg",
-          erc20Token: "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096",
+          erc20Token: "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b",
           total: 0,
           estUSD: 0,
           fluctuation: 0,
@@ -904,6 +904,18 @@ export default {
       }
     },
     createReserve() {
+      let depositAmount = 0;
+      if(this.selectedAsset.erc20Token == this.data[1].erc20Token) {
+        depositAmount = (
+          window.web3.utils.toWei(this.amountToDeposit.toString(), "ether") / 10**12).toString();
+      }
+      else {
+        depositAmount = window.web3.utils.toWei(
+          this.amountToDeposit.toString(),
+          "ether"
+        );
+      }
+
       this.CREATE_LIQUIDITY_RESERVE({
         web3: window.web3,
         linkToken: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
@@ -917,11 +929,8 @@ export default {
           this.lockPrice.toString(),
           "ether"
         ),
-        lockingPricePosition: parseInt(this.lockPricePosition),
-        depositAmount: window.web3.utils.toWei(
-          this.amountToDeposit.toString(),
-          "ether"
-        )
+        lockingPricePosition: parseFloat(this.lockPricePosition),
+        depositAmount: depositAmount
       });
       
       this.hideModal();
@@ -974,24 +983,23 @@ export default {
       let providerReservesKrwb = [];
 
       this.providerReservesDetails.map((reserve, key) => {
-        console.log("reserve detailsss");
-        console.log(reserve);
+        console.log(reserve.asset);
         switch (reserve.asset.toLowerCase()) {
           case "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa".toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "DAI";
-            this.data[0].total += parseInt(reserve.totalBalance);
-            this.data[0].assetEarning += parseInt(reserve.earned);
+            this.data[0].total += parseFloat(reserve.totalBalance);
+            this.data[0].assetEarning += parseFloat(reserve.earned);
             providerReservesDai.push(reserve);
             this.estPortfolio =
               this.estPortfolio +
-              (parseInt(reserve.deposited) *
+              (parseFloat(reserve.deposited) *
               this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]);
-              console.log(this.estPortfolio, '2222', (parseInt(reserve.deposited) *
+              console.log(this.estPortfolio, '2222', (parseFloat(reserve.deposited) *
               this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]));
             this.estEarnings =
               this.estEarnings +
-              parseInt(reserve.earned) *
+              parseFloat(reserve.earned) *
               this.priceCoin[`${this.data[0].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[0].name}/${this.unitCoin}`]) {
               this.data[0].estUSD =
@@ -1010,20 +1018,22 @@ export default {
               });
             }
             break;
-          case "0x9be1001d601102ae0f24ab4764dd5ce2f3e5b096".toLowerCase():
+          case "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b".toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
-            reserve.assetSymbol = "LINK";
-            this.data[1].total += parseInt(reserve.totalBalance);
-            this.data[1].assetEarning += parseInt(reserve.earned);
+            reserve.assetSymbol = "USDC";
+            this.data[1].total += parseFloat(reserve.totalBalance);
+            this.data[1].assetEarning += parseFloat(reserve.earned);
             providerReservesUSDC.push(reserve);
-            // this.estPortfolio =
-            //   this.estPortfolio +
-            //   parseInt(reserve.deposited) *
-            //   this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
-            // this.estEarnings =
-            //   this.estEarnings +
-            //   (parseInt(reserve.earned) *
-            //   this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]);
+            this.estPortfolio =
+              this.estPortfolio +
+              (parseFloat(reserve.deposited) *
+              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]);
+              console.log(this.estPortfolio, '2222', (parseFloat(reserve.deposited) *
+              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]));
+            this.estEarnings =
+              this.estEarnings +
+              parseFloat(reserve.earned) *
+              this.priceCoin[`${this.data[1].name}/${this.unitCoin}`];
             if (this.priceCoin[`${this.data[1].name}/${this.unitCoin}`]) {
               this.data[1].estUSD =
                 this.data[1].total *
@@ -1043,17 +1053,17 @@ export default {
             break;
           case "0xf6b1c64e86c1213088a6464484ebb8488635795d".toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
-            reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
-            this.data[2].total += parseInt(reserve.totalBalance);
-            this.data[2].assetEarning += parseInt(reserve.earned);
+            reserve.assetSymbol = "LINK";
+            this.data[2].total += parseFloat(reserve.totalBalance);
+            this.data[2].assetEarning += parseFloat(reserve.earned);
             providerReservesLink.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
-            //   parseInt(reserve.deposited) *
+            //   parseFloat(reserve.deposited) *
             //   this.priceCoin[`${this.data[2].name}/${this.unitCoin}`];
             // this.estEarnings =
             //   this.estEarnings +
-            //   (parseInt(reserve.earned) *
+            //   (parseFloat(reserve.earned) *
             //   this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[2].name}/${this.unitCoin}`]) {
               this.data[2].estUSD =
@@ -1073,18 +1083,18 @@ export default {
             }
             break;
           case "0xb763e26cd6dd09d16f52dc3c60ebb77e46b03290".toLowerCase():
-            reserve.assetSymbol = "KRWB";
             reserve.address = this.providerLiquidityReserves[key];
-            this.data[3].total += parseInt(reserve.totalBalance);
-            this.data[3].assetEarning += parseInt(reserve.earned);
+            reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
+            this.data[3].total += parseFloat(reserve.totalBalance);
+            this.data[3].assetEarning += parseFloat(reserve.earned);
             providerReservesMkr.push(reserve);
             // this.estPortfolio =
             //   this.estPortfolio +
-            //   parseInt(reserve.deposited) *
+            //   parseFloat(reserve.deposited) *
             //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
             // this.estEarnings =
             //   this.estEarnings +
-            //   (parseInt(reserve.earned) *
+            //   (parseFloat(reserve.earned) *
             //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]);
             if (this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]) {
               this.data[3].estUSD =
@@ -1103,9 +1113,43 @@ export default {
               });
             }
             break;
+          case "0x7fca0bf31dcec373c90478c9167b8b11b7dec3a1".toLowerCase():
+            reserve.assetSymbol = "KRWB";
+            reserve.address = this.providerLiquidityReserves[key];
+            this.data[4].total += parseFloat(reserve.totalBalance);
+            this.data[4].assetEarning += parseFloat(reserve.earned);
+            providerReservesKrwb.push(reserve);
+            // this.estPortfolio =
+            //   this.estPortfolio +
+            //   parseFloat(reserve.deposited) *
+            //   this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+            // this.estEarnings =
+            //   this.estEarnings +
+            //   (parseFloat(reserve.earned) *
+            //   this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]);
+            if (this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]) {
+              this.data[4].estUSD =
+                this.data[4].total *
+                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+              this.data[4].estFluctuation =
+                this.data[4].fluctuation *
+                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+            } else {
+              this.GET_PRICE_COIN({
+                name: this.data[4].name
+              }).then(res => {
+                this.data[4].estUSD = this.data[4].total * res.data.last;
+                this.data[4].estFluctuation =
+                  this.data[4].fluctuation * res.data.last;
+              });
+            }
+            break;
           default:
             break;
         }
+
+        console.log("usdc reserves");
+        console.log(this.data[1].providerReserves);
 
         this.data[0].providerReserves = providerReservesDai;
         this.data[1].providerReserves = providerReservesUSDC;
