@@ -909,6 +909,10 @@ export default {
         depositAmount = (
           window.web3.utils.toWei(this.amountToDeposit.toString(), "ether") / 10**12).toString();
       }
+      else if(this.selectedAsset.erc20Token == this.data[4].erc20Token) {
+        depositAmount = (
+          window.web3.utils.toWei(this.amountToDeposit.toString(), "ether") / 10**10).toString();
+      }
       else {
         depositAmount = window.web3.utils.toWei(
           this.amountToDeposit.toString(),
@@ -1083,7 +1087,7 @@ export default {
             break;
           case this.data[3].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
-            reserve.assetSymbol = "0x4d4b520000000000000000000000000000000000000000000000000000000000";
+            reserve.assetSymbol = "REP";
             this.data[3].total += parseFloat(reserve.totalBalance);
             this.data[3].assetEarning += parseFloat(reserve.earned);
             providerReservesRep.push(reserve);
