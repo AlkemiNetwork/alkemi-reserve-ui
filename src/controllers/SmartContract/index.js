@@ -49,7 +49,6 @@ const actions = {
           Accept: "application/json"
         }
       }).then(result => {
-          console.log(result.data, 'kiennnnnnnnnn');
           commit(mutationType.SET_PRICE_COIN, result.data);
           resolve(result);
         })
@@ -480,7 +479,6 @@ const mutations = {
   //WEB3 Stuff
   [mutationType.SET_PRICE_COIN](state, unitCoin) {
     state.priceCoin = unitCoin;
-    console.log(state.priceCoin, 'aaaaaaaaaaaa');
   },
   [mutationType.SET_ACCOUNT](state, account) {
     console.log("Account set");
