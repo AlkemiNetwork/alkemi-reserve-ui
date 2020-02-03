@@ -220,7 +220,7 @@ const actions = {
         });
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
 
-        let withDrawemitter = liquidityReserve.contract.events.ReserveWithdraw(
+        let withdrawEmitter = liquidityReserve.contract.events.ReserveWithdraw(
           {
             filter: {
               withdrawer: state.account
@@ -236,7 +236,7 @@ const actions = {
           console.log(event);
           // alert of withdraw 
 
-          withDrawemitter.removeAllListeners('data');
+          withdrawEmitter.removeAllListeners('data');
         })
         .on('error', console.error);
       
