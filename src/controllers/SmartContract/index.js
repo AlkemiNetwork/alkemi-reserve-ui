@@ -33,19 +33,24 @@ const state = {
 const getters = {};
 
 const actions = {
-  [actionType.GET_PRICE_COIN]: function({ commit, state }, params) {
+  [actionType.GET_PRICE_COIN]: function({ commit, state }) {
     return new Promise((resolve, reject) => {
-      axios(`https://market-data.alkemi.tech/exchange/bitfinex2/ticker`, {
+      // https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD
+      // https://min-api.cryptocompare.com/data/pricemulti?fsyms=DAI,USDC,ETH,REP,WBTC&tsyms=USD
+      // https://market-data.alkemi.tech/exchange/bitfinex2/ticker
+      axios(`https://min-api.cryptocompare.com/data/pricemulti`, {
         method: "GET",
-        params: { symbol: `${params.name}/${state.unitCoin}` },
+        params: {
+                  fsyms: "DAI,USDC,ETH,REP,WBTC",
+                  tsyms:`${state.unitCoin}`},
         headers: {
+          // need to set the actual key as a constant and load from environment variables
+          authorization: "Apikey 97fbfd2409fc4e55853809f70e104dfd83e1a90eddbf5fd37323b82844f2b972",
           Accept: "application/json"
         }
-      })
-        .then(result => {
-          if (!state.priceCoin[result.data.symbol]) {
-            commit(mutationType.SET_PRICE_COIN, result.data);
-          }
+      }).then(result => {
+          console.log(result.data, 'kiennnnnnnnnn');
+          commit(mutationType.SET_PRICE_COIN, result.data);
           resolve(result);
         })
         .catch(error => reject(error));
@@ -98,7 +103,7 @@ const actions = {
       }
     );
 
-    for (let i = 0; i < reserves.length; i++) {      
+    for (let i = 0; i < reserves.length; i++) {
       if(reserves[i] == "0x0000000000000000000000000000000000000000") {
         reserves.splice(i);
       }
@@ -146,13 +151,22 @@ const actions = {
           },
           function(error, event) {
             console.log(event);
-            // dispatch approve token action
-            dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
-              web3: params.web3,
-              erc20: params.erc20Token,
-              spender: event.returnValues[0],
-              amount: params.depositAmount
-            });
+            if (params.erc20Token != "0x0000000000000000000000000000000000000000") {
+              // dispatch approve token action
+              dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+                web3: params.web3,
+                erc20: params.erc20Token,
+                spender: event.returnValues[0],
+                amount: params.depositAmount
+              });
+            }
+            else {
+              dispatch(actionType.DEPOSIT_ETH_LIQUIDITY, {
+                web3: params.web3,
+                reserveAddress: event.returnValues[0],
+                amount: params.depositAmount
+              });
+            }
           }
         );
       }
@@ -192,9 +206,9 @@ const actions = {
         params.tokenSymbol,
         params.market,
         params.oraclePayment,
-        { 
+        {
           gasLimit: 750000,
-          from: state.account 
+          from: state.account
         }
       );
       if (txHash) {
@@ -214,7 +228,7 @@ const actions = {
           function(error, event) {
             console.log("reserve withdraw event");
             console.log(event);
-            // alert of withdraw 
+            // alert of withdraw
           }
         );
 
@@ -255,7 +269,8 @@ const actions = {
     console.log(erc20Token);
 
     let txHash = await erc20Token.approve(params.spender, params.amount, {
-      from: state.account
+      from: state.account,
+      gasLimit: 750000
     });
 
     if (txHash) {
@@ -264,7 +279,7 @@ const actions = {
         txHash: txHash.tx
       });
 
-      dispatch(actionType.DEPOSIT_LIQUIDITY, {
+      dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
         web3: params.web3,
         reserveAddress: params.spender,
         amount: params.amount
@@ -278,21 +293,45 @@ const actions = {
     console.log(state.account);
     console.log(params.erc20);
 
-    let erc20Token = await ERC20Token.at(params.erc20);
-    console.log(erc20Token);
+    if (params.erc20 != "0x0000000000000000000000000000000000000000") {
+      let erc20Token = await ERC20Token.at(params.erc20);
+      console.log(erc20Token);
 
-    let txHash = await erc20Token.balanceOf(state.account, {
-      from: state.account
-    });
+      let txHash = await erc20Token.balanceOf(state.account, {
+        from: state.account
+      });
 
-    if (txHash) {
+      if (txHash) {
+        if(params.erc20 == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether") * 10**12
+          );
+        }
+        else if (params.erc20 == "0x577D296678535e4903D59A4C929B718e1D575e0A") {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether") * 10**10
+          );
+        }
+        else {
+          commit(
+            mutationType.SET_TOKEN_BALANCE,
+            params.web3.utils.fromWei(txHash, "ether")
+          );
+        }
+      }
+    }
+    else {
+      let balance = await params.web3.eth.getBalance(state.account);
       commit(
         mutationType.SET_TOKEN_BALANCE,
-        params.web3.utils.fromWei(txHash, "ether")
+        params.web3.utils.fromWei(balance, "ether")
       );
     }
+
   },
-  [actionType.DEPOSIT_LIQUIDITY]: async function(
+  [actionType.DEPOSIT_TOKEN_LIQUIDITY]: async function(
     { commit, dispatch, state },
     params
   ) {
@@ -328,6 +367,43 @@ const actions = {
       console.log(err);
     }
   },
+  [actionType.DEPOSIT_ETH_LIQUIDITY]: async function(
+    { commit, dispatch, state },
+    params
+  ) {
+    console.log(params.web3.currentProvider);
+    LiquidityReserve.setProvider(params.web3.currentProvider);
+
+    console.log("liquidity provider address");
+    console.log(state.account);
+
+    console.log("liquidity reserve to deposit into");
+    console.log(params.reserveAddress);
+
+    commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+      status: "pending",
+      txHash: ""
+    });
+
+    try {
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+      let txHash = await liquidityReserve.deposit(params.amount, {
+        from: state.account,
+        gasLimit: 750000,
+        value: params.amount
+      });
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+      }
+    }
+    catch(err) {
+      console.log(err);
+    }
+  },
   [actionType.LOAD_TOKEN_LIQUIDITY_RESERVES]: async function ({
     commit,
     state
@@ -349,17 +425,45 @@ const actions = {
       from: state.account
     });
     if (txHash) {
-      commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
-        asset: txHash[0],
-        beneficiary: txHash[1],
-        createdAt: txHash[2],
-        lockingPeriod: txHash[3],
-        lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
-        lockingPricePosition: txHash[5],
-        totalBalance: params.web3.utils.fromWei(txHash[6], "ether"),
-        deposited: params.web3.utils.fromWei(txHash[7], "ether"),
-        earned: params.web3.utils.fromWei(txHash[8], "ether")
-      });
+      if(txHash[0] == "0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b") {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether") * 10**12,
+          deposited: params.web3.utils.fromWei(txHash[7], "ether") * 10**12,
+          earned: params.web3.utils.fromWei(txHash[8], "ether") * 10**12
+        });
+      }
+      else if (txHash[0] == "0x577D296678535e4903D59A4C929B718e1D575e0A") {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether") * 10**10,
+          deposited: params.web3.utils.fromWei(txHash[7], "ether") * 10**10,
+          earned: params.web3.utils.fromWei(txHash[8], "ether") * 10**10
+        });
+      }
+      else {
+        commit(mutationType.SET_PROVIDER_RESERVE_DETAILS, {
+          asset: txHash[0],
+          beneficiary: txHash[1],
+          createdAt: txHash[2],
+          lockingPeriod: txHash[3],
+          lockingPrice: params.web3.utils.fromWei(txHash[4], "ether"),
+          lockingPricePosition: txHash[5],
+          totalBalance: params.web3.utils.fromWei(txHash[6], "ether"),
+          deposited: params.web3.utils.fromWei(txHash[7], "ether"),
+          earned: params.web3.utils.fromWei(txHash[8], "ether")
+        });
+        }
     }
   },
   [actionType.CLOSE_MINING_DIALOG]: async function ({
@@ -375,7 +479,8 @@ const actions = {
 const mutations = {
   //WEB3 Stuff
   [mutationType.SET_PRICE_COIN](state, unitCoin) {
-    state.priceCoin[unitCoin.symbol] = unitCoin.last;
+    state.priceCoin = unitCoin;
+    console.log(state.priceCoin, 'aaaaaaaaaaaa');
   },
   [mutationType.SET_ACCOUNT](state, account) {
     console.log("Account set");
@@ -425,7 +530,7 @@ const mutations = {
   },
   [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
-  }  
+  }
 };
 
 export default {
