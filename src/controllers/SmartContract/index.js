@@ -118,9 +118,9 @@ const actions = {
       txHash: ""
     });
 
-    try {
-      let latest = await params.web3.eth.getBlockNumber();
+    let latest = await params.web3.eth.getBlockNumber();
 
+    try {
       let txHash = await state.alkemiNetwork.createLiquidityReserve(
         params.linkToken,
         params.beneficiary,
@@ -131,39 +131,46 @@ const actions = {
         params.lockingPricePosition,
         { from: state.account }
       );
+      
       if (txHash) {
         commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
           status: "done",
           txHash: txHash.tx
-        });
+        });      
 
-        state.alkemiNetwork.contract.events.ReserveCreate(
+        let emitter = state.alkemiNetwork.contract.events.ReserveCreate(
           {
             filter: {
               liquidityProvider: state.account
             },
             fromBlock: latest
-          },
-          function(error, event) {
-            console.log(event);
-            if (params.erc20Token != "0x0000000000000000000000000000000000000000") {
-              // dispatch approve token action
-              dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
-                web3: params.web3,
-                erc20: params.erc20Token,
-                spender: event.returnValues[0],
-                amount: params.depositAmount
-              });
-            }
-            else {
-              dispatch(actionType.DEPOSIT_ETH_LIQUIDITY, {
-                web3: params.web3,
-                reserveAddress: event.returnValues[0],
-                amount: params.depositAmount
-              });
-            }
           }
-        );
+        ).on('data', function(event){
+          console.log(event);
+          if (params.erc20Token != "0x0000000000000000000000000000000000000000") {
+            // dispatch approve token action
+            dispatch(actionType.APPROVE_TOKEN_DEPOSIT, {
+              web3: params.web3,
+              erc20: params.erc20Token,
+              spender: event.returnValues[0],
+              amount: params.depositAmount
+            });
+          }
+          else {
+            dispatch(actionType.DEPOSIT_ETH_LIQUIDITY, {
+              web3: params.web3,
+              reserveAddress: event.returnValues[0],
+              amount: params.depositAmount
+            });
+          }
+
+          emitter.removeAllListeners('data');
+        })
+        .on('error', function(error) {
+          console.log(error); 
+
+          emitter.removeAllListeners('error');
+        });  
       }
     }
     catch(err) {
@@ -190,9 +197,9 @@ const actions = {
     });
 
     try {
-      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
-
       let latest = await params.web3.eth.getBlockNumber();
+
+      let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
       let txHash = await liquidityReserve.withdraw(
         params.amount,
@@ -213,7 +220,7 @@ const actions = {
         });
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
 
-        liquidityReserve.contract.events.ReserveWithdraw(
+        let withDrawemitter = liquidityReserve.contract.events.ReserveWithdraw(
           {
             filter: {
               withdrawer: state.account
@@ -223,22 +230,35 @@ const actions = {
           function(error, event) {
             console.log("reserve withdraw event");
             console.log(event);
-            // alert of withdraw 
           }
-        );
+        )
+        .on('data', function(event){
+          console.log(event);
+          // alert of withdraw 
 
-        liquidityReserve.contract.events.PriceUnlock(
+          withDrawemitter.removeAllListeners('data');
+        })
+        .on('error', console.error);
+      
+
+        let priceUnlockEmitter = liquidityReserve.contract.events.PriceUnlock(
           {
             fromBlock: latest
           },
           function(error, event) {
             console.log("price unlocking event");
             console.log(event);
-            // alert of price unlocking
-
-            dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
           }
-        );
+        )
+        .on('data', function(event){
+          console.log(event);
+          // alert of price unlocking
+
+          dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
+
+          priceUnlockEmitter.removeAllListeners('data');
+        })
+        .on('error', console.error);
       }
     } catch(err){
       console.log(err);
@@ -260,6 +280,8 @@ const actions = {
       txHash: ""
     });
 
+    let latest = await params.web3.eth.getBlockNumber();
+
     let erc20Token = await ERC20Token.at(params.erc20);
     console.log(erc20Token);
 
@@ -274,11 +296,28 @@ const actions = {
         txHash: txHash.tx
       });
 
-      dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
-        web3: params.web3,
-        reserveAddress: params.spender,
-        amount: params.amount
-      });
+      let emitter = erc20Token.contract.events.Approval(
+        {
+          filter: {
+            owner: state.account,
+            spender: params.spender,
+            amount: params.amount
+          },
+          fromBlock: latest
+        }
+      )
+      .on('data', function(event){
+        console.log(event);
+
+        dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
+          web3: params.web3,
+          reserveAddress: params.spender,
+          amount: params.amount
+        });  
+
+        emitter.removeAllListeners('data');
+      })
+      .on('error', console.error);
     }
   },
   [actionType.GET_TOKEN_BALANCE]: async function({ commit, state }, params) {
