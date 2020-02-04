@@ -28,21 +28,29 @@
                   <div @click="toggleShowOption" class="p-2 bd-highlight bg-dark wallet-address" role="button">
                     <div class="text-white">{{ addressWallet }}</div>
                     <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
-                    <div v-if="isShowOption" class="wallet-option bd-highlight bg-dark">
-                      <div class="item-option">
-                        <div v-clipboard="account" class="text">Copy Address</div>
+                  </div>
+                  <div v-if="isShowOption" class="wallet-option bd-highlight bg-dark">
+                      <div v-clipboard="account" @click="$bvToast.toast('Copy address successful', {
+                            title: `Notification`,
+                            variant: 'success',
+                            toaster: 'b-toaster-top-left',
+                            solid: true
+                          })"
+                        class="item-option">
+
+                        <div  
+                        class="text">Copy Address</div>
+                      </div>
+                      <div @click="compatibilityMode" class="item-option">
+                        <div class="text">Compatibility Mode: {{mode ? 'On' : 'Off'}}</div>
                       </div>
                       <div class="item-option">
-                        <div class="text">Compatibility Mode: Off</div>
+                        <div class="text" @click="openEtherscan">Open in Etherscan</div>
                       </div>
-                      <div class="item-option">
-                        <div class="text">Open in Etherscan</div>
-                      </div>
-                      <div class="item-option">
+                      <div @click="disconnectWallet" class="item-option">
                         <div class="text">Disconnect Wallet</div>
                       </div>
                     </div>
-                  </div>
                   <div class="p-2 bd-highlight bg-dark wallet-name">
                     <div class="text-white">
                       <svg
@@ -577,7 +585,7 @@ export default {
         {
           name: "REP",
           fullName: "Augur",
-          image: "mkr.svg",
+          image: "rep.svg",
           erc20Token: "0x6e894660985207feb7cf89Faf048998c71E8EE89",
           total: 0,
           estUSD: 0,
@@ -673,14 +681,15 @@ export default {
           thStyle: { width: "16.66%" }
         }
       ],
-      items: []
+      items: [],
+      mode : false
     };
   },
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
     if (window.web3.currentProvider.selectedAddress) {
-      var addressWallet = window.web3.currentProvider.selectedAddress;
+      let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
         addressWallet.substr(0, 4) +
         "..." +
@@ -1208,6 +1217,18 @@ export default {
     },
     toggleShowOption() {
       this.isShowOption = !this.isShowOption;
+    },
+    async disconnectWallet(){
+      ///Coming
+    },
+    compatibilityMode() {
+      this.mode = !this.mode;
+    },
+    openEtherscan(){
+      window.open(
+        'https://etherscan.io/address/null',
+        '_blank'
+      );
     }
   }
 };

@@ -665,7 +665,6 @@ body {
 .wallet-option{
 	position: absolute;
 	top: 32px;
-	right: 0;
 	width: 216px;
 	height: auto;
 	z-index: 999;
@@ -682,10 +681,16 @@ body {
 	    align-items: center;
 	    position: relative;
 	    width: 100%;
-	    padding: 0 20px;
+		padding: 0 20px;
+		cursor: pointer;
 	    &:hover{
 	    	background: $color-woodsmoke;
-	    }
+		}
+		-moz-user-select: none; /* Firefox */
+		-ms-user-select: none; /* Internet Explorer */
+		-khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+		-webkit-user-select: none; /* Chrome, Safari, and Opera */
+		-webkit-touch-callout: none; /* Disable Android and iOS callouts*/
     }
 }
 #ul-list-dot{
