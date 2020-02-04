@@ -25,8 +25,23 @@
                   v-if="isConnect"
                   class="d-flex flex-row-reverse bd-highlight"
                 >
-                  <div class="p-2 bd-highlight bg-dark wallet-address ">
+                  <div @click="toggleShowOption" class="p-2 bd-highlight bg-dark wallet-address" role="button">
                     <div class="text-white">{{ addressWallet }}</div>
+                    <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
+                    <div v-if="isShowOption" class="wallet-option bd-highlight bg-dark">
+                      <div class="item-option">
+                        <div v-clipboard="account" class="text">Copy Address</div>
+                      </div>
+                      <div class="item-option">
+                        <div class="text">Compatibility Mode: Off</div>
+                      </div>
+                      <div class="item-option">
+                        <div class="text">Open in Etherscan</div>
+                      </div>
+                      <div class="item-option">
+                        <div class="text">Disconnect Wallet</div>
+                      </div>
+                    </div>
                   </div>
                   <div class="p-2 bd-highlight bg-dark wallet-name">
                     <div class="text-white">
@@ -490,6 +505,7 @@ export default {
       version: currentVersion,
       isShow: "form-add",
       isShowClaim: "form-claim",
+      isShowOption: false,
       txStatus: "",
       txHash: "",
       isConnect: false,
@@ -1190,6 +1206,9 @@ export default {
         return moment(before - moment()).format('D[ Days ] H[ Hrs]');
       }
     },
+    toggleShowOption() {
+      this.isShowOption = !this.isShowOption;
+    }
   }
 };
 </script>
