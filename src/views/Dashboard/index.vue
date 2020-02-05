@@ -30,22 +30,14 @@
                     <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
                   </div>
                   <div v-if="isShowOption" class="wallet-option bd-highlight bg-dark">
-                      <div v-clipboard="account" @click="$bvToast.toast('Copy address successful', {
-                            title: `Notification`,
-                            variant: 'success',
-                            toaster: 'b-toaster-top-left',
-                            solid: true
-                          })"
-                        class="item-option">
-
-                        <div  
+                      <div v-clipboard="account" @click="statusCoppy" class="item-option"><div  
                         class="text">Copy Address</div>
                       </div>
                       <div @click="compatibilityMode" class="item-option">
                         <div class="text">Compatibility Mode: {{mode ? 'On' : 'Off'}}</div>
                       </div>
                       <div class="item-option">
-                        <div class="text" @click="openEtherscan">Open in Etherscan</div>
+                        <div class="text" @click="openEtherscan(account)">Open in Etherscan</div>
                       </div>
                       <div @click="disconnectWallet" class="item-option">
                         <div class="text">Disconnect Wallet</div>
@@ -1218,6 +1210,20 @@ export default {
     toggleShowOption() {
       this.isShowOption = !this.isShowOption;
     },
+    async statusCoppy(){
+      const h = this.$createElement
+        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
+          h('i', { class : 'fas fa-check'}),
+          h('span', { class : 'content-toast' }, 'Coppy address'),
+     
+        ])
+        this.$bvToast.toast(vNodes, {
+          toastClass: 'toast-success',
+          noCloseButton: true,
+          toaster: 'b-toaster-top-left',
+          autoHideDelay: 3000,
+        })
+    },
     async disconnectWallet(){
         const h = this.$createElement
         const vNodes = this.$createElement('div', { class: 'text-center ' }, [
@@ -1228,15 +1234,16 @@ export default {
         this.$bvToast.toast(vNodes, {
           toastClass: 'toast-success',
           noCloseButton: true,
+          toaster: 'b-toaster-top-right',
           autoHideDelay: 3000,
         })
     },
     compatibilityMode() {
       this.mode = !this.mode;
     },
-    openEtherscan(){
+    openEtherscan(account){
       window.open(
-        'https://etherscan.io/address/null',
+        'https://rinkeby.etherscan.io/address/'+`${account}`,
         '_blank'
       );
     }

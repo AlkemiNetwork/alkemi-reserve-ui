@@ -621,6 +621,9 @@ body {
 .mr-30{
 	margin-right: 30px;
 }
+.mt-25{
+	margin-top: 25px;
+}
 .pull-right {
 	float: right;
 }
@@ -728,5 +731,19 @@ body {
 		left: 25px;
 		top: 10px;
 
+	}
+}
+.toastTransaction{
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	.toast-body{
+		text-align: center;
+		color: $color-white;
+		background-color: #51a351;
+	}
+	.toastProcessing{
+		min-width: 300px;
+		padding: 30px;
 	}
 }
