@@ -1219,7 +1219,17 @@ export default {
       this.isShowOption = !this.isShowOption;
     },
     async disconnectWallet(){
-      ///Coming
+        const h = this.$createElement
+        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
+          h('i', { class : 'fas fa-check'}),
+          h('span', { class : 'content-toast' }, 'FUNDS CLAIMEDED'),
+     
+        ])
+        this.$bvToast.toast(vNodes, {
+          toastClass: 'toast-success',
+          noCloseButton: true,
+          autoHideDelay: 3000,
+        })
     },
     compatibilityMode() {
       this.mode = !this.mode;

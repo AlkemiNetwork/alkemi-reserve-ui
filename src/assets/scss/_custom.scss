@@ -718,3 +718,15 @@ body {
 	color: $color-gray;
 	font-size: 12px;
 }
+.toast-success {
+	width: 250px;
+	background-color: $color-green !important;
+	color: $color-white;
+	svg {
+		font-size: 25px;
+		position: absolute;
+		left: 25px;
+		top: 10px;
+
+	}
+}

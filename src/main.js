@@ -9,6 +9,8 @@ import BootstrapVue from "bootstrap-vue";
 import router from "./router";
 import FunctionalCalendar from "vue-functional-calendar";
 import VueClipboard from 'vue-clipboard2';
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all.js'
 
 Vue.config.productionTip = false;
 
