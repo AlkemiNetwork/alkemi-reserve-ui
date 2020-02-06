@@ -331,7 +331,6 @@ const actions = {
         params.web3.utils.fromWei(balance, "ether")
       );
     }
-
   },
   [actionType.DEPOSIT_TOKEN_LIQUIDITY]: async function(
     { commit, dispatch, state },

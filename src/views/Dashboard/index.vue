@@ -872,7 +872,6 @@ export default {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
-
           window.ethereum.enable().then(addressWallet => {
             this.INIT_APP(window.web3)
             .then(result=>{
@@ -899,7 +898,6 @@ export default {
             )
           );
           this.INIT_APP(window.web3);
-
         }
       } else if (window.web3) {
         console.log("Running legacy web3 provider");
@@ -1113,11 +1111,41 @@ export default {
                 this.priceCoin[`${this.data[4].name}`].USD;
             }
             break;
+          case this.data[4].erc20Token.toLowerCase():
+           reserve.assetSymbol = "WBTC";
+            reserve.address = this.providerLiquidityReserves[key];
+            this.data[4].total += parseFloat(reserve.totalBalance);
+            this.data[4].assetEarning += parseFloat(reserve.earned);
+            providerReservesWbtc.push(reserve);
+            // this.estPortfolio =
+            //   this.estPortfolio +
+            //   parseInt(reserve.deposited) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
+            // this.estEarnings =
+            //   this.estEarnings +
+            //   (parseInt(reserve.earned) *
+            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]);
+            if (this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]) {
+              this.data[4].estUSD =
+                this.data[4].total *
+                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+              this.data[4].estFluctuation =
+                this.data[4].fluctuation *
+                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
+            } else {
+              this.GET_PRICE_COIN({
+                name: this.data[4].name
+              }).then(res => {
+                this.data[4].estUSD = this.data[4].total * res.data.last;
+                this.data[4].estFluctuation =
+                  this.data[4].fluctuation * res.data.last;
+              });
+            }
+            break;
           default:
             break;
         }
       });
-
       this.data[0].providerReserves = providerReservesDai;
       this.data[1].providerReserves = providerReservesUSDC;
       this.data[2].providerReserves = providerReservesETH;
