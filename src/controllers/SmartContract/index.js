@@ -33,19 +33,23 @@ const state = {
 const getters = {};
 
 const actions = {
-  [actionType.GET_PRICE_COIN]: function({ commit, state }, params) {
+  [actionType.GET_PRICE_COIN]: function({ commit, state }) {
     return new Promise((resolve, reject) => {
-      axios(`https://market-data.alkemi.tech/exchange/bitfinex2/ticker`, {
+      // https://min-api.cryptocompare.com/data/price?fsym=WBTC&tsyms=USD
+      // https://min-api.cryptocompare.com/data/pricemulti?fsyms=DAI,USDC,ETH,REP,WBTC&tsyms=USD
+      // https://market-data.alkemi.tech/exchange/bitfinex2/ticker
+      axios(`https://min-api.cryptocompare.com/data/pricemulti`, {
         method: "GET",
-        params: { symbol: `${params.name}/${state.unitCoin}` },
+        params: {
+                  fsyms: "DAI,USDC,ETH,REP,WBTC",
+                  tsyms:`${state.unitCoin}`},
         headers: {
+          // need to set the actual key as a constant and load from environment variables
+          authorization: "Apikey 97fbfd2409fc4e55853809f70e104dfd83e1a90eddbf5fd37323b82844f2b972",
           Accept: "application/json"
         }
-      })
-        .then(result => {
-          if (!state.priceCoin[result.data.symbol]) {
-            commit(mutationType.SET_PRICE_COIN, result.data);
-          }
+      }).then(result => {
+          commit(mutationType.SET_PRICE_COIN, result.data);
           resolve(result);
         })
         .catch(error => reject(error));
@@ -98,7 +102,7 @@ const actions = {
       }
     );
 
-    for (let i = 0; i < reserves.length; i++) {      
+    for (let i = 0; i < reserves.length; i++) {
       if(reserves[i] == "0x0000000000000000000000000000000000000000") {
         reserves.splice(i);
       }
@@ -201,9 +205,9 @@ const actions = {
         params.tokenSymbol,
         params.market,
         params.oraclePayment,
-        { 
+        {
           gasLimit: 750000,
-          from: state.account 
+          from: state.account
         }
       );
       if (txHash) {
@@ -223,7 +227,7 @@ const actions = {
           function(error, event) {
             console.log("reserve withdraw event");
             console.log(event);
-            // alert of withdraw 
+            // alert of withdraw
           }
         );
 
@@ -324,7 +328,6 @@ const actions = {
         params.web3.utils.fromWei(balance, "ether")
       );
     }
-    
   },
   [actionType.DEPOSIT_TOKEN_LIQUIDITY]: async function(
     { commit, dispatch, state },
@@ -474,7 +477,7 @@ const actions = {
 const mutations = {
   //WEB3 Stuff
   [mutationType.SET_PRICE_COIN](state, unitCoin) {
-    state.priceCoin[unitCoin.symbol] = unitCoin.last;
+    state.priceCoin = unitCoin;
   },
   [mutationType.SET_ACCOUNT](state, account) {
     console.log("Account set");
@@ -524,7 +527,7 @@ const mutations = {
   },
   [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
-  }  
+  }
 };
 
 export default {
