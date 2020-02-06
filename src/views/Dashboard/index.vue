@@ -25,24 +25,19 @@
                   v-if="isConnect"
                   class="d-flex flex-row-reverse bd-highlight"
                 >
-                  <div @click="toggleShowOption" class="p-2 bd-highlight bg-dark wallet-address" role="button">
+                  <b-dropdown right class="dropdownMenu">
+                    <template v-slot:button-content>
+                      <span class="text-white">{{ addressWallet }}</span>
+                    </template>
+                    <b-dropdown-item v-clipboard="account" @click="statusCoppy" class="item-option">Copy Address</b-dropdown-item>
+                    <b-dropdown-item @click="compatibilityMode" class="item-option">Compatibility Mode: {{mode ? 'On' : 'Off'}}</b-dropdown-item>
+                    <b-dropdown-item @click="openEtherscan(account)" class="item-option">Open in Etherscan</b-dropdown-item>
+                    <b-dropdown-item @click="disconnectWallet" class="item-option">Disconnect Wallet</b-dropdown-item>
+                  </b-dropdown>
+                  <!-- <div @click="toggleShowOption" class="p-2 bd-highlight bg-dark wallet-address" role="button">
                     <div class="text-white">{{ addressWallet }}</div>
                     <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
-                  </div>
-                  <div v-if="isShowOption" class="wallet-option bd-highlight bg-dark">
-                      <div v-clipboard="account" @click="statusCoppy" class="item-option"><div  
-                        class="text">Copy Address</div>
-                      </div>
-                      <div @click="compatibilityMode" class="item-option">
-                        <div class="text">Compatibility Mode: {{mode ? 'On' : 'Off'}}</div>
-                      </div>
-                      <div class="item-option">
-                        <div class="text" @click="openEtherscan(account)">Open in Etherscan</div>
-                      </div>
-                      <div @click="disconnectWallet" class="item-option">
-                        <div class="text">Disconnect Wallet</div>
-                      </div>
-                    </div>
+                  </div> -->
                   <div class="p-2 bd-highlight bg-dark wallet-name">
                     <div class="text-white">
                       <svg

@@ -1,4 +1,4 @@
-<template>
+ <!--<template>
   <div class="toastTransaction" v-if="miningTransactionObject.status != null">
     <b-toast id="example-toast" v-model="showToastTransaction" static no-auto-hide no-close-button>
         <template>
@@ -35,7 +35,6 @@
     </b-toast>
   </div>
 </template>
-
 <script>
 import { mapActions, mapState } from "vuex";
 import ClickableTransaction from "@/components/widgets/ClickableTransaction";
@@ -79,6 +78,117 @@ export default {
     },
   }
 };
+</script> 
+-->
+<script>
+import { mapActions, mapState } from "vuex";
+export default {
+  data() {
+    return {
+      showDialog: true,
+      showToastTransaction: true,
+    }
+  },
+  computed: {
+    ...mapState("ContractController", [
+      "etherscanBase",
+      "miningTransactionObject",
+      "statusTransaction"
+    ])
+  },
+  watch: {
+    statusTransaction: function(miningTransObj){
+      if(miningTransObj.status == "processing"){
+        this.popToastProcess();
+      }else if (miningTransObj.status == "approve"){
+        this.popToastApprove();
+      }else if(miningTransObj.status == "success"){
+        this.$bvToast.hide("toastProcess");
+        this.popToastSuccess();
+      }else if (miningTransObj.status == "fails"){
+        this.$bvToast.hide("toastProcess");
+      }
+    }
+  },
+  methods: {
+    ...mapActions("ContractController", [
+      "CLOSE_MINING_DIALOG"
+    ]),
+    modalClosed() {
+      console.log("CLOSED");
+      this.CLOSE_MINING_DIALOG();
+    },
+    buildLink: function() {
+      return `${this.etherscanBase}/tx/${this.miningTransactionObject.txHash}`;
+    },
+    popToastProcess() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['text-center', 'mb-0', 'toastr-flex'] },
+        [
+          h('b-spinner'),
+          h('div', {class: "text-toast"}, 'PROCESSING TRANSACTION')
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastProcess",
+        toastClass: "toastProcess",
+        noCloseButton: true,
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    popToastApprove() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['text-center', 'mb-0', 'toastr-flex'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'APPROVE'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    popToastSuccess() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'TRANSACTION COMPLETE'),
+          h('div', { class : "clearfix" }),
+          h('b-link', { props: {href: `${this.buildLink()}`, target: '_blank'} }, 'View Transaction' )
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        toastClass: "toastSuccess",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    dotDotDot: function(tx) {
+      if (tx) {
+        return (
+            tx.substr(0, 6) +
+            "..." +
+            tx.substr(
+              tx.length - 6,
+              tx.length
+            )
+          )
+      }
+      else {
+        return ""
+      }
+    },
+  },
+}
 </script>
-
-<style></style>

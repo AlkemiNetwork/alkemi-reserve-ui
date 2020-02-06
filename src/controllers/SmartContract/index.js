@@ -27,6 +27,9 @@ const state = {
   miningTransactionObject: {
     status: null,
     txHash: ""
+  },
+  statusTransaction: {
+    status: null,
   }
 };
 
@@ -121,7 +124,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
+    commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let latest = await params.web3.eth.getBlockNumber();
 
@@ -140,7 +143,7 @@ const actions = {
           status: "done",
           txHash: txHash.tx
         });
-
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "approve"});
         state.alkemiNetwork.contract.events.ReserveCreate(
           {
             filter: {
@@ -171,7 +174,7 @@ const actions = {
       }
     }
     catch(err) {
-      console.log(err);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "fails"});
       dispatch(actionType.CLOSE_MINING_DIALOG);
     }
   },
@@ -246,6 +249,7 @@ const actions = {
       }
     } catch(err){
       console.log(err);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "fails"});
       dispatch(actionType.CLOSE_MINING_DIALOG);
     }
   },
@@ -263,7 +267,6 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
     let erc20Token = await ERC20Token.at(params.erc20);
     console.log(erc20Token);
 
@@ -277,7 +280,7 @@ const actions = {
         status: "done",
         txHash: txHash.tx
       });
-
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "approve"});
       dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
         web3: params.web3,
         reserveAddress: params.spender,
@@ -359,11 +362,12 @@ const actions = {
           status: "done",
           txHash: txHash.tx
         });
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "success"});
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
       }
     }
     catch(err) {
-      console.log(err);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "fails"});
     }
   },
   [actionType.DEPOSIT_ETH_LIQUIDITY]: async function(
@@ -396,10 +400,12 @@ const actions = {
           status: "done",
           txHash: txHash.tx
         });
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "success"});
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
       }
     }
     catch(err) {
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "fails"});
       console.log(err);
     }
   },
@@ -528,6 +534,9 @@ const mutations = {
   },
   [mutationType.SET_WITHDRAW_EVENT_OBJECT](state, withdrawEventObject) {
     state.withdrawEventObject = withdrawEventObject;
+  },
+  [mutationType.SET_STATUS_TRANSACTION](state, statusTransaction) {
+    state.statusTransaction = statusTransaction;
   }
 };
 
