@@ -306,7 +306,7 @@
       <div class="head-modal">
         <b-img src="/img/dai.svg"></b-img>
         <span class="title-popup">
-          ADD {{ selectedAsset ? selectedAsset.name : "" }} POOL
+          ADD {{ selectedAsset ? selectedAsset.name : "" }} RESERVE
         </span>
       </div>
       <div class="content-modal">
