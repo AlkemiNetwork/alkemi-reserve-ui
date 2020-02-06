@@ -1209,7 +1209,7 @@ export default {
       const h = this.$createElement
         const vNodes = this.$createElement('div', { class: 'text-center ' }, [
           h('i', { class : 'fas fa-check'}),
-          h('span', { class : 'content-toast' }, 'Coppy address'),
+          h('span', { class : 'content-toast' }, 'Copy address'),
 
         ])
         this.$bvToast.toast(vNodes, {
@@ -1223,7 +1223,7 @@ export default {
         const h = this.$createElement
         const vNodes = this.$createElement('div', { class: 'text-center ' }, [
           h('i', { class : 'fas fa-check'}),
-          h('span', { class : 'content-toast' }, 'FUNDS CLAIMEDED'),
+          h('span', { class : 'content-toast' }, 'FUNDS CLAIMED'),
 
         ])
         this.$bvToast.toast(vNodes, {
