@@ -70,10 +70,6 @@ body {
 			min-height: calc(100vh - 100px);
 		}
 		.col-auto{
-			width: 30%;
-			@media screen and (max-width: 1366px){
-			 	width: 40%;
-			}
 			&:focus{
 				outline: 0;
 			}
@@ -118,12 +114,9 @@ body {
 			}
 		}
 		.tab-content{
-			width: 70%;
+			width: 50%;
 			background: $color-shark;
 			color: $color-white;
-			@media screen and (max-width: 1366px){
-			 	width: 60%;
-			}
 			&:hover{
 				outline: 0;
 			}div{
@@ -240,7 +233,7 @@ body {
 		}
 		.content-mid{
 			font-size: $font-size-16;
-			min-width: 125px;
+			min-width: 100px;
 			border-collapse: collapse;
 			.cost{
 				font-size: $font-size-12;
@@ -333,7 +326,7 @@ body {
 				position: absolute;
 				right: 25px;
 				top: 21px;
-				cursor: pointer;
+				cursor: $pointer;
 			}
 		}
 		.line-horizontal{
@@ -424,7 +417,7 @@ body {
 				position: absolute;
 				right: 25px;
 				top: 21px;
-				cursor: pointer;
+				cursor: $pointer;
 			}
 			> span{
 				text-transform: none;
@@ -525,7 +518,7 @@ body {
 										border-radius: 0;
 									}
 									&.vfc-hover:hover{
-										cursor: pointer;
+										cursor: $pointer;
 									}
 									&.vfc-disabled:hover {
 										cursor: no-drop !important;
@@ -628,6 +621,9 @@ body {
 .mr-30{
 	margin-right: 30px;
 }
+.mt-25{
+	margin-top: 25px;
+}
 .pull-right {
 	float: right;
 }
@@ -653,10 +649,33 @@ body {
 .wallet-address {
 	border-bottom-right-radius: 4px;
 	border-top-right-radius: 4px;
+	position: relative;
+	cursor: $pointer;
+	min-width: 115px;
+	padding: 8px 12px;
 	p {
 		font-size: $font-size-14;
 		font-weight : 300;
 	}
+	> img {
+		width: 12px;
+	    height: 12px;
+	    position: absolute;
+	    right: 8px;
+	    top: 12px;
+	}
+}
+.wallet-option{
+	position: absolute;
+	top: 40px;
+	width: 216px;
+	height: auto;
+	z-index: 999;
+	color: $color-white;
+    display: flex;
+	flex-direction: column;
+	border: 1px solid $color-black;
+    border-radius: 4px;
 }
 #ul-list-dot{
 	padding: 0;
@@ -682,4 +701,187 @@ body {
 	left: 25px;
 	color: $color-gray;
 	font-size: 12px;
+}
+.toast-success {
+	width: 250px;
+	background-color: $color-green !important;
+	color: $color-white;
+	svg {
+		font-size: 25px;
+		position: absolute;
+		left: 25px;
+		top: 10px;
+
+	}
+}
+// .toastTransaction{
+// 	position: fixed;
+// 	top: 20px;
+// 	right: 30px;
+// 	.toast-body{
+// 		text-align: center;
+// 		color: $color-white;
+// 		background-color: #51a351;
+// 	}
+// 	.toastProcessing{
+// 		min-width: 300px;
+// 		padding: 30px;
+// 	}
+// }
+// .toastTransaction{
+// 	position: fixed;
+// 	top: 20px;
+// 	right: 30px;
+// 	.toastProcessing{
+// 		padding: 15px;
+// 		display: flex;
+// 		align-items: center;
+// 		justify-content: center;
+// 	}
+// }
+.dropdownMenu{
+	> ul {
+		padding: 0;
+		background: #343a40;
+		border: 1px solid $color-black;
+		.item-option{
+			overflow: hidden;
+			font-size: 14px;
+			display: flex;
+			height: 40px;
+			align-items: center;
+			border-bottom: 1px solid $color-black;
+			position: relative;
+			width: 100%;
+			padding: 0 20px;
+			cursor: $pointer;
+			&:hover{
+				background: $color-woodsmoke;
+			}
+			&:last-child{
+				border-bottom: none;
+			}
+			> a{
+				color: $color-white;
+				&:hover{
+					background: inherit;
+				}
+			}
+			.dropdown-item{
+				padding: 0;
+			}
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* Internet Explorer */
+			-khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+			-webkit-user-select: none; /* Chrome, Safari, and Opera */
+			-webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+		}
+		&:focus{
+			outline: 0;
+		}
+	}
+	.dropdown-menu-right{
+		width: 212px;
+	}
+	.text-white{
+		font-size: $font-size-14;
+	}
+	.btn{
+		padding: 0 8px !important;
+		background: #343a40;
+		border: none;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		min-width: 110px;
+		&:focus{
+			outline: none;
+			box-shadow: unset;
+		}
+	}
+}
+.btn-secondary.dropdown-toggle{
+	&::after{
+		margin-left: 15px;
+	}
+}
+.show{
+	.btn-secondary.dropdown-toggle{
+		background-color: #343a40;
+	}
+}
+.dropdown-item{
+	font-size: 14px;
+}
+.toastProcess{
+	.toast-body{
+		text-align: center;
+		color: $color-white;
+		background-color: #3263fd;
+		.text-toast{
+			margin-left: 20px;
+			font-size: $font-size-16;
+		}
+	}
+}
+.toastSuccess{
+	.toast-header{
+		padding: 0;
+		> button{
+			color: $color-white;
+			&.close{
+				position: absolute;
+				right: 8px;
+				top: 5px;
+			}
+		}
+	}
+	.toast-body{
+		color: $color-white;
+		background-color: #1bb47c;
+		.text-toast{
+			margin-left: 20px;
+			font-size: $font-size-16;
+			float: left;
+		}
+	}
+	.fa-check{
+		font-size: $font-size-24;
+		margin-left: 35px;
+		float: left;
+	}
+	a{
+		color: $color-white;
+		text-decoration: underline;
+		margin-left: 80px;
+	}
+}
+.toastr-flex{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.toastApprove{
+	.toast-header{
+		padding: 0;
+		> button{
+			color: $color-white;
+			&.close{
+				position: absolute;
+				right: 8px;
+				top: 5px;
+			}
+		}
+	}
+	.toast-body{
+		color: $color-white;
+		background-color: #1bb47c;
+		.text-toast{
+			margin-left: 20px;
+			font-size: $font-size-16;
+		}
+	}
+	.fa-check{
+		font-size: $font-size-24;
+		margin-left: 35px;
+	}
 }

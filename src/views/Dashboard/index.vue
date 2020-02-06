@@ -25,9 +25,19 @@
                   v-if="isConnect"
                   class="d-flex flex-row-reverse bd-highlight"
                 >
-                  <div class="p-2 bd-highlight bg-dark wallet-address ">
+                  <b-dropdown right class="dropdownMenu">
+                    <template v-slot:button-content>
+                      <span class="text-white">{{ addressWallet }}</span>
+                    </template>
+                    <b-dropdown-item v-clipboard="account" @click="statusCoppy" class="item-option">Copy Address</b-dropdown-item>
+                    <b-dropdown-item @click="compatibilityMode" class="item-option">Compatibility Mode: {{mode ? 'On' : 'Off'}}</b-dropdown-item>
+                    <b-dropdown-item @click="openEtherscan(account)" class="item-option">Open in Etherscan</b-dropdown-item>
+                    <b-dropdown-item @click="disconnectWallet" class="item-option">Disconnect Wallet</b-dropdown-item>
+                  </b-dropdown>
+                  <!-- <div @click="toggleShowOption" class="p-2 bd-highlight bg-dark wallet-address" role="button">
                     <div class="text-white">{{ addressWallet }}</div>
-                  </div>
+                    <b-img src="/img/arrow-down-sign-to-navigate.png"></b-img>
+                  </div> -->
                   <div class="p-2 bd-highlight bg-dark wallet-name">
                     <div class="text-white">
                       <svg
@@ -490,6 +500,7 @@ export default {
       version: currentVersion,
       isShow: "form-add",
       isShowClaim: "form-claim",
+      isShowOption: false,
       txStatus: "",
       txHash: "",
       isConnect: false,
@@ -561,7 +572,7 @@ export default {
         {
           name: "REP",
           fullName: "Augur",
-          image: "mkr.svg",
+          image: "rep.svg",
           erc20Token: "0x6e894660985207feb7cf89Faf048998c71E8EE89",
           total: 0,
           estUSD: 0,
@@ -657,14 +668,15 @@ export default {
           thStyle: { width: "16.66%" }
         }
       ],
-      items: []
+      items: [],
+      mode : false
     };
   },
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
     if (window.web3.currentProvider.selectedAddress) {
-      var addressWallet = window.web3.currentProvider.selectedAddress;
+      let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
         addressWallet.substr(0, 4) +
         "..." +
@@ -1101,37 +1113,6 @@ export default {
                 this.priceCoin[`${this.data[4].name}`].USD;
             }
             break;
-          case this.data[4].erc20Token.toLowerCase():
-           reserve.assetSymbol = "WBTC";
-            reserve.address = this.providerLiquidityReserves[key];
-            this.data[4].total += parseFloat(reserve.totalBalance);
-            this.data[4].assetEarning += parseFloat(reserve.earned);
-            providerReservesWbtc.push(reserve);
-            // this.estPortfolio =
-            //   this.estPortfolio +
-            //   parseInt(reserve.deposited) *
-            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`];
-            // this.estEarnings =
-            //   this.estEarnings +
-            //   (parseInt(reserve.earned) *
-            //   this.priceCoin[`${this.data[3].name}/${this.unitCoin}`]);
-            if (this.priceCoin[`${this.data[4].name}/${this.unitCoin}`]) {
-              this.data[4].estUSD =
-                this.data[4].total *
-                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
-              this.data[4].estFluctuation =
-                this.data[4].fluctuation *
-                this.priceCoin[`${this.data[4].name}/${this.unitCoin}`];
-            } else {
-              this.GET_PRICE_COIN({
-                name: this.data[4].name
-              }).then(res => {
-                this.data[4].estUSD = this.data[4].total * res.data.last;
-                this.data[4].estFluctuation =
-                  this.data[4].fluctuation * res.data.last;
-              });
-            }
-            break;
           default:
             break;
         }
@@ -1221,6 +1202,46 @@ export default {
         return moment(before - moment()).format('D[ Days ] H[ Hrs]');
       }
     },
+    toggleShowOption() {
+      this.isShowOption = !this.isShowOption;
+    },
+    async statusCoppy(){
+      const h = this.$createElement
+        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
+          h('i', { class : 'fas fa-check'}),
+          h('span', { class : 'content-toast' }, 'Coppy address'),
+
+        ])
+        this.$bvToast.toast(vNodes, {
+          toastClass: 'toast-success',
+          noCloseButton: true,
+          toaster: 'b-toaster-top-left',
+          autoHideDelay: 3000,
+        })
+    },
+    async disconnectWallet(){
+        const h = this.$createElement
+        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
+          h('i', { class : 'fas fa-check'}),
+          h('span', { class : 'content-toast' }, 'FUNDS CLAIMEDED'),
+
+        ])
+        this.$bvToast.toast(vNodes, {
+          toastClass: 'toast-success',
+          noCloseButton: true,
+          toaster: 'b-toaster-top-right',
+          autoHideDelay: 3000,
+        })
+    },
+    compatibilityMode() {
+      this.mode = !this.mode;
+    },
+    openEtherscan(account){
+      window.open(
+        'https://rinkeby.etherscan.io/address/'+`${account}`,
+        '_blank'
+      );
+    }
   }
 };
 </script>

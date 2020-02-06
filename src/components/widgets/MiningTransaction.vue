@@ -1,61 +1,51 @@
-<template>
-    <b-modal
-      hide-footer
-      hide-header
-      v-if="miningTransactionObject.status != null"
-      ref="modal-loading"
-      title="Using Component Methods"
-      id="modal-loading"
-      v-model="showDialog"
-      centered
-      no-close-on-esc
-      no-close-on-backdrop
-      hide-header-close 
-   >
-      <div class="content-modal">
-        <div class="processing">
-          <div v-if="miningTransactionObject.status != null">
-            <div v-if="miningTransactionObject.status == 'uploading'" class="title-process">
-              Uploading content to IPFS
+ <!--<template>
+  <div class="toastTransaction" v-if="miningTransactionObject.status != null">
+    <b-toast id="example-toast" v-model="showToastTransaction" static no-auto-hide no-close-button>
+        <template>
+          <div class="toastProcessing">
+            <div v-if="miningTransactionObject.status != null">
+              <div v-if="miningTransactionObject.status == 'uploading'" class="title-process">
+                Uploading content to IPFS
+              </div>
+              <div v-if="miningTransactionObject.status == 'pending'" class="title-process">
+                Pending Transaction
+              </div>
+              <div v-if="miningTransactionObject.status == 'done'" class="title-process">
+                Transaction Mined
+              </div>
+              <div v-if="miningTransactionObject.status == 'done'">
+                Transaction has been mined! You can view the transaction info on
+                EtherScan
+                <clickable-transaction :transaction="miningTransactionObject.txHash" />.
+              </div>
+              <div class="address-transaction">
+                {{ dotDotDot(miningTransactionObject.txHash) }}
+              </div>
+              <div class="w-100 text-center mt-25">
+                <b-spinner v-if="(miningTransactionObject.status == 'pending') || (miningTransactionObject.status == 'uploading')"></b-spinner>
+              </div>
+              <b-button-group v-if="miningTransactionObject.status == 'done'">
+                <b-button @click="modalClosed" variant="akm">
+                  Close
+                </b-button>
+              </b-button-group>
             </div>
-            <div v-if="miningTransactionObject.status == 'pending'" class="title-process">
-              Pending Transaction
-            </div>
-            <div v-if="miningTransactionObject.status == 'done'" class="title-process">
-              Transaction Mined
-            </div>
-            <div v-if="miningTransactionObject.status == 'done'">
-              Transaction has been mined! You can view the transaction info on
-              EtherScan
-              <clickable-transaction :transaction="miningTransactionObject.txHash" />.
-            </div>
-            <div class="address-transaction">
-              {{ dotDotDot(miningTransactionObject.txHash) }}
-            </div>
-            <loadingPopup v-if="(miningTransactionObject.status == 'pending') || (miningTransactionObject.status == 'uploading')" :quality="4"></loadingPopup>
-            <b-button-group v-if="miningTransactionObject.status == 'done'">
-              <b-button @click="modalClosed" variant="akm">
-                Close
-              </b-button>
-            </b-button-group>
           </div>
-        </div>
-      </div>
-    </b-modal>
+        </template>
+    </b-toast>
+  </div>
 </template>
-
 <script>
 import { mapActions, mapState } from "vuex";
 import ClickableTransaction from "@/components/widgets/ClickableTransaction";
-import loadingPopup from "../../components/loading-popup/index";
 export default {
   name: "miningTransaction",
   components: { 
     ClickableTransaction,
-    loadingPopup 
   },
   data: () => ({
     showDialog: true,
+    showToastTransaction: true,
   }),
   computed: {
     ...mapState("ContractController", [
@@ -63,15 +53,6 @@ export default {
       "miningTransactionObject"
     ])
   },
-  /*watch: {
-    miningTransactionObject: function(miningTransObject) {
-      if (miningTransObject.status !== null) {
-        this.showModalLoading()
-      } else {
-        this.hideModalLoading()
-      }
-    }
-  },*/
   methods: {
     ...mapActions("ContractController", [
       "CLOSE_MINING_DIALOG"
@@ -80,13 +61,6 @@ export default {
       console.log("CLOSED");
       this.CLOSE_MINING_DIALOG();
     },
-    /*showModalLoading() {
-      this.$refs["modal-loading"].show()
-    },
-    hideModalLoading() {
-      this.$refs["modal-loading"].hide()
-      this.CLOSE_MINING_DIALOG();
-    },*/
     dotDotDot: function(tx) {
       if (tx) {
         return (
@@ -104,6 +78,122 @@ export default {
     },
   }
 };
+</script> 
+-->
+<template>
+  <div>
+    <!-- coming soon -->
+  </div>
+</template>
+<script>
+import { mapActions, mapState } from "vuex";
+export default {
+  data() {
+    return {
+      showDialog: true,
+      showToastTransaction: true,
+    }
+  },
+  computed: {
+    ...mapState("ContractController", [
+      "etherscanBase",
+      "miningTransactionObject",
+      "statusTransaction"
+    ])
+  },
+  watch: {
+    statusTransaction: function(miningTransObj){
+      if(miningTransObj.status == "processing"){
+        this.popToastProcess();
+      }else if (miningTransObj.status == "approve"){
+        this.popToastApprove();
+      }else if(miningTransObj.status == "success"){
+        this.$bvToast.hide("toastProcess");
+        this.popToastSuccess();
+      }else if (miningTransObj.status == "fails"){
+        this.$bvToast.hide("toastProcess");
+      }
+    }
+  },
+  methods: {
+    ...mapActions("ContractController", [
+      "CLOSE_MINING_DIALOG"
+    ]),
+    modalClosed() {
+      console.log("CLOSED");
+      this.CLOSE_MINING_DIALOG();
+    },
+    buildLink: function() {
+      return `${this.etherscanBase}/tx/${this.miningTransactionObject.txHash}`;
+    },
+    popToastProcess() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['text-center', 'mb-0', 'toastr-flex'] },
+        [
+          h('b-spinner'),
+          h('div', {class: "text-toast"}, 'PROCESSING TRANSACTION')
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastProcess",
+        toastClass: "toastProcess",
+        noCloseButton: true,
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    popToastApprove() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['text-center', 'mb-0', 'toastr-flex'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'APPROVE'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    popToastSuccess() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'TRANSACTION COMPLETE'),
+          h('div', { class : "clearfix" }),
+          h('b-link', { props: {href: `${this.buildLink()}`, target: '_blank'} }, 'View Transaction' )
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        toastClass: "toastSuccess",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+    },
+    dotDotDot: function(tx) {
+      if (tx) {
+        return (
+            tx.substr(0, 6) +
+            "..." +
+            tx.substr(
+              tx.length - 6,
+              tx.length
+            )
+          )
+      }
+      else {
+        return ""
+      }
+    },
+  },
+}
 </script>
-
-<style></style>
