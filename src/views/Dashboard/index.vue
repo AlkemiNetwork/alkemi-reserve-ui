@@ -861,7 +861,8 @@ export default {
       "GET_RESERVE_DETAILS",
       "GET_TOKEN_BALANCE",
       "GET_PRICE_COIN",
-      "CLAIM_LIQUIDITY_RESERVE"
+      "CLAIM_LIQUIDITY_RESERVE",
+      "CLEAR_APP"
     ]),
      ...mapMutations("ContractController", [
       "SET_EMPTY_PROVIDER_RESERVE_DETAILS",
@@ -872,24 +873,16 @@ export default {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
-
           window.ethereum.enable().then(addressWallet => {
             this.INIT_APP(window.web3)
-            .then(result=>{
-              console.log(result)
+            .then(()=>{
               this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
             })
             this.addressWallet =
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-            console.log(this.addressWallet);
             this.isConnect = true;
-            window.web3.eth
-              .getBalance(window.web3.currentProvider.selectedAddress)
-              .then(coins => {
-                this.walletAssetBalance = coins;
-              });
           });
         } catch (error) {
           console.log(error);
@@ -996,7 +989,6 @@ export default {
       this.poolsCounter = 0;
 
       this.providerReservesDetails.map((reserve, key) => {
-        console.log(reserve.asset);
         switch (reserve.asset.toLowerCase()) {
           case this.data[0].erc20Token.toLowerCase():
             reserve.address = this.providerLiquidityReserves[key];
@@ -1183,7 +1175,7 @@ export default {
       this.amountToWithdraw = maxAmount;
     },
     async selectWallet(item)  {
-       this.selectedAsset = item;
+      this.selectedAsset = item;
       if(window.web3.currentProvider.selectedAddress){
         await this.GET_TOKEN_BALANCE({
           web3: window.web3,
@@ -1220,18 +1212,29 @@ export default {
         })
     },
     async disconnectWallet(){
-        const h = this.$createElement
-        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
-          h('i', { class : 'fas fa-check'}),
-          h('span', { class : 'content-toast' }, 'FUNDS CLAIMED'),
+      window.web3.currentProvider.selectedAddress = null;
+      this.CLEAR_APP();
 
-        ])
-        this.$bvToast.toast(vNodes, {
-          toastClass: 'toast-success',
-          noCloseButton: true,
-          toaster: 'b-toaster-top-right',
-          autoHideDelay: 3000,
-        })
+      this.isConnect = false;
+      this.addressWallet = "";
+      this.estPortfolio = 0;
+      this.estEarnings = 0;
+      this.totalChange24h = 0;
+
+      for (let i = 0; i < this.data.length; i++) {
+        this.data[i].total = 0;
+        this.data[i].estUSD = 0;
+        this.data[i].fluctuation = 0;
+        this.data[i].estFluctuation = 0;
+        this.data[i].change24h = 0;
+        this.data[i].estchange24h = 0;
+        this.data[i].assetEarning = 0;
+        this.data[i].usdEarning = 0;
+        this.data[i].providerReserves = [];
+      }
+
+      this.reservesCounter = 0;
+      this.poolsCounter = 0;
     },
     compatibilityMode() {
       this.mode = !this.mode;
