@@ -110,11 +110,11 @@
                                   {{ item.fullName }}
                                 </div>
                               </div>
-                              <div class="content-mid">
+                              <div class="content-mid text-right">
                                 {{ item.total | formatNumberReturnZero }}
                                 <div class="cost">{{ item.estUSD | formatMoney }}</div>
                               </div>
-                              <div class="content-mid">
+                              <div class="content-mid text-right">
                                 {{ item.change24h }}
                                 <span class="percent" v-if="item.total != 0"
                                   >{{

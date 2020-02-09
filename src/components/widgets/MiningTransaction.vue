@@ -87,7 +87,11 @@ export default {
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
+import iconComment from '../Icons/comment'
 export default {
+  components: {
+    'iconComment' : iconComment,
+  },
   data() {
     return {
       showDialog: true,
@@ -108,10 +112,9 @@ export default {
       }else if (miningTransObj.status == "approve"){
         this.popToastApprove();
       }else if(miningTransObj.status == "success"){
-        this.$bvToast.hide("toastProcess");
         this.popToastSuccess();
       }else if (miningTransObj.status == "fails"){
-        this.$bvToast.hide("toastProcess");
+        this.popToastError();
       }
     }
   },
@@ -126,7 +129,8 @@ export default {
     buildLink: function() {
       return `${this.etherscanBase}/tx/${this.miningTransactionObject.txHash}`;
     },
-    popToastProcess() {
+    async popToastProcess() {
+      this.$bvToast.hide('toastProcess')
       const h = this.$createElement
       const vNodesMsg = h(
         'div',
@@ -136,22 +140,25 @@ export default {
           h('div', {class: "text-toast"}, 'PROCESSING TRANSACTION')
         ]
       )
-      this.$bvToast.toast([vNodesMsg], {
+       this.$bvToast.toast([vNodesMsg], {
         id: "toastProcess",
         toastClass: "toastProcess",
         noCloseButton: true,
         noHoverPause: true,
         noAutoHide: true,
       })
+      this.$bvToast.hide('toastApprove')
+      this.$bvToast.hide('toastSuccess')
+      this.$bvToast.hide('toastError')
     },
-    popToastApprove() {
+    async popToastApprove() {
       const h = this.$createElement
       const vNodesMsg = h(
         'div',
         { class: ['text-center', 'mb-0', 'toastr-flex'] },
         [
           h('i', { class : "fas fa-check"}),
-          h('div', { class: "text-toast"}, 'APPROVE'),
+          h('div', { class: "text-toast"}, 'TRANSACTION COMPLETE'),
         ]
       )
       this.$bvToast.toast([vNodesMsg], {
@@ -160,25 +167,55 @@ export default {
         noHoverPause: true,
         noAutoHide: true,
       })
+      this.$bvToast.hide('toastProcess')
+      this.$bvToast.hide('toastSuccess')
+      this.$bvToast.hide('toastError')
     },
-    popToastSuccess() {
+    async popToastSuccess() {
       const h = this.$createElement
       const vNodesMsg = h(
         'div',
         { class: ['mb-0'] },
         [
           h('i', { class : "fas fa-check"}),
-          h('div', { class: "text-toast"}, 'TRANSACTION COMPLETE'),
+          h('div', { class: "text-toast"}, 'RESERVE CREATED'),
           h('div', { class : "clearfix" }),
           h('b-link', { props: {href: `${this.buildLink()}`, target: '_blank'} }, 'View Transaction' )
         ]
       )
-      this.$bvToast.toast([vNodesMsg], {
+       this.$bvToast.toast([vNodesMsg], {
+        id: "toastSuccess",
         toastClass: "toastSuccess",
         noHoverPause: true,
         noAutoHide: true,
       })
+      this.$bvToast.hide('toastProcess')
+      this.$bvToast.hide('toastApprove')
+      this.$bvToast.hide('toastError')
     },
+    async popToastError() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0'] },
+        [
+          h('iconComment', { props : {}}),
+          h('div', { class: "text-toast"}, 'TRANSACTION FAILED'),
+          h('div', { class: "text-mess-toast"}, 'Insufficient Funds'),
+          h('div', { class : "clearfix" }),
+         
+        ]
+      )
+       this.$bvToast.toast([vNodesMsg], {
+        id: "toastError",
+        toastClass: "toastError",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+      this.$bvToast.hide('toastProcess')
+      this.$bvToast.hide('toastApprove')
+      this.$bvToast.hide('toastSuccess')
+     },
     dotDotDot: function(tx) {
       if (tx) {
         return (

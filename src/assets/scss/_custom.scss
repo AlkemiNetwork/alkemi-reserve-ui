@@ -246,10 +246,10 @@ body {
 	}
 }
 .acronym-name{
-	min-width: 130px !important;
+	min-width: 100px !important;
 	color: $color-white;
 	@media screen and (max-width: 1366px){
-		min-width: 100px !important;
+		min-width: 90px !important;
 	}
 	.name-el-money{
 		color: $color-boulder;
@@ -882,6 +882,38 @@ body {
 	}
 	.fa-check{
 		font-size: $font-size-24;
+		//margin-left: 35px;
+	}
+}
+.toastError{
+	.toast-header{
+		padding: 0;
+		> button{
+			color: $color-white;
+			&.close{
+				position: absolute;
+				right: 8px;
+				top: 5px;
+			}
+		}
+	}
+	.toast-body{
+		color: $color-white;
+		background-color: #E35164;
+		.text-toast{
+			margin-left: 20px;
+			font-size: $font-size-16;
+			float: left;
+		}
+	}
+	.fa-comment-alt-exclamation{
+		font-size: 40px;
 		margin-left: 35px;
+		float: left;
+	}
+	.text-mess-toast{
+		color: $color-white;
+		margin-left: 23px;
+		display: inline-block;
 	}
 }
