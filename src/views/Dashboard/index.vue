@@ -110,11 +110,11 @@
                                   {{ item.fullName }}
                                 </div>
                               </div>
-                              <div class="content-mid">
+                              <div class="content-mid text-right">
                                 {{ item.total | formatNumberReturnZero }}
                                 <div class="cost">{{ item.estUSD | formatMoney }}</div>
                               </div>
-                              <div class="content-mid">
+                              <div class="content-mid text-right">
                                 {{ item.change24h }}
                                 <span class="percent" v-if="item.total != 0"
                                   >{{
@@ -481,6 +481,7 @@
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
 import Web3 from "web3";
+import iconComment from '../../components/Icons/comment'
 import { FunctionalCalendar } from "vue-functional-calendar";
 import MiningTransaction from "../../components/widgets/MiningTransaction";
 import accounting from "accounting";
@@ -492,7 +493,8 @@ export default {
   name: "dashboard",
   components: {
     FunctionalCalendar,
-    MiningTransaction
+    MiningTransaction,
+    iconComment
   },
   data() {
     return {
@@ -905,6 +907,12 @@ export default {
       }
     },
     createReserve() {
+      if(this.lockPricePosition==="0" && parseFloat(this.lockPrice)  >=  parseFloat(this.priceCoin[this.selectedAsset.name].USD)  ){
+        return this.popToastError('Failed message')
+      }
+      if(this.lockPricePosition==="1" && parseFloat(this.lockPrice)  <=  parseFloat(this.priceCoin[this.selectedAsset.name].USD)  ){
+        return this.popToastError('Failed message')
+      }
       let depositAmount = 0;
       if(this.selectedAsset.erc20Token == this.data[1].erc20Token) {
         depositAmount = (
@@ -1135,6 +1143,8 @@ export default {
     },
     /* eslint-enable */
     showModal() {
+      this.amountToDeposit = 0;
+      this.lockPrice = "";
       this.$refs["modal-add-new"].show();
     },
     hideModal() {
@@ -1143,6 +1153,7 @@ export default {
     },
     showModalClaim(selectedReserve) {
       this.selectedReserve = selectedReserve;
+      this.amountToWithdraw = ""
       this.$refs["modal-claim"].show();
     },
     hideModalClaim() {
@@ -1244,7 +1255,30 @@ export default {
         'https://rinkeby.etherscan.io/address/'+`${account}`,
         '_blank'
       );
-    }
+    },
+    async popToastError(mess) {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0'] },
+        [
+          h('iconComment', { props : {}}),
+          h('div', { class: "text-toast"}, 'TRANSACTION FAILED'),
+          h('div', { class: "text-mess-toast"}, mess ||'Insufficient Funds'),
+          h('div', { class : "clearfix" }),
+         
+        ]
+      )
+       this.$bvToast.toast([vNodesMsg], {
+        id: "toastError",
+        toastClass: "toastError",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+      this.$bvToast.hide('toastProcess')
+      this.$bvToast.hide('toastApprove')
+      this.$bvToast.hide('toastSuccess')
+     },
   }
 };
 </script>
