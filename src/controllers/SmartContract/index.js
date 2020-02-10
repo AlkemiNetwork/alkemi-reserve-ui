@@ -121,6 +121,8 @@ const actions = {
     commit(mutationType.SET_ACCOUNT, null);
     commit(mutationType.SET_ALKEMI_NETWORK, null);
 
+    commit(mutationType.SET_TOKEN_BALANCE, null);
+
     dispatch(actionType.CLEAR_PROVIDER_LIQUIDITY_RESERVE);
     //dispatch(actionType.SET_EMPTY_PROVIDER_RESERVE_DETAILS);
   },

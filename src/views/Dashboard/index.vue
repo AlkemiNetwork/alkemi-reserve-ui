@@ -868,7 +868,8 @@ export default {
     ]),
      ...mapMutations("ContractController", [
       "SET_EMPTY_PROVIDER_RESERVE_DETAILS",
-      "SET_PROVIDER_LIQUIDITY_RESERVE"
+      "SET_PROVIDER_LIQUIDITY_RESERVE",
+      "SET_TOKEN_BALANCE"
     ]),
     async connectWallet() {
        this.selectWallet(this.data[0]);
