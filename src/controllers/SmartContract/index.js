@@ -394,7 +394,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
+    commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
       let txHash = await liquidityReserve.deposit(params.amount, {
