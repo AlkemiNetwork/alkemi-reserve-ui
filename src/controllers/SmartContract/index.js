@@ -194,7 +194,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
+    commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
@@ -218,7 +218,7 @@ const actions = {
           txHash: txHash.tx
         });
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "Claimsuccess"});
         liquidityReserve.contract.events.ReserveWithdraw(
           {
             filter: {

@@ -116,6 +116,9 @@ export default {
       }else if (miningTransObj.status == "fails"){
         this.popToastError();
       }
+      else if(miningTransObj.status=="Claimsuccess"){
+        this.popToastClaimSuccess();
+      }
     }
   },
   methods: {
@@ -150,6 +153,7 @@ export default {
       this.$bvToast.hide('toastApprove')
       this.$bvToast.hide('toastSuccess')
       this.$bvToast.hide('toastError')
+      this.$bvToast.hide('toastClaimSuccess')
     },
     async popToastApprove() {
       const h = this.$createElement
@@ -185,6 +189,28 @@ export default {
       )
        this.$bvToast.toast([vNodesMsg], {
         id: "toastSuccess",
+        toastClass: "toastSuccess",
+        noHoverPause: true,
+        noAutoHide: true,
+      })
+      this.$bvToast.hide('toastProcess')
+      this.$bvToast.hide('toastApprove')
+      this.$bvToast.hide('toastError')
+    },
+    async popToastClaimSuccess() {
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'CLAIM SUCCESS'),
+          h('div', { class : "clearfix" }),
+          h('b-link', { props: {href: `${this.buildLink()}`, target: '_blank'} }, 'View Transaction' )
+        ]
+      )
+       this.$bvToast.toast([vNodesMsg], {
+        id: "toastClaimSuccess",
         toastClass: "toastSuccess",
         noHoverPause: true,
         noAutoHide: true,

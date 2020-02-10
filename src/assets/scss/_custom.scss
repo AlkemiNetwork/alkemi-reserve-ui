@@ -696,7 +696,7 @@ body {
 	}
 }
 .version{
-	position: absolute;
+	position: fixed;
 	bottom: 15px;
 	left: 25px;
 	color: $color-gray;
@@ -817,6 +817,11 @@ body {
 		text-align: center;
 		color: $color-white;
 		background-color: #3263fd;
+		>div {
+			&:first-child {
+				padding: 4px 0;
+			}
+		}
 		.text-toast{
 			margin-left: 20px;
 			font-size: $font-size-16;
@@ -826,6 +831,7 @@ body {
 .toastSuccess{
 	.toast-header{
 		padding: 0;
+		border-bottom :0;
 		> button{
 			color: $color-white;
 			&.close{
@@ -839,15 +845,18 @@ body {
 		color: $color-white;
 		background-color: #1bb47c;
 		.text-toast{
-			margin-left: 20px;
+			margin-left: 80px;
 			font-size: $font-size-16;
 			float: left;
 		}
 	}
 	.fa-check{
-		font-size: $font-size-24;
+		font-size: 35px;
 		margin-left: 35px;
 		float: left;
+		position: absolute;
+		top: 17px;
+		left: 0;
 	}
 	a{
 		color: $color-white;
@@ -887,6 +896,7 @@ body {
 }
 .toastError{
 	.toast-header{
+		border-bottom :0;
 		padding: 0;
 		> button{
 			color: $color-white;
@@ -908,7 +918,8 @@ body {
 	}
 	.fa-comment-alt-exclamation{
 		font-size: 40px;
-		margin-left: 35px;
+		margin-left: 27px;
+		margin-top: 5px;
 		float: left;
 	}
 	.text-mess-toast{
@@ -916,4 +927,8 @@ body {
 		margin-left: 23px;
 		display: inline-block;
 	}
+}
+.spinner-border {
+	width: 2.5em;
+	height: 2.5em;
 }
