@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{'run-loading':Loading}">
     <b-container fluid>
       <b-row>
         <b-col lg="12">
@@ -498,6 +498,7 @@ export default {
   },
   data() {
     return {
+      Loading : false,
       dateNow : null,
       version: currentVersion,
       isShow: "form-add",
@@ -975,6 +976,16 @@ export default {
     async getProviderReservesDetails() {
       this.reservesCounter = this.providerLiquidityReserves.length;
 
+     
+      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
+      this.Loading = true;
+      for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
+        await this.GET_RESERVE_DETAILS({
+          web3: window.web3,
+          reserveAddress: this.providerLiquidityReserves[i]
+        });
+      }
+
       this.data[0].total = 0;
       this.data[0].assetEarning = 0;
       this.data[1].total = 0;
@@ -987,15 +998,7 @@ export default {
       this.data[4].assetEarning = 0;
       this.estPortfolio = 0;
       this.estEarnings = 0;
-      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
-
-      for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
-        await this.GET_RESERVE_DETAILS({
-          web3: window.web3,
-          reserveAddress: this.providerLiquidityReserves[i]
-        });
-      }
-
+      
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesETH = [];
@@ -1148,6 +1151,7 @@ export default {
       if(providerReservesWbtc.length > 0) {
         this.poolsCounter++;
       }
+      this.Loading = false;
     },
     /* eslint-enable */
     showModal() {
