@@ -127,7 +127,6 @@ const actions = {
     commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let latest = await params.web3.eth.getBlockNumber();
-
       let txHash = await state.alkemiNetwork.createLiquidityReserve(
         params.linkToken,
         params.beneficiary,
@@ -195,7 +194,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
+    commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
 
@@ -219,7 +218,7 @@ const actions = {
           txHash: txHash.tx
         });
         dispatch(actionType.LOAD_PROVIDER_LIQUIDITY_RESERVES);
-
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "Claimsuccess"});
         liquidityReserve.contract.events.ReserveWithdraw(
           {
             filter: {
@@ -267,26 +266,33 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-    let erc20Token = await ERC20Token.at(params.erc20);
-    console.log(erc20Token);
-
-    let txHash = await erc20Token.approve(params.spender, params.amount, {
-      from: state.account,
-      gasLimit: 750000
-    });
-
-    if (txHash) {
-      commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
-        status: "done",
-        txHash: txHash.tx
+    try {
+      let erc20Token = await ERC20Token.at(params.erc20);
+      console.log(erc20Token);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
+      let txHash = await erc20Token.approve(params.spender, params.amount, {
+        from: state.account,
+        gasLimit: 750000
       });
-      commit(mutationType.SET_STATUS_TRANSACTION, {status: "approve"});
-      dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
-        web3: params.web3,
-        reserveAddress: params.spender,
-        amount: params.amount
-      });
+      if (txHash) {
+        commit(mutationType.SET_MINING_TRANSACTION_OBJECT, {
+          status: "done",
+          txHash: txHash.tx
+        });
+        commit(mutationType.SET_STATUS_TRANSACTION, {status: "approve"});
+        dispatch(actionType.DEPOSIT_TOKEN_LIQUIDITY, {
+          web3: params.web3,
+          reserveAddress: params.spender,
+          amount: params.amount
+        });
+      }
     }
+    catch(err){
+      console.log(err);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "fails"});
+      dispatch(actionType.CLOSE_MINING_DIALOG);
+    }
+  
   },
   [actionType.GET_TOKEN_BALANCE]: async function({ commit, state }, params) {
     ERC20Token.setProvider(params.web3.currentProvider);
@@ -353,6 +359,7 @@ const actions = {
 
     try {
       let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
+      commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
       let txHash = await liquidityReserve.deposit(params.amount, {
         from: state.account,
         gasLimit: 750000
@@ -387,7 +394,7 @@ const actions = {
       status: "pending",
       txHash: ""
     });
-
+    commit(mutationType.SET_STATUS_TRANSACTION, {status: "processing"});
     try {
       let liquidityReserve = await LiquidityReserve.at(params.reserveAddress);
       let txHash = await liquidityReserve.deposit(params.amount, {
