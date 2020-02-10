@@ -677,13 +677,12 @@ export default {
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
-    if (window.web3.currentProvider.selectedAddress) {
+    if ((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)) {
       let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
         addressWallet.substr(0, 4) +
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
-      this.isConnect = true;
       window.web3 = new Web3(window.web3.currentProvider);
 
       await this.INIT_APP(window.web3);
@@ -886,6 +885,8 @@ export default {
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
             this.isConnect = true;
+
+            this.selectWallet(this.data[0]);
           });
         } catch (error) {
           console.log(error);
@@ -1188,7 +1189,7 @@ export default {
     },
     async selectWallet(item)  {
       this.selectedAsset = item;
-      if(window.web3.currentProvider.selectedAddress){
+      if((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)){
         await this.GET_TOKEN_BALANCE({
           web3: window.web3,
           erc20: item.erc20Token
