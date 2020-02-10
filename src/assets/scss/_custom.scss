@@ -817,6 +817,7 @@ body {
 		text-align: center;
 		color: $color-white;
 		background-color: #3263fd;
+		padding: 13px 0;
 		>div {
 			&:first-child {
 				padding: 4px 0;
@@ -872,6 +873,7 @@ body {
 .toastApprove{
 	.toast-header{
 		padding: 0;
+		border-bottom :0;
 		> button{
 			color: $color-white;
 			&.close{
@@ -884,13 +886,16 @@ body {
 	.toast-body{
 		color: $color-white;
 		background-color: #1bb47c;
+		padding: 17px 0;
 		.text-toast{
-			margin-left: 20px;
+			margin-left: 10px;
 			font-size: $font-size-16;
 		}
 	}
 	.fa-check{
-		font-size: $font-size-24;
+		font-size: 35px;
+		margin-left: 27px;
+    	margin-right: 18px;
 		//margin-left: 35px;
 	}
 }
@@ -932,3 +937,70 @@ body {
 	width: 2.5em;
 	height: 2.5em;
 }
+.clear-center {
+	justify-content: unset;
+}
+.run-loading{
+	min-height: 100px;
+	&::before{
+	  content: '';
+	  z-index: 10;
+	  width: 30px;
+	  height: 30px;
+	  border: solid 2px transparent;
+	  border-top-color: #000;
+	  border-left-color: #000;
+	  border-radius: 50%;
+	  animation: pace-spinner 400ms linear infinite;
+	  vertical-align: middle;
+	  margin-top: -15px;
+	  margin-left: -15px;
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  display: block;
+	}
+	&::after{
+	  content: "";
+	  position: absolute;
+	  background: rgba(255,255,255,0.3);
+	  z-index: 9;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  display: block;
+	}
+	&.small-loading{
+	  min-height: auto;
+	  &::before{
+		width: 15px;
+		height: 15px;
+	  }
+	}
+  }
+  
+  @-webkit-keyframes pace-spinner {
+	0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+	100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
+  }
+  
+  @-moz-keyframes pace-spinner {
+	0%{-moz-transform:rotate(0deg);transform:rotate(0deg)}
+	100%{-moz-transform:rotate(360deg);transform:rotate(360deg)}
+  }
+  
+  @-o-keyframes pace-spinner {
+	0%{-o-transform:rotate(0deg);transform:rotate(0deg)}
+	100%{-o-transform:rotate(360deg);transform:rotate(360deg)}
+  }
+  
+  @-ms-keyframes pace-spinner {
+	0%{-ms-transform:rotate(0deg);transform:rotate(0deg)}
+	100%{-ms-transform:rotate(360deg);transform:rotate(360deg)}
+  }
+  
+  @keyframes pace-spinner {
+	0%{transform:rotate(0deg);transform:rotate(0deg)}
+	100%{transform:rotate(360deg);transform:rotate(360deg)}
+  }  

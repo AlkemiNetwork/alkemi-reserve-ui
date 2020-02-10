@@ -150,7 +150,6 @@ export default {
         noHoverPause: true,
         noAutoHide: true,
       })
-      this.$bvToast.hide('toastApprove')
       this.$bvToast.hide('toastSuccess')
       this.$bvToast.hide('toastError')
       this.$bvToast.hide('toastClaimSuccess')
@@ -159,7 +158,7 @@ export default {
       const h = this.$createElement
       const vNodesMsg = h(
         'div',
-        { class: ['text-center', 'mb-0', 'toastr-flex'] },
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
         [
           h('i', { class : "fas fa-check"}),
           h('div', { class: "text-toast"}, 'TRANSACTION COMPLETE'),
@@ -169,7 +168,7 @@ export default {
         id: "toastApprove",
         toastClass: "toastApprove",
         noHoverPause: true,
-        noAutoHide: true,
+        autoHideDelay : 1000
       })
       this.$bvToast.hide('toastProcess')
       this.$bvToast.hide('toastSuccess')
@@ -194,7 +193,6 @@ export default {
         noAutoHide: true,
       })
       this.$bvToast.hide('toastProcess')
-      this.$bvToast.hide('toastApprove')
       this.$bvToast.hide('toastError')
     },
     async popToastClaimSuccess() {
@@ -216,7 +214,6 @@ export default {
         noAutoHide: true,
       })
       this.$bvToast.hide('toastProcess')
-      this.$bvToast.hide('toastApprove')
       this.$bvToast.hide('toastError')
     },
     async popToastError() {
@@ -239,7 +236,6 @@ export default {
         noAutoHide: true,
       })
       this.$bvToast.hide('toastProcess')
-      this.$bvToast.hide('toastApprove')
       this.$bvToast.hide('toastSuccess')
      },
     dotDotDot: function(tx) {
