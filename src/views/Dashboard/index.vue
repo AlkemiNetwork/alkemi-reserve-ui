@@ -1261,7 +1261,6 @@ export default {
         this.data[i].usdEarning = 0;
         this.data[i].providerReserves = [];
       }
-
       this.reservesCounter = 0;
       this.poolsCounter = 0;
     },
