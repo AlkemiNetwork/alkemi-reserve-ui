@@ -270,13 +270,20 @@
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <b-button
+                                      <!-- <b-button
                                         size="sm"
                                         class="btn-claim float-right"
                                         @click="showModalClaim(row.item)"
                                       >
                                         CLAIM
-                                      </b-button>
+                                      </b-button> -->
+                                      <b-dropdown size="sm" right class="float-right btn-actions" variant="link" toggle-class="text-decoration-none btn-active" no-caret>
+                                        <template v-slot:button-content>
+                                        <i class="fas fa-ellipsis-h"></i>
+                                        </template>
+                                        <b-dropdown-item-button @click="showModalClaim(row.item)" >Withdraw Funds</b-dropdown-item-button>
+                                        <b-dropdown-item-button @click="copyAddressReserves(row.item)" >Copy address</b-dropdown-item-button>
+                                      </b-dropdown>
                                     </template>
                                   </b-table>
                                 </div>
@@ -400,6 +407,7 @@
         </div>
       </div>
     </b-modal>
+    
     <b-modal
       hide-footer
       hide-header
@@ -1222,17 +1230,22 @@ export default {
     },
     async statusCoppy(){
       const h = this.$createElement
-        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
-          h('i', { class : 'fas fa-check'}),
-          h('span', { class : 'content-toast' }, 'Copy address'),
-
-        ])
-        this.$bvToast.toast(vNodes, {
-          toastClass: 'toast-success',
-          noCloseButton: true,
-          toaster: 'b-toaster-top-left',
-          autoHideDelay: 3000,
-        })
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'WALLET ADDRESS COPIED'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        toaster: 'b-toaster-top-left',
+        noHoverPause: true,
+        autoHideDelay : 2000,
+        noCloseButton : true
+      })
     },
     async disconnectWallet(){
         const h = this.$createElement
@@ -1245,7 +1258,7 @@ export default {
           toastClass: 'toast-success',
           noCloseButton: true,
           toaster: 'b-toaster-top-right',
-          autoHideDelay: 3000,
+          autoHideDelay: 2000,
         })
     },
     compatibilityMode() {
@@ -1256,6 +1269,25 @@ export default {
         'https://rinkeby.etherscan.io/address/'+`${account}`,
         '_blank'
       );
+    },
+    copyAddressReserves(data) {
+      this.$copyText(data.address)
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'RESERVE ADDRESS COPIED'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        noHoverPause: true,
+        autoHideDelay : 2000,
+        noCloseButton : true
+      })
     },
     async popToastError(mess) {
       const h = this.$createElement
