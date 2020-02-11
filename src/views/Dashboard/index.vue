@@ -686,6 +686,8 @@ export default {
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
+    if(localStorage.getItem("isConnect") && localStorage.getItem("isConnect")=="true") 
+      this.isConnect = true
     if ((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)) {
       let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -693,9 +695,8 @@ export default {
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
       window.web3 = new Web3(window.web3.currentProvider);
-
+      this.Loading = true;
       await this.INIT_APP(window.web3);
-
       this.selectWallet(this.data[0]);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       //await this.getProviderReserves();
@@ -885,6 +886,7 @@ export default {
         window.web3 = new Web3(window.ethereum);
         try {
           window.ethereum.enable().then(addressWallet => {
+            this.Loading = true;
             this.INIT_APP(window.web3)
             .then(()=>{
               this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
@@ -894,6 +896,7 @@ export default {
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
             this.isConnect = true;
+            localStorage.setItem("isConnect", true);
 
             this.selectWallet(this.data[0]);
           });
@@ -904,6 +907,7 @@ export default {
               "https://rinkeby.infura.io/v3/816cc7a6308448dbbaf46ac5488507cf"
             )
           );
+          this.Loading = true;
           this.INIT_APP(window.web3);
 
         }
@@ -978,8 +982,6 @@ export default {
     },
     async getProviderReservesDetails() {
       this.reservesCounter = this.providerLiquidityReserves.length;
-
-     
       await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
       this.Loading = true;
       for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
@@ -988,7 +990,6 @@ export default {
           reserveAddress: this.providerLiquidityReserves[i]
         });
       }
-
       this.data[0].total = 0;
       this.data[0].assetEarning = 0;
       this.data[1].total = 0;
@@ -1245,6 +1246,7 @@ export default {
       window.web3.currentProvider.selectedAddress = null;
       this.CLEAR_APP();
       this.isConnect = false;
+      localStorage.removeItem("isConnect");
       this.addressWallet = "";
       this.estPortfolio = 0;
       this.estEarnings = 0;
@@ -1262,6 +1264,23 @@ export default {
       }
       this.reservesCounter = 0;
       this.poolsCounter = 0;
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'DISCONNECT WALLET SUCCESS'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        toaster: 'b-toaster-top-left',
+        noHoverPause: true,
+        autoHideDelay : 2000,
+        noCloseButton : true
+      })
     },
     compatibilityMode() {
       this.mode = !this.mode;
