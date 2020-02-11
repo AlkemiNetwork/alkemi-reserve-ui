@@ -1249,7 +1249,6 @@ export default {
       this.estPortfolio = 0;
       this.estEarnings = 0;
       this.totalChange24h = 0;
-
       for (let i = 0; i < this.data.length; i++) {
         this.data[i].total = 0;
         this.data[i].estUSD = 0;
@@ -1261,7 +1260,6 @@ export default {
         this.data[i].usdEarning = 0;
         this.data[i].providerReserves = [];
       }
-
       this.reservesCounter = 0;
       this.poolsCounter = 0;
     },
