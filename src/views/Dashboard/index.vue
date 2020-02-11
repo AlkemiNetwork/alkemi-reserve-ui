@@ -270,18 +270,12 @@
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <!-- <b-button
-                                        size="sm"
-                                        class="btn-claim float-right"
-                                        @click="showModalClaim(row.item)"
-                                      >
-                                        CLAIM
-                                      </b-button> -->
                                       <b-dropdown size="sm" right class="float-right btn-actions" variant="link" toggle-class="text-decoration-none btn-active" no-caret>
                                         <template v-slot:button-content>
                                         <i class="fas fa-ellipsis-h"></i>
                                         </template>
-                                        <b-dropdown-item-button @click="showModalClaim(row.item)" >Withdraw Funds</b-dropdown-item-button>
+                                        <b-dropdown-item-button v-if="row.item.totalBalance > 0" @click="showModalClaim(row.item)" >Withdraw Funds</b-dropdown-item-button>
+                                        <b-dropdown-item-button v-if="row.item.totalBalance == 0" @click="showModalClaim(row.item)" >Deposit Funds</b-dropdown-item-button>
                                         <b-dropdown-item-button @click="copyAddressReserves(row.item)" >Copy address</b-dropdown-item-button>
                                       </b-dropdown>
                                     </template>
@@ -923,10 +917,10 @@ export default {
     },
     createReserve() {
       if(this.lockPricePosition==="0" && parseFloat(this.lockPrice)  >=  parseFloat(this.priceCoin[this.selectedAsset.name].USD)  ){
-        return this.popToastError('Failed message')
+        return this.popToastError('Invalid price locking')
       }
       if(this.lockPricePosition==="1" && parseFloat(this.lockPrice)  <=  parseFloat(this.priceCoin[this.selectedAsset.name].USD)  ){
-        return this.popToastError('Failed message')
+        return this.popToastError('Invalid price locking')
       }
       let depositAmount = 0;
       if(this.selectedAsset.erc20Token == this.data[1].erc20Token) {
