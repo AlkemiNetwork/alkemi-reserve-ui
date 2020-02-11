@@ -113,6 +113,24 @@ const actions = {
 
     commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, reserves);
   },
+  [actionType.CLEAR_APP]: async function({
+    commit,
+    dispatch
+  }) {
+    commit(mutationType.SET_WEB3, null);
+    commit(mutationType.SET_ACCOUNT, null);
+    commit(mutationType.SET_ALKEMI_NETWORK, null);
+
+    commit(mutationType.SET_TOKEN_BALANCE, null);
+
+    dispatch(actionType.CLEAR_PROVIDER_LIQUIDITY_RESERVE);
+    //dispatch(actionType.SET_EMPTY_PROVIDER_RESERVE_DETAILS);
+  },
+  [actionType.CLEAR_PROVIDER_LIQUIDITY_RESERVE]: async function({
+    commit,
+  }) {
+    commit(mutationType.SET_PROVIDER_LIQUIDITY_RESERVE, null);
+  },
   [actionType.CREATE_LIQUIDITY_RESERVE]: async function(
     { commit, dispatch, state },
     params
