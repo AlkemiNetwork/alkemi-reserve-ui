@@ -947,23 +947,23 @@ body {
 	  z-index: 10;
 	  width: 30px;
 	  height: 30px;
-	  border: solid 2px transparent;
-	  border-top-color: #000;
-	  border-left-color: #000;
+	  border: solid 2px $color-white;
+	  border-top-color:transparent;
+	  border-left-color: transparent;
 	  border-radius: 50%;
 	  animation: pace-spinner 400ms linear infinite;
 	  vertical-align: middle;
 	  margin-top: -15px;
 	  margin-left: -15px;
-	  position: absolute;
+	  position: fixed;
 	  top: 50%;
 	  left: 50%;
 	  display: block;
 	}
 	&::after{
 	  content: "";
-	  position: absolute;
-	  background: rgba(255,255,255,0.3);
+	  position: fixed;
+	  background: rgba(0,0,0,0.6);
 	  z-index: 9;
 	  top: 0;
 	  left: 0;
@@ -1004,3 +1004,54 @@ body {
 	0%{transform:rotate(0deg);transform:rotate(0deg)}
 	100%{transform:rotate(360deg);transform:rotate(360deg)}
   }  
+  .btn-actions {
+	.fa-ellipsis-h{
+		color: $color-white;
+	}
+	button {
+		&:hover {
+			background: $color-black;
+		}
+		&:active {
+			background: $color-black;
+		}
+	}
+	.dropdown-menu {
+		border-radius: 5px;
+		background-color: #23252c;
+		padding: 0 !important;
+		margin-top: 0;
+		li {
+			 &:first-child {
+				 button {
+					border-top-left-radius: 5px;
+					border-top-right-radius: 5px;
+				 }
+			}
+			&:last-child {
+				button {
+					border-bottom-left-radius: 5px;
+					border-bottom-right-radius: 5px;
+				}
+			}
+		}
+		.dropdown-item {
+			color: $color-white;
+			&:hover {
+				background: $color-black !important;
+			}
+			padding: 0.5rem 1.5rem;
+		}
+		> li {
+		
+			&:first-child {
+				border-bottom: 2px solid #000;
+			}
+		}
+	}
+  }
+  .show {
+	  .btn-active {
+		  background-color: $color-black !important;
+	  }
+  }
