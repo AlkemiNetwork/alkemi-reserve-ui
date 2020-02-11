@@ -275,7 +275,7 @@
                                         <i class="fas fa-ellipsis-h"></i>
                                         </template>
                                         <b-dropdown-item-button v-if="row.item.totalBalance > 0" @click="showModalClaim(row.item)" >Withdraw Funds</b-dropdown-item-button>
-                                        <b-dropdown-item-button v-if="row.item.totalBalance == 0" @click="showModalClaim(row.item)" >Deposit Funds</b-dropdown-item-button>
+                                        <b-dropdown-item-button v-if="row.item.totalBalance == 0" @click="showDepositModal(row.item)" >Deposit Funds</b-dropdown-item-button>
                                         <b-dropdown-item-button @click="copyAddressReserves(row.item)" >Copy address</b-dropdown-item-button>
                                       </b-dropdown>
                                     </template>
@@ -401,7 +401,69 @@
         </div>
       </div>
     </b-modal>
-    
+
+    <b-modal
+      hide-footer
+      hide-header
+      centered
+      ref="modal-deposit-into-reserve"
+      title="Using Component Methods"
+      id="modal-add"
+    >
+      <div class="head-modal">
+        <b-img :src="`/img/${selectedAsset.image}`"></b-img>
+        <span class="title-popup">
+          ADD {{ selectedAsset ? selectedAsset.name : "" }} RESERVE
+        </span>
+      </div>
+      <div class="content-modal">
+        <b-form v-if="isShow == 'form-add'">
+          <b-form-group
+            class="text-label text-left"
+            :label="`AVAILABLE ${selectedAsset ? selectedAsset.name : ''} BALANCE`"
+            label-for="walletAssetBalance"
+          >
+            <b-form-input
+              class="value-available"
+              type="text"
+              v-model="tokenBalance"
+              readonly
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            class="text-label text-left input-rlt"
+            label="ENTER FUNDING AMOUNT"
+            label-for="fundingAmount"
+          >
+            <b-form-input
+              v-model="amountToDeposit"
+              class="enter-money"
+              type="text"
+              placeholder="0.00"
+            >
+            </b-form-input>
+            <b-button @click="maxAvailable" class="btn-position">
+              MAX
+            </b-button>
+          </b-form-group>
+          <b-button
+            class="btn-submit"
+            v-bind:class="{
+              'btn-modal-add-new': amountToDeposit,
+              'btn-modal-disable': !amountToDeposit
+            }"
+            @click="createReserve"
+            :disabled="!amountToDeposit"
+          >
+            DEPOSIT
+          </b-button>
+          <b-button class="btn-cancel" @click="hideDepositModal()">
+            Cancel
+          </b-button>
+        </b-form>
+      </div>
+    </b-modal>
+
     <b-modal
       hide-footer
       hide-header
@@ -681,7 +743,7 @@ export default {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
     if(localStorage.getItem("isConnect") && localStorage.getItem("isConnect")=="true") 
-      this.isConnect = true
+      this.isConnect = true;
     if ((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)) {
       let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
@@ -691,8 +753,10 @@ export default {
       window.web3 = new Web3(window.web3.currentProvider);
       this.Loading = true;
       await this.INIT_APP(window.web3);
-      this.selectWallet(this.data[0]);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
+      
+      this.selectWallet(this.data[0]);
+
       //await this.getProviderReserves();
       console.log("provider liquidity reserves");
       console.log(this.providerLiquidityReserves);
@@ -867,7 +931,9 @@ export default {
       "GET_TOKEN_BALANCE",
       "GET_PRICE_COIN",
       "CLAIM_LIQUIDITY_RESERVE",
-      "CLEAR_APP"
+      "CLEAR_APP",
+      "APPROVE_TOKEN_DEPOSIT",
+      "DEPOSIT_ETH_LIQUIDITY"
     ]),
      ...mapMutations("ContractController", [
       "SET_EMPTY_PROVIDER_RESERVE_DETAILS",
@@ -956,6 +1022,42 @@ export default {
       });
 
       this.hideModal();
+    },
+    depositIntoReserve(reserve) {
+      let depositAmount = 0;
+      if(reserve.asset == this.data[1].erc20Token) {
+        depositAmount = (
+          window.web3.utils.toWei(this.amountToDeposit.toString(), "ether") / 10**12).toString();
+      }
+      else if(reserve.asset == this.data[4].erc20Token) {
+        depositAmount = (
+          window.web3.utils.toWei(this.amountToDeposit.toString(), "ether") / 10**10).toString();
+      }
+      else {
+        depositAmount = window.web3.utils.toWei(
+          this.amountToDeposit.toString(),
+          "ether"
+        );
+      }
+
+      if (reserve.asset != "0x0000000000000000000000000000000000000000") {
+        // call the approve token transfer action
+        this.APPROVE_TOKEN_DEPOSIT({
+          web3: window.web3,
+          erc20: reserve.asset,
+          spender: reserve.address,
+          amount: depositAmount
+        });
+      }
+      else {
+        // send ether to reserve
+        this.DEPOSIT_ETH_LIQUIDITY({
+          web3: window.web3,
+          reserveAddress: reserve.address,
+          amount: depositAmount
+        });
+      }
+      this.hideDepositModal();
     },
     claimReserve(reserve) {
       console.log("reserve to claim");
@@ -1174,6 +1276,14 @@ export default {
     },
     backForm() {
       this.isShow = "form-add";
+    },
+    showDepositModal() {
+      this.amountToDeposit = 0;
+      this.$refs["modal-deposit-into-reserve"].show();
+    },
+    hideDepositModal() {
+      this.$refs["modal-deposit-into-reserve"].hide();
+      this.amountToDeposit = 0;
     },
     clickDay(data) {
       if (moment(data.date, "DD-MM-YYYY") > moment()) {
