@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{'run-loading':Loading}">
     <b-container fluid>
       <b-row>
         <b-col lg="12">
@@ -270,13 +270,20 @@
                                       </div>
                                     </template>
                                     <template v-slot:cell(btn)="row">
-                                      <b-button
+                                      <!-- <b-button
                                         size="sm"
                                         class="btn-claim float-right"
                                         @click="showModalClaim(row.item)"
                                       >
                                         CLAIM
-                                      </b-button>
+                                      </b-button> -->
+                                      <b-dropdown size="sm" right class="float-right btn-actions" variant="link" toggle-class="text-decoration-none btn-active" no-caret>
+                                        <template v-slot:button-content>
+                                        <i class="fas fa-ellipsis-h"></i>
+                                        </template>
+                                        <b-dropdown-item-button @click="showModalClaim(row.item)" >Withdraw Funds</b-dropdown-item-button>
+                                        <b-dropdown-item-button @click="copyAddressReserves(row.item)" >Copy address</b-dropdown-item-button>
+                                      </b-dropdown>
                                     </template>
                                   </b-table>
                                 </div>
@@ -400,6 +407,7 @@
         </div>
       </div>
     </b-modal>
+    
     <b-modal
       hide-footer
       hide-header
@@ -498,6 +506,7 @@ export default {
   },
   data() {
     return {
+      Loading : false,
       dateNow : null,
       version: currentVersion,
       isShow: "form-add",
@@ -970,6 +979,16 @@ export default {
     async getProviderReservesDetails() {
       this.reservesCounter = this.providerLiquidityReserves.length;
 
+     
+      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
+      this.Loading = true;
+      for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
+        await this.GET_RESERVE_DETAILS({
+          web3: window.web3,
+          reserveAddress: this.providerLiquidityReserves[i]
+        });
+      }
+
       this.data[0].total = 0;
       this.data[0].assetEarning = 0;
       this.data[1].total = 0;
@@ -982,15 +1001,7 @@ export default {
       this.data[4].assetEarning = 0;
       this.estPortfolio = 0;
       this.estEarnings = 0;
-      await this.SET_EMPTY_PROVIDER_RESERVE_DETAILS();
-
-      for (let i = 0; i < this.providerLiquidityReserves.length; i++) {
-        await this.GET_RESERVE_DETAILS({
-          web3: window.web3,
-          reserveAddress: this.providerLiquidityReserves[i]
-        });
-      }
-
+      
       let providerReservesDai = [];
       let providerReservesUSDC = [];
       let providerReservesETH = [];
@@ -1142,6 +1153,7 @@ export default {
       if(providerReservesWbtc.length > 0) {
         this.poolsCounter++;
       }
+      this.Loading = false;
     },
     /* eslint-enable */
     showModal() {
@@ -1212,28 +1224,31 @@ export default {
     },
     async statusCoppy(){
       const h = this.$createElement
-        const vNodes = this.$createElement('div', { class: 'text-center ' }, [
-          h('i', { class : 'fas fa-check'}),
-          h('span', { class : 'content-toast' }, 'Copy address'),
-
-        ])
-        this.$bvToast.toast(vNodes, {
-          toastClass: 'toast-success',
-          noCloseButton: true,
-          toaster: 'b-toaster-top-left',
-          autoHideDelay: 3000,
-        })
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'WALLET ADDRESS COPIED'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        toaster: 'b-toaster-top-left',
+        noHoverPause: true,
+        autoHideDelay : 2000,
+        noCloseButton : true
+      })
     },
     async disconnectWallet(){
       window.web3.currentProvider.selectedAddress = null;
       this.CLEAR_APP();
-
       this.isConnect = false;
       this.addressWallet = "";
       this.estPortfolio = 0;
       this.estEarnings = 0;
       this.totalChange24h = 0;
-
       for (let i = 0; i < this.data.length; i++) {
         this.data[i].total = 0;
         this.data[i].estUSD = 0;
@@ -1245,7 +1260,6 @@ export default {
         this.data[i].usdEarning = 0;
         this.data[i].providerReserves = [];
       }
-
       this.reservesCounter = 0;
       this.poolsCounter = 0;
     },
@@ -1257,6 +1271,25 @@ export default {
         'https://rinkeby.etherscan.io/address/'+`${account}`,
         '_blank'
       );
+    },
+    copyAddressReserves(data) {
+      this.$copyText(data.address)
+      const h = this.$createElement
+      const vNodesMsg = h(
+        'div',
+        { class: ['mb-0', 'toastr-flex', 'clear-center'] },
+        [
+          h('i', { class : "fas fa-check"}),
+          h('div', { class: "text-toast"}, 'RESERVE ADDRESS COPIED'),
+        ]
+      )
+      this.$bvToast.toast([vNodesMsg], {
+        id: "toastApprove",
+        toastClass: "toastApprove",
+        noHoverPause: true,
+        autoHideDelay : 2000,
+        noCloseButton : true
+      })
     },
     async popToastError(mess) {
       const h = this.$createElement
