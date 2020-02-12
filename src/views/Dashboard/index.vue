@@ -604,7 +604,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-          providerReserves: []
+          providerReserves: [],
+          chartdata : []
         },
         {
           name: "USDC",
@@ -619,7 +620,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-          providerReserves: []
+          providerReserves: [],
+          chartdata : []
         },
         {
           name: "ETH",
@@ -634,7 +636,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-          providerReserves: []
+          providerReserves: [],
+          chartdata : []
         },
         {
           name: "REP",
@@ -649,7 +652,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-          providerReserves: []
+          providerReserves: [],
+          chartdata : []
         },
         {
           name: "WBTC",
@@ -664,7 +668,8 @@ export default {
           estchange24h: 0,
           assetEarning: 0,
           usdEarning: 0,
-          providerReserves: []
+          providerReserves: [],
+          chartdata : []
         }
       ],
       chartOptionsLine: {
@@ -690,7 +695,7 @@ export default {
           {
             showSymbol: false,
             type: "line",
-            data: [55, 72, 84, 48, 2000, 62, 500, 75, 94, 1011, 127, 118, 100]
+            data: []
           }
         ],
         title: {
@@ -752,7 +757,6 @@ export default {
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
       window.web3 = new Web3(window.web3.currentProvider);
-
       await this.INIT_APP(window.web3);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       
@@ -956,11 +960,9 @@ export default {
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-
-            this.selectWallet(this.data[0]);
-
             this.isConnect = true;
             localStorage.setItem("isConnect", true);
+            this.selectWallet(this.data[0]);
           });
         } catch (error) {
           console.log(error);
@@ -1107,10 +1109,10 @@ export default {
       let providerReservesRep = [];
       let providerReservesWbtc = [];
       this.poolsCounter = 0;
-
       this.providerReservesDetails.map((reserve, key) => {
         switch (reserve.asset.toLowerCase()) {
           case this.data[0].erc20Token.toLowerCase():
+            this.data[0].chartdata.push(parseFloat(reserve.deposited))
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "DAI";
             this.data[0].total += parseFloat(reserve.totalBalance);
@@ -1134,6 +1136,7 @@ export default {
             }
             break;
           case this.data[1].erc20Token.toLowerCase():
+            this.data[1].chartdata.push(parseFloat(reserve.deposited))
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "USDC";
             this.data[1].total += parseFloat(reserve.totalBalance);
@@ -1157,6 +1160,7 @@ export default {
             }
             break;
           case this.data[2].erc20Token.toLowerCase():
+            this.data[2].chartdata.push(parseFloat(reserve.deposited))
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "ETH";
             this.data[2].total += parseFloat(reserve.totalBalance);
@@ -1180,6 +1184,7 @@ export default {
             }
             break;
           case this.data[3].erc20Token.toLowerCase():
+             this.data[3].chartdata.push(parseFloat(reserve.deposited))
             reserve.address = this.providerLiquidityReserves[key];
             reserve.assetSymbol = "REP";
             this.data[3].total += parseFloat(reserve.totalBalance);
@@ -1203,7 +1208,8 @@ export default {
             }
             break;
           case this.data[4].erc20Token.toLowerCase():
-           reserve.assetSymbol = "WBTC";
+            this.data[4].chartdata.push(parseFloat(reserve.deposited))
+            reserve.assetSymbol = "WBTC";
             reserve.address = this.providerLiquidityReserves[key];
             this.data[4].total += parseFloat(reserve.totalBalance);
             this.data[4].assetEarning += parseFloat(reserve.earned);
@@ -1229,7 +1235,43 @@ export default {
             break;
         }
       });
-
+      const _this = this;
+      this.data.some( function(item) {
+          if(_this.selectedAsset.erc20Token==item.erc20Token){
+               _this.chartOptionsLine = {
+                grid: {
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  show: false,
+                  timeline: {
+                    show: false
+                  }
+                },
+                xAxis: {
+                  show: false,
+                  data: []
+                },
+                yAxis: {
+                  min: 1,
+                  show: false
+                },
+                series: [
+                  {
+                    showSymbol: true,
+                    type: "line",
+                    data: item.chartdata
+                  }
+                ],
+                title: {
+                  show: false
+                },
+                color: ["#14DC94"]
+              };
+          }
+      } );
+      
       this.data[0].providerReserves = providerReservesDai;
       this.data[1].providerReserves = providerReservesUSDC;
       this.data[2].providerReserves = providerReservesETH;
@@ -1309,6 +1351,37 @@ export default {
     },
     async selectWallet(item)  {
       this.selectedAsset = item;
+      this.chartOptionsLine = {
+        grid: {
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          show: false,
+          timeline: {
+            show: false
+          }
+        },
+        xAxis: {
+          show: false,
+          data: []
+        },
+        yAxis: {
+          min: 1,
+          show: false
+        },
+        series: [
+          {
+            showSymbol: true,
+            type: "line",
+            data: item.chartdata
+          }
+        ],
+        title: {
+          show: false
+        },
+        color: ["#14DC94"]
+      };
       if((window.web3.currentProvider.selectedAddress) && (localStorage.getItem("isConnect")=="true")){
         await this.GET_TOKEN_BALANCE({
           web3: window.web3,
