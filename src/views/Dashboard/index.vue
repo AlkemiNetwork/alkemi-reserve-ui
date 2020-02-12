@@ -452,7 +452,7 @@
               'btn-modal-add-new': amountToDeposit,
               'btn-modal-disable': !amountToDeposit
             }"
-            @click="createReserve"
+            @click="depositIntoReserve(selectedReserve)"
             :disabled="!amountToDeposit"
           >
             DEPOSIT
@@ -1277,7 +1277,8 @@ export default {
     backForm() {
       this.isShow = "form-add";
     },
-    showDepositModal() {
+    showDepositModal(reserve) {
+      this.selectedReserve = reserve;
       this.amountToDeposit = 0;
       this.$refs["modal-deposit-into-reserve"].show();
     },
