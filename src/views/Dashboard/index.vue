@@ -742,16 +742,17 @@ export default {
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
-    if(localStorage.getItem("isConnect") && localStorage.getItem("isConnect")=="true") 
+    if((window.web3.currentProvider.selectedAddress) && (localStorage.getItem("isConnect")=="true"))  {
+      this.Loading = true;
       this.isConnect = true;
-    if ((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)) {
+
       let addressWallet = window.web3.currentProvider.selectedAddress;
       this.addressWallet =
         addressWallet.substr(0, 4) +
         "..." +
         addressWallet.substr(addressWallet.length - 4, 4);
       window.web3 = new Web3(window.web3.currentProvider);
-      this.Loading = true;
+
       await this.INIT_APP(window.web3);
       await this.LOAD_PROVIDER_LIQUIDITY_RESERVES();
       
@@ -941,7 +942,7 @@ export default {
       "SET_TOKEN_BALANCE"
     ]),
     async connectWallet() {
-       this.selectWallet(this.data[0]);
+      this.selectWallet(this.data[0]);
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         try {
@@ -955,10 +956,11 @@ export default {
               addressWallet[0].substr(0, 4) +
               "..." +
               addressWallet[0].substr(addressWallet[0].length - 4, 4);
-            this.isConnect = true;
-            localStorage.setItem("isConnect", true);
 
             this.selectWallet(this.data[0]);
+
+            this.isConnect = true;
+            localStorage.setItem("isConnect", true);
           });
         } catch (error) {
           console.log(error);
@@ -1307,7 +1309,7 @@ export default {
     },
     async selectWallet(item)  {
       this.selectedAsset = item;
-      if((window.web3.currentProvider.selectedAddress) && (this.isConnect == true)){
+      if((window.web3.currentProvider.selectedAddress) && (localStorage.getItem("isConnect")=="true")){
         await this.GET_TOKEN_BALANCE({
           web3: window.web3,
           erc20: item.erc20Token
@@ -1348,10 +1350,11 @@ export default {
       })
     },
     async disconnectWallet(){
-      window.web3.currentProvider.selectedAddress = null;
       this.CLEAR_APP();
+
       this.isConnect = false;
       localStorage.removeItem("isConnect");
+
       this.addressWallet = "";
       this.estPortfolio = 0;
       this.estEarnings = 0;
