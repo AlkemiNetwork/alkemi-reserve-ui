@@ -305,7 +305,7 @@
       id="modal-add"
     >
       <div class="head-modal">
-        <b-img :src="`/img/${selectedAsset.image}`"></b-img>
+        <b-img :src="`/img/${selectedAsset ? selectedAsset.image : ''}`"></b-img>
         <span class="title-popup">
           ADD {{ selectedAsset ? selectedAsset.name : "" }} RESERVE
         </span>
@@ -411,7 +411,7 @@
       id="modal-add"
     >
       <div class="head-modal">
-        <b-img :src="`/img/${selectedAsset.image}`"></b-img>
+        <b-img :src="`/img/${selectedAsset ? selectedAsset.image : ''}`"></b-img>
         <span class="title-popup">
           ADD {{ selectedAsset ? selectedAsset.name : "" }} RESERVE
         </span>
