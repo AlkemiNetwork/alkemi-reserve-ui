@@ -744,6 +744,13 @@ export default {
       mode : false
     };
   },
+  mounted() {
+    clearInterval(this.ivl)
+    this.ivl = setInterval(()=>{
+      if((window.web3.currentProvider.selectedAddress) && (localStorage.getItem("isConnect")=="true"))
+        this.getProviderReservesDetails();
+    }, 3600000)
+  },
   async created() {
     this.dateNow = moment().format('DD/MM/YYYY');
     await this.GET_PRICE_COIN();
