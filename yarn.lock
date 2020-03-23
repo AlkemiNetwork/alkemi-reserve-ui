@@ -931,15 +931,16 @@
   dependencies:
     "@vue/cli-shared-utils" "^4.1.2"
 
-"@vue/cli-plugin-unit-mocha@^4.1.0":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-mocha/-/cli-plugin-unit-mocha-4.1.2.tgz#1ce88579ee1e399d992d21c8bbfe8c3ebf9fde8e"
+"@vue/cli-plugin-unit-mocha@^4.2.3":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-mocha/-/cli-plugin-unit-mocha-4.2.3.tgz#b7c926799f90b845d9623d4714dd670a473ee36b"
+  integrity sha512-6fNBQ6qpvvbXgafvT7SyVNhY4bZpeOr1Klb3DHYa+w55AWjMWbiDSp+xpL3X1OkTO2U7YUUFZkRuvTpy5FW4Dw==
   dependencies:
-    "@vue/cli-shared-utils" "^4.1.2"
+    "@vue/cli-shared-utils" "^4.2.3"
     jsdom "^15.2.1"
     jsdom-global "^3.0.2"
     mocha "^6.2.2"
-    mochapack "^1.1.12"
+    mochapack "^1.1.13"
 
 "@vue/cli-plugin-vuex@^4.1.2":
   version "4.1.2"
@@ -1002,9 +1003,10 @@
     webpack-dev-server "^3.9.0"
     webpack-merge "^4.2.2"
 
-"@vue/cli-shared-utils@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-4.1.2.tgz#d33984c8790ad869ef77f5229abd3e8e584fe58b"
+"@vue/cli-shared-utils@^4.1.2", "@vue/cli-shared-utils@^4.2.3":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-4.2.3.tgz#13646452cc25b0ab68a57cb52cac27983cee39a4"
+  integrity sha512-GCoTB6vMZsi9z/Bmn8/C9IlnUw8eeHONOGE+48TJkZyulftVFhlwVWjTFp5GuDAlwpTWarHchW9IoVu3pIIGfA==
   dependencies:
     "@hapi/joi" "^15.0.1"
     chalk "^2.4.2"
@@ -1014,6 +1016,7 @@
     node-ipc "^9.1.1"
     open "^6.3.0"
     ora "^3.4.0"
+    read-pkg "^5.1.1"
     request "^2.87.0"
     request-promise-native "^1.0.8"
     semver "^6.1.0"
@@ -6106,9 +6109,10 @@ mocha@^7.0.0:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
-mochapack@^1.1.12:
+mochapack@^1.1.13:
   version "1.1.13"
   resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.13.tgz#7803cd2d0a5a635da30011cd61ec531dee89699c"
+  integrity sha512-SQQn/0hsX5E3+tFxjmAm9ruEqLRYpnINssmul69PxnRdqxnNjs4UQvOQz1zTsoE7RfJl6FAprVjvMznZFIzytQ==
   dependencies:
     babel-runtime "^6.26.0"
     chalk "^2.4.2"
