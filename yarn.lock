@@ -9206,10 +9206,10 @@ vue-eslint-parser@^5.0.0:
     esquery "^1.0.1"
     lodash "^4.17.11"
 
-vue-functional-calendar@^2.7.3:
-  version "2.7.4"
-  resolved "https://registry.yarnpkg.com/vue-functional-calendar/-/vue-functional-calendar-2.7.4.tgz#fcaa9d9ee357034fdf42e0184c82558cdf9e41a3"
-  integrity sha512-KijNU4t8MRKLRtHyoNc/6My+1HN8U0iavZcmbwYiBV4Zny/ayI+t0zX0XWmwhBISG6/HlFc9X8Fok2lqz+ZPag==
+vue-functional-calendar@^2.8.83:
+  version "2.8.83"
+  resolved "https://registry.yarnpkg.com/vue-functional-calendar/-/vue-functional-calendar-2.8.83.tgz#da523984e039e1c8cea57269f711c4be42a6e81d"
+  integrity sha512-1zDYSIMESOgliOWB6AxxjRwdV26dWj0BJTS/N7Mi4LT3/+RgkOzZeh8a329Cl9xhewWGWKMzDACBdPKc/vqW0w==
   dependencies:
     core-js "^2.6.5"
     vue "^2.5.21"
