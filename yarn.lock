@@ -594,6 +594,14 @@
     js-levenshtein "^1.1.3"
     semver "^5.5.0"
 
+"@babel/runtime-corejs2@^7.0.0":
+  version "7.10.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.10.2.tgz#532f20b839684615f97e9f700f630e995efed426"
+  integrity sha512-ZLwsFnNm3WpIARU1aLFtufjMHsmEnc8TjtrfAjmbgMbeoyR+LuQoyESoNdTfeDhL6IdY12SpeycXMgSgl8XGXA==
+  dependencies:
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.7.4":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.7.tgz#194769ca8d6d7790ec23605af9ee3e42a0aa79cf"
@@ -931,15 +939,16 @@
   dependencies:
     "@vue/cli-shared-utils" "^4.1.2"
 
-"@vue/cli-plugin-unit-mocha@^4.1.0":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-mocha/-/cli-plugin-unit-mocha-4.1.2.tgz#1ce88579ee1e399d992d21c8bbfe8c3ebf9fde8e"
+"@vue/cli-plugin-unit-mocha@^4.4.4":
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-mocha/-/cli-plugin-unit-mocha-4.4.4.tgz#d190caea51d8852554c344babd9e03b8fe5a9775"
+  integrity sha512-U+MZp0XYQUZcrkWE2g+CqPk6vA7qguCfCTr7bxhNMrhJSAdML4D3sTJN6+aoCNYs8+jNfyPfTkrKI4Ad6D/cRg==
   dependencies:
-    "@vue/cli-shared-utils" "^4.1.2"
+    "@vue/cli-shared-utils" "^4.4.4"
     jsdom "^15.2.1"
     jsdom-global "^3.0.2"
     mocha "^6.2.2"
-    mochapack "^1.1.12"
+    mochapack "^1.1.15"
 
 "@vue/cli-plugin-vuex@^4.1.2":
   version "4.1.2"
@@ -1002,9 +1011,10 @@
     webpack-dev-server "^3.9.0"
     webpack-merge "^4.2.2"
 
-"@vue/cli-shared-utils@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-4.1.2.tgz#d33984c8790ad869ef77f5229abd3e8e584fe58b"
+"@vue/cli-shared-utils@^4.1.2", "@vue/cli-shared-utils@^4.4.4":
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-4.4.4.tgz#b9685b73a604c8a7ee82d6fc3319fe7bb2cdb274"
+  integrity sha512-ccMZtTMSutR35V5nrU/eyj+zRMomTRGBTLwJPmaJ2sRiW/93MTggQGXDWC8JRAA8yiU1N8xza8mjBxS0O2wIAA==
   dependencies:
     "@hapi/joi" "^15.0.1"
     chalk "^2.4.2"
@@ -1014,7 +1024,8 @@
     node-ipc "^9.1.1"
     open "^6.3.0"
     ora "^3.4.0"
-    request "^2.87.0"
+    read-pkg "^5.1.1"
+    request "^2.88.2"
     request-promise-native "^1.0.8"
     semver "^6.1.0"
     strip-ansi "^6.0.0"
@@ -1555,13 +1566,6 @@ babel-plugin-dynamic-import-node@^2.2.0, babel-plugin-dynamic-import-node@^2.3.0
   resolved "https://registry.yarnpkg.com/babel-plugin-dynamic-import-node/-/babel-plugin-dynamic-import-node-2.3.0.tgz#f00f507bdaa3c3e3ff6e7e5e98d90a7acab96f7f"
   dependencies:
     object.assign "^4.1.0"
-
-babel-runtime@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.0"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -2508,7 +2512,7 @@ core-js-compat@^3.4.4, core-js-compat@^3.6.0:
     browserslist "^4.8.3"
     semver "7.0.0"
 
-core-js@^2.4.0, core-js@^2.6.5:
+core-js@^2.6.5:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -4501,7 +4505,7 @@ har-schema@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/har-schema/-/har-schema-2.0.0.tgz#a94c2224ebcac04782a0d9035521f24735b7ec92"
 
-har-validator@~5.1.0:
+har-validator@~5.1.0, har-validator@~5.1.3:
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/har-validator/-/har-validator-5.1.3.tgz#1ef89ebd3e4996557675eed9893110dc350fa080"
   dependencies:
@@ -6106,11 +6110,12 @@ mocha@^7.0.0:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
-mochapack@^1.1.12:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.13.tgz#7803cd2d0a5a635da30011cd61ec531dee89699c"
+mochapack@^1.1.15:
+  version "1.1.15"
+  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.15.tgz#426c793b871ed006c781172da2b15f612f11f2dc"
+  integrity sha512-/gOsgJk3CWlNiOdef7hrNhp37VpatB9IiWzSCxS2p8pG21R7NAKJBBsU5T0eUWT9oz1NQhyubXdQgh51U7oVZA==
   dependencies:
-    babel-runtime "^6.26.0"
+    "@babel/runtime-corejs2" "^7.0.0"
     chalk "^2.4.2"
     chokidar "^2.0.0"
     glob-parent "5.1.0"
@@ -7554,13 +7559,14 @@ regenerate@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
 
-regenerator-runtime@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
-
 regenerator-runtime@^0.13.2:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
+
+regenerator-runtime@^0.13.4:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.5.tgz#d878a1d094b4306d10b9096484b33ebd55e26697"
+  integrity sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
 
 regenerator-transform@^0.14.0:
   version "0.14.1"
@@ -7682,6 +7688,32 @@ request@2.88.0, request@^2.79.0, request@^2.87.0, request@^2.88.0:
     qs "~6.5.2"
     safe-buffer "^5.1.2"
     tough-cookie "~2.4.3"
+    tunnel-agent "^0.6.0"
+    uuid "^3.3.2"
+
+request@^2.88.2:
+  version "2.88.2"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
+  integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
+  dependencies:
+    aws-sign2 "~0.7.0"
+    aws4 "^1.8.0"
+    caseless "~0.12.0"
+    combined-stream "~1.0.6"
+    extend "~3.0.2"
+    forever-agent "~0.6.1"
+    form-data "~2.3.2"
+    har-validator "~5.1.3"
+    http-signature "~1.2.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.19"
+    oauth-sign "~0.9.0"
+    performance-now "^2.1.0"
+    qs "~6.5.2"
+    safe-buffer "^5.1.2"
+    tough-cookie "~2.5.0"
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
 
@@ -8804,7 +8836,7 @@ toposort@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
 
-tough-cookie@^2.3.3:
+tough-cookie@^2.3.3, tough-cookie@~2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"
   dependencies:
